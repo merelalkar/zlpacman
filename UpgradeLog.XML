@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="FakeSpider">
+</Property><Property Name="Файл решения" Value="E:\Projects\FakeSpider\FakeSpider.sln">
+</Property><Property Name="Файл параметров пользователя" Value="E:\Projects\FakeSpider\FakeSpider.suo">
+</Property><Property Name="Date" Value="9 сентября 2010 г.">
+</Property><Property Name="Time" Value="22:56">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="FakeSpider.sln" Description="Успешно создана резервная копия файла E:\Projects\FakeSpider\FakeSpider.sln.old">
+</Event><Event ErrorLevel="0" Project="" Source="FakeSpider.suo" Description="Успешно создана резервная копия файла E:\Projects\FakeSpider\FakeSpider.suo.old">
+</Event><Event ErrorLevel="0" Project="engine" Source="engine\engine.vcproj" Description="Веб-развертывание на локальном IIS-сервере больше не поддерживается. Инструмент веб-развертывания был удален из параметров проекта.">
+</Event><Event ErrorLevel="1" Project="engine" Source="engine\engine.vcproj" Description="Приложение было обновлено, чтобы включить параметры, связанные с контролем учетных записей пользователей (UAC), появившемся в Windows Vista. По умолчанию, в Windows Vista при включенном UAC, приложение запускается с теми же привилегиями, что и запустивший его процесс. Это также делает невозможным запуск приложений с технологией виртуализации. Параметры, связанные с UAC можно поменять на странице свойств проекта.">
+</Event><Event ErrorLevel="0" Project="engine" Source="engine\engine.vcproj" Description="Из проектного файла была успешно сделана резервная копия &quot;E:\Projects\FakeSpider\engine\engine.vcproj.8.00.old&quot;.">
+</Event><Event ErrorLevel="0" Project="engine" Source="engine\engine.vcproj" Description="Проект обновлен успешно.">
+</Event><Event ErrorLevel="3" Project="engine" Source="engine\engine.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="domain" Source="domain\domain.vcproj" Description="Веб-развертывание на локальном IIS-сервере больше не поддерживается. Инструмент веб-развертывания был удален из параметров проекта.">
+</Event><Event ErrorLevel="1" Project="domain" Source="domain\domain.vcproj" Description="Приложение было обновлено, чтобы включить параметры, связанные с контролем учетных записей пользователей (UAC), появившемся в Windows Vista. По умолчанию, в Windows Vista при включенном UAC, приложение запускается с теми же привилегиями, что и запустивший его процесс. Это также делает невозможным запуск приложений с технологией виртуализации. Параметры, связанные с UAC можно поменять на странице свойств проекта.">
+</Event><Event ErrorLevel="0" Project="domain" Source="domain\domain.vcproj" Description="Из проектного файла была успешно сделана резервная копия &quot;E:\Projects\FakeSpider\domain\domain.vcproj.8.00.old&quot;.">
+</Event><Event ErrorLevel="0" Project="domain" Source="domain\domain.vcproj" Description="Проект обновлен успешно.">
+</Event><Event ErrorLevel="3" Project="domain" Source="domain\domain.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="FakeSpider" Source="application\FakeSpider.vcproj" Description="Веб-развертывание на локальном IIS-сервере больше не поддерживается. Инструмент веб-развертывания был удален из параметров проекта.">
+</Event><Event ErrorLevel="1" Project="FakeSpider" Source="application\FakeSpider.vcproj" Description="Приложение было обновлено, чтобы включить параметры, связанные с контролем учетных записей пользователей (UAC), появившемся в Windows Vista. По умолчанию, в Windows Vista при включенном UAC, приложение запускается с теми же привилегиями, что и запустивший его процесс. Это также делает невозможным запуск приложений с технологией виртуализации. Параметры, связанные с UAC можно поменять на странице свойств проекта.">
+</Event><Event ErrorLevel="0" Project="FakeSpider" Source="application\FakeSpider.vcproj" Description="Из проектного файла была успешно сделана резервная копия &quot;E:\Projects\FakeSpider\application\FakeSpider.vcproj.8.00.old&quot;.">
+</Event><Event ErrorLevel="0" Project="FakeSpider" Source="application\FakeSpider.vcproj" Description="Проект обновлен успешно.">
+</Event><Event ErrorLevel="3" Project="FakeSpider" Source="application\FakeSpider.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="platform" Source="platform\platform.vcproj" Description="Веб-развертывание на локальном IIS-сервере больше не поддерживается. Инструмент веб-развертывания был удален из параметров проекта.">
+</Event><Event ErrorLevel="1" Project="platform" Source="platform\platform.vcproj" Description="Приложение было обновлено, чтобы включить параметры, связанные с контролем учетных записей пользователей (UAC), появившемся в Windows Vista. По умолчанию, в Windows Vista при включенном UAC, приложение запускается с теми же привилегиями, что и запустивший его процесс. Это также делает невозможным запуск приложений с технологией виртуализации. Параметры, связанные с UAC можно поменять на странице свойств проекта.">
+</Event><Event ErrorLevel="0" Project="platform" Source="platform\platform.vcproj" Description="Из проектного файла была успешно сделана резервная копия &quot;E:\Projects\FakeSpider\platform\platform.vcproj.8.00.old&quot;.">
+</Event><Event ErrorLevel="0" Project="platform" Source="platform\platform.vcproj" Description="Проект обновлен успешно.">
+</Event><Event ErrorLevel="3" Project="platform" Source="platform\platform.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="temp" Source="temp\temp.vcproj" Description="Веб-развертывание на локальном IIS-сервере больше не поддерживается. Инструмент веб-развертывания был удален из параметров проекта.">
+</Event><Event ErrorLevel="1" Project="temp" Source="temp\temp.vcproj" Description="Приложение было обновлено, чтобы включить параметры, связанные с контролем учетных записей пользователей (UAC), появившемся в Windows Vista. По умолчанию, в Windows Vista при включенном UAC, приложение запускается с теми же привилегиями, что и запустивший его процесс. Это также делает невозможным запуск приложений с технологией виртуализации. Параметры, связанные с UAC можно поменять на странице свойств проекта.">
+</Event><Event ErrorLevel="0" Project="temp" Source="temp\temp.vcproj" Description="Из проектного файла была успешно сделана резервная копия &quot;E:\Projects\FakeSpider\temp\temp.vcproj.8.00.old&quot;.">
+</Event><Event ErrorLevel="0" Project="temp" Source="temp\temp.vcproj" Description="Проект обновлен успешно.">
+</Event><Event ErrorLevel="3" Project="temp" Source="temp\temp.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="platform_test" Source="platform_test\platform_test.vcproj" Description="Веб-развертывание на локальном IIS-сервере больше не поддерживается. Инструмент веб-развертывания был удален из параметров проекта.">
+</Event><Event ErrorLevel="1" Project="platform_test" Source="platform_test\platform_test.vcproj" Description="Приложение было обновлено, чтобы включить параметры, связанные с контролем учетных записей пользователей (UAC), появившемся в Windows Vista. По умолчанию, в Windows Vista при включенном UAC, приложение запускается с теми же привилегиями, что и запустивший его процесс. Это также делает невозможным запуск приложений с технологией виртуализации. Параметры, связанные с UAC можно поменять на странице свойств проекта.">
+</Event><Event ErrorLevel="0" Project="platform_test" Source="platform_test\platform_test.vcproj" Description="Из проектного файла была успешно сделана резервная копия &quot;E:\Projects\FakeSpider\platform_test\platform_test.vcproj.8.00.old&quot;.">
+</Event><Event ErrorLevel="0" Project="platform_test" Source="platform_test\platform_test.vcproj" Description="Проект обновлен успешно.">
+</Event><Event ErrorLevel="3" Project="platform_test" Source="platform_test\platform_test.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="FakeSpider.sln" Description="Преобразование решения успешно завершено">
+</Event><Event ErrorLevel="3" Project="" Source="FakeSpider.sln" Description="Converted">
+</Event></UpgradeLog>

@@ -1,0 +1,549 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// русский resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+#ifdef _WIN32
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)\r\n"
+    "LANGUAGE 25, 1\r\n"
+    "#pragma code_page(1251)\r\n"
+    "#include ""res\\FakeSpider.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\FakeSpider.ico"
+IDR_FakeSpiderTYPE      ICON                    "res\\FakeSpiderDoc.ico"
+IDI_SPIDER              ICON                    "res\\icons\\103.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDB_ABOUT               BITMAP                  "res\\about.bmp"
+IDB_CASTS               BITMAP                  "res\\difficulty.bmp"
+IDB_CARD_CLUB_ACE       BITMAP                  "res\\bitmaps\\CARD1.bmp"
+IDB_CARD_CLUB_2         BITMAP                  "res\\bitmaps\\CARD2.bmp"
+IDB_CARD_CLUB_3         BITMAP                  "res\\bitmaps\\CARD3.bmp"
+IDB_CARD_CLUB_4         BITMAP                  "res\\bitmaps\\CARD4.bmp"
+IDB_CARD_CLUB_5         BITMAP                  "res\\bitmaps\\CARD5.bmp"
+IDB_CARD_CLUB_6         BITMAP                  "res\\bitmaps\\CARD6.bmp"
+IDB_CARD_CLUB_7         BITMAP                  "res\\bitmaps\\CARD7.bmp"
+IDB_CARD_CLUB_8         BITMAP                  "res\\bitmaps\\CARD8.bmp"
+IDB_CARD_CLUB_9         BITMAP                  "res\\bitmaps\\CARD9.bmp"
+IDB_CARD_CLUB_10        BITMAP                  "res\\bitmaps\\CARD10.bmp"
+IDB_CARD_CLUB_JACK      BITMAP                  "res\\bitmaps\\CARD11.bmp"
+IDB_CARD_CLUB_QUEEN     BITMAP                  "res\\bitmaps\\CARD12.bmp"
+IDB_CARD_CLUB_KING      BITMAP                  "res\\bitmaps\\CARD13.bmp"
+IDB_CARD_DIAMOND_ACE    BITMAP                  "res\\bitmaps\\CARD14.bmp"
+IDB_CARD_DIAMOND_2      BITMAP                  "res\\bitmaps\\CARD15.bmp"
+IDB_CARD_DIAMOND_3      BITMAP                  "res\\bitmaps\\CARD16.bmp"
+IDB_CARD_DIAMOND_4      BITMAP                  "res\\bitmaps\\CARD17.bmp"
+IDB_CARD_DIAMOND_5      BITMAP                  "res\\bitmaps\\CARD18.bmp"
+IDB_CARD_DIAMOND_6      BITMAP                  "res\\bitmaps\\CARD19.bmp"
+IDB_CARD_DIAMOND_7      BITMAP                  "res\\bitmaps\\CARD20.bmp"
+IDB_CARD_DIAMOND_8      BITMAP                  "res\\bitmaps\\CARD21.bmp"
+IDB_CARD_DIAMOND_9      BITMAP                  "res\\bitmaps\\CARD22.bmp"
+IDB_CARD_DIAMOND_10     BITMAP                  "res\\bitmaps\\CARD23.bmp"
+IDB_CARD_DIAMOND_JACK   BITMAP                  "res\\bitmaps\\CARD24.bmp"
+IDB_CARD_DIAMOND_QUEEN  BITMAP                  "res\\bitmaps\\CARD25.bmp"
+IDB_CARD_DIAMOND_KING   BITMAP                  "res\\bitmaps\\CARD26.bmp"
+IDB_CARD_HEART_ACE      BITMAP                  "res\\bitmaps\\CARD27.bmp"
+IDB_CARD_HEART_2        BITMAP                  "res\\bitmaps\\CARD28.bmp"
+IDB_CARD_HEART_3        BITMAP                  "res\\bitmaps\\CARD29.bmp"
+IDB_CARD_HEART_4        BITMAP                  "res\\bitmaps\\CARD30.bmp"
+IDB_CARD_HEART_5        BITMAP                  "res\\bitmaps\\CARD31.bmp"
+IDB_CARD_HEART_6        BITMAP                  "res\\bitmaps\\CARD32.bmp"
+IDB_CARD_HEART_7        BITMAP                  "res\\bitmaps\\CARD33.bmp"
+IDB_CARD_HEART_8        BITMAP                  "res\\bitmaps\\CARD34.bmp"
+IDB_CARD_HEART_9        BITMAP                  "res\\bitmaps\\CARD35.bmp"
+IDB_CARD_HEART_10       BITMAP                  "res\\bitmaps\\CARD36.bmp"
+IDB_CARD_HEART_JACK     BITMAP                  "res\\bitmaps\\CARD37.bmp"
+IDB_CARD_HEART_QUEEN    BITMAP                  "res\\bitmaps\\CARD38.bmp"
+IDB_CARD_HEART_KING     BITMAP                  "res\\bitmaps\\CARD39.bmp"
+IDB_CARD_SPADE_ACE      BITMAP                  "res\\bitmaps\\CARD40.bmp"
+IDB_CARD_SPADE_2        BITMAP                  "res\\bitmaps\\CARD41.bmp"
+IDB_CARD_SPADE_3        BITMAP                  "res\\bitmaps\\CARD42.bmp"
+IDB_CARD_SPADE_4        BITMAP                  "res\\bitmaps\\CARD43.bmp"
+IDB_CARD_SPADE_5        BITMAP                  "res\\bitmaps\\CARD44.bmp"
+IDB_CARD_SPADE_6        BITMAP                  "res\\bitmaps\\CARD45.bmp"
+IDB_CARD_SPADE_7        BITMAP                  "res\\bitmaps\\CARD46.bmp"
+IDB_CARD_SPADE_8        BITMAP                  "res\\bitmaps\\CARD47.bmp"
+IDB_CARD_SPADE_9        BITMAP                  "res\\bitmaps\\CARD48.bmp"
+IDB_CARD_SPADE_10       BITMAP                  "res\\bitmaps\\CARD49.bmp"
+IDB_CARD_SPADE_JACK     BITMAP                  "res\\bitmaps\\CARD50.bmp"
+IDB_CARD_SPADE_QUEEN    BITMAP                  "res\\bitmaps\\CARD51.bmp"
+IDB_CARD_SPADE_KING     BITMAP                  "res\\bitmaps\\CARD52.bmp"
+IDB_CARDBACK            BITMAP                  "res\\bitmaps\\CARDBACK.bmp"
+IDB_GAG                 BITMAP                  "res\\bitmaps\\108.bmp"
+IDB_FELT                BITMAP                  "res\\bitmaps\\FELT.bmp"
+IDB_BACK                BITMAP                  "res\\bitmaps\\background.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&Игра"
+    BEGIN
+        MENUITEM "&Новая игра\tF2",             IDMI_NEW_GAME
+        MENUITEM "Начать &заново",              IDMI_RESTART_GAME
+        MENUITEM SEPARATOR
+        MENUITEM "&Отменить\tCtrl+Z",           IDMI_UNDO_TURN
+        MENUITEM "С&дать новый ряд\tД",         IDMI_TAKE_NEW_SERIES
+        MENUITEM "По&казать допустимый ход\tК", IDMI_SHOW_VALID_TURN
+        MENUITEM SEPARATOR
+        MENUITEM "Уровень с&ложности...\tF3",   IDMI_DIFFICUTLY_LEVEL
+        MENUITEM "С&татистика...\tF4",          IDMI_STATICTICS
+        MENUITEM "&Параметры...\tF5",           IDMI_GAME_SETTINGS
+        MENUITEM SEPARATOR
+        MENUITEM "&Сохранить игру\tCtrl+S",     IDMI_SAVE_GAME
+        MENUITEM "Отк&рыть последнюю сохраненную игру\tCtrl+O", IDMI_OPEN_SAVED_GAME
+        MENUITEM SEPARATOR
+        MENUITEM "В&ыход",                      ID_APP_EXIT
+    END
+    MENUITEM "С&дать карты",                IDMI_TAKE_CARDS
+    POPUP "&Справка"
+    BEGIN
+        MENUITEM "&Вызов справки\tF1",          IDMI_INVOKE_HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&О программе...",             IDMI_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    VK_F2,          IDMI_NEW_GAME,          VIRTKEY, NOINVERT
+    "Z",            IDMI_UNDO_TURN,         VIRTKEY, CONTROL, NOINVERT
+    "L",            IDMI_TAKE_NEW_SERIES,   VIRTKEY, NOINVERT
+    "R",            IDMI_SHOW_VALID_TURN,   VIRTKEY, NOINVERT
+    VK_F3,          IDMI_DIFFICUTLY_LEVEL,  VIRTKEY, NOINVERT
+    VK_F4,          IDMI_STATICTICS,        VIRTKEY, NOINVERT
+    VK_F5,          IDMI_GAME_SETTINGS,     VIRTKEY, NOINVERT
+    "S",            IDMI_SAVE_GAME,         VIRTKEY, CONTROL, NOINVERT
+    "O",            IDMI_OPEN_SAVED_GAME,   VIRTKEY, CONTROL, NOINVERT
+    VK_F1,          IDMI_INVOKE_HELP,       VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 255, 185
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Пасьянс ""Паук"" - о программе"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         130,IDC_STATIC,"Static",SS_BITMAP,7,7,239,150
+    DEFPUSHBUTTON   "OK",IDOK,103,164,50,14,WS_GROUP
+END
+
+IDD_DIFFICUTLY_SWITCHER DIALOGEX 0, 0, 194, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Сложность игры"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,45,89,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,113,89,50,14
+    LTEXT           "Выберите уровень сложности.",IDC_STATIC,7,7,105,8
+    CONTROL         "Простая игра: одна масть",IDC_DIFFICUTLY_EASY,"Button",BS_AUTORADIOBUTTON | BS_ICON | WS_GROUP | WS_TABSTOP,59,31,104,10
+    CONTROL         "Средняя игра: две масти",IDC_DIFFICUTLY_MEDIUM,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,59,46,101,10
+    CONTROL         "Сложная игра: четыре масти",IDC_DIFFICUTLY_HEAVY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,59,62,115,10
+    CONTROL         136,IDC_STATIC,"Static",SS_BITMAP,20,29,37,44
+END
+
+IDD_GAME_SETTINGS DIALOGEX 0, 0, 232, 129
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Пасьянс ""Паук"" - параметры"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,61,108,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,120,108,50,14
+    CONTROL         "Использовать анимацию при сдаче карт",IDC_OPTION_USEANIMATION,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,153,10
+    CONTROL         "Автоматически сохранять игру при выходе",IDC_OPTION_AUTOSAVING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,23,165,10
+    CONTROL         "Автоматически открывать предыдущую игру при запуске",IDC_OPTION_AUTOLOADING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,38,216,10
+    CONTROL         "Выдавать запрос перед сохранением игры",IDC_OPTION_CHECKONSAVING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,54,161,10
+    CONTROL         "Выдавать запрос перед открытием сохраненной игры",IDC_OPTION_CHECKONLOADING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,69,201,10
+    CONTROL         "Использовать звуковые эффекты",IDC_OPTION_USESOUND,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,84,131,10
+END
+
+IDD_STATISTICS DIALOGEX 0, 0, 192, 199
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Пасьянс ""Паук"" - статистика"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,39,178,50,14
+    PUSHBUTTON      "Сброс",IDB_RESET,101,178,50,14
+    CONTROL         "",IDC_TAB,"SysTabControl32",0x0,7,7,178,166
+END
+
+IDD_STATISTICS_TAB DIALOGEX 0, 0, 154, 153
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Рекорд",IDC_STATIC,7,7,140,24
+    LTEXT           "Static",IDC_RECORD,77,17,19,8
+    GROUPBOX        "Процентные показатели",IDC_STATIC,7,34,140,52
+    GROUPBOX        "Наибольшее число подряд",IDC_STATIC,7,93,140,53
+    LTEXT           "Побед:",IDC_STATIC,20,47,25,8
+    LTEXT           "Поражений:",IDC_STATIC,20,58,42,8
+    LTEXT           "Доля побед:",IDC_STATIC,20,70,44,8
+    LTEXT           "Побед:",IDC_STATIC,20,106,25,8
+    LTEXT           "Поражений:",IDC_STATIC,20,119,42,8
+    LTEXT           "Сейчас:",IDC_STATIC,20,130,28,8
+    LTEXT           "Static",IDC_WINS_PERCENT,77,47,19,8
+    LTEXT           "Static",IDC_LOSSES_PERCENT,77,58,19,8
+    LTEXT           "Static",IDC_SHAREOFWINS_PERCENT,77,70,19,8
+    LTEXT           "Static",IDC_WINS_MAX,77,108,19,8
+    LTEXT           "Static",IDC_LOSSES_MAX,77,120,19,8
+    LTEXT           "Static",IDC_CURRENT_MAX,77,132,19,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "FakeSpider.exe"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "OriginalFilename", "FakeSpider.exe"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 248
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+
+    IDD_DIFFICUTLY_SWITCHER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 186
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_GAME_SETTINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 225
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 122
+    END
+
+    IDD_STATISTICS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 192
+    END
+
+    IDD_STATISTICS_TAB, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 147
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 146
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+IDSOUND_PASS_NEW_SERIES WAVE                    "res\\sounds\\124.wav"
+IDSOUND_RELEASE_CARD    WAVE                    "res\\sounds\\125.wav"
+IDSOUND_SHOW_VALID_TURN WAVE                    "res\\sounds\\126.wav"
+IDSOUND_NO_VALID_TURN   WAVE                    "res\\sounds\\127.wav"
+IDSOUND_TAKE_CARD       WAVE                    "res\\sounds\\128.wav"
+IDSOUND_YOU_WIN         WAVE                    "res\\sounds\\129.wav"
+IDR_WAVE2               WAVE                    "res\\sounds\\spec_1.wav"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "Пасьянс ""Паук""\n\nFakeSpider\n\n\nFakeSpider.Document\nFakeSpider.Document"
+    IDS_MESSAGE_BEGIN_NEW_GAME "Вы действительно хотите начать новую игру?"
+    IDS_MESSAGE_RESTART_CURRENT_GAME 
+                            "Вы действительно хотите начать текущую игру заново?"
+    IDS_MESSAGE_PASS_NEW_SERIES_IMPOSIBBLE 
+                            "Сдача нового ряда при наличии пустых ячеек невозможна."
+    IDS_MESSAGE_REPLACE_EXISTING_SAVE 
+                            "Сохраненная игра уже существует.  Вы действительно хотите заменить ее на текущую игру?"
+    IDS_MESSAGE_LOAD_SAVED_GAME 
+                            "Вы действительно хотите прервать текущую игру и загрузить ранее сохраненную игру?"
+    IDS_MESSAGE_GAME_SAVE_FAILED "Не удается сохранить игру."
+    IDS_MESSAGE_GAME_LOAD_FAILED "Не удается загрузить игру."
+    IDS_MESSAGE_YOU_WIN     "Вы выиграли!"
+    IDS_MESSAGE_SAVE_GAME   "Сохранить эту игру?"
+    IDS_MESSAGE_RESET_STATISTICS 
+                            "Вы действительно хотите сбросить всю статистику игры?"
+    IDS_LABEL_SCORES        "Счет:"
+    IDS_LABEL_TURNS         "Ходов:"
+    IDS_MESSAGE_TITLE       "Пасьянс ""Паук"""
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Пасьянс ""Паук"""
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this document"
+    ID_FILE_MRU_FILE2       "Open this document"
+    ID_FILE_MRU_FILE3       "Open this document"
+    ID_FILE_MRU_FILE4       "Open this document"
+    ID_FILE_MRU_FILE5       "Open this document"
+    ID_FILE_MRU_FILE6       "Open this document"
+    ID_FILE_MRU_FILE7       "Open this document"
+    ID_FILE_MRU_FILE8       "Open this document"
+    ID_FILE_MRU_FILE9       "Open this document"
+    ID_FILE_MRU_FILE10      "Open this document"
+    ID_FILE_MRU_FILE11      "Open this document"
+    ID_FILE_MRU_FILE12      "Open this document"
+    ID_FILE_MRU_FILE13      "Open this document"
+    ID_FILE_MRU_FILE14      "Open this document"
+    ID_FILE_MRU_FILE15      "Open this document"
+    ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+END
+
+#endif    // русский resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE 25, 1
+#pragma code_page(1251)
+#include "res\FakeSpider.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
