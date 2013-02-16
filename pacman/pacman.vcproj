@@ -246,6 +246,10 @@
 			Name="game logic"
 			>
 			<File
+				RelativePath=".\cell_grid.h"
+				>
+			</File>
+			<File
 				RelativePath=".\collision_checker.cpp"
 				>
 			</File>
