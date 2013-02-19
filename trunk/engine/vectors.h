@@ -12,6 +12,8 @@ namespace Pegas
 		Vector3();
 		Vector3(double x, double y, double z);
 
+		float length();
+		
 		friend Vector3 operator+(const Vector3& a, const Vector3& b);
 		friend Vector3 operator-(const Vector3& a, const Vector3& b);
 		friend Vector3 operator*(double a, const Vector3& b);
@@ -53,6 +55,11 @@ namespace Pegas
 	inline Vector3 operator/(const Vector3& a, double b)
 	{
 		return Vector3((a._x / b), (a._y / b), (a._z / b));
+	}
+
+	inline float Vector3::length()
+	{
+		return sqrt((_x * _x) + (_y * _y) + (_z * _z));
 	}
 }
 
