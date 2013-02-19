@@ -61,6 +61,17 @@ namespace Pegas
 		void pointToCell(CURCOORD x, CURCOORD y, int32& row, int32& col);
 		void cellCoords(int32 row, int32 col, CURCOORD& x, CURCOORD& y);
 
+		CURCOORD getLeft() const { return m_left; }
+		CURCOORD getTop() const { return m_top; }
+		CURCOORD getWidth() const { return m_width; }
+		CURCOORD getHeight() const { return m_height; }
+
+		CURCOORD	getCellWidth() const { return m_cellWidth; }
+		CURCOORD	getCellHeight() const { return m_cellHeight; }
+		
+		int32 getNumRows() const { return m_numRows; }
+		int32 getNumColumns() const { return m_numCols; }
+
 	private:
 		int32 packCoords(int32 row, int32 col);
 		void  extractCoords(int32 packedVal, int32& row, int32& col);
