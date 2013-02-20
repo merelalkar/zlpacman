@@ -14,6 +14,8 @@ namespace Pegas
 		Vector3(float x, float y, float z);
 
 		float length();
+		float dotProduct(const Vector3& other);
+		Vector3& normalize();
 		
 		friend Vector3 operator+(const Vector3& a, const Vector3& b);
 		friend Vector3 operator-(const Vector3& a, const Vector3& b);
@@ -66,6 +68,24 @@ namespace Pegas
 	inline float Vector3::length()
 	{
 		return sqrt((_x * _x) + (_y * _y) + (_z * _z));
+	}
+
+	inline float Vector3::dotProduct(const Vector3& other)
+	{
+		return ((_x * other._x) + (_y * other._y) + (_z * other._z));
+	}
+
+	inline Vector3& Vector3::normalize()
+	{
+		float l = length();
+		if(l != 0)
+		{
+			_x /= l;
+			_y /= l;
+			_z /= l;
+		}
+
+		return *this;
 	}
 }
 
