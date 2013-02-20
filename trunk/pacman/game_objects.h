@@ -5,10 +5,20 @@
 
 namespace Pegas
 {
+	enum Actors
+	{
+		k_actorAll = -1,
+		k_actorPacman = 1,
+		k_actorBlinky,
+		k_actorPinky,
+		k_actorInky,
+		k_actorClyde
+	};
+
 	class Character: public IEventListener
 	{
 	public:
-		Character(TileGrid* tileGrid);
+		Character(TileGrid* tileGrid, int actorId);
 
 		Vector3 getPosition() const { return m_position; }
 		float	getRadius() const { return m_radius; }
@@ -17,21 +27,26 @@ namespace Pegas
 		virtual void update(float deltaTime);
 
 	protected:
+		int		  m_actorId;	
 		TileGrid* m_tileGrid;
 		Vector3	  m_position;
-		Vector3	  m_velosity;
 		float	  m_radius;
 
-		enum Commands
+		enum eMovingDirections
 		{
-			k_commandTurnLeft = 0,
-			k_commandTurnTop,
-			k_commandTurnRight,
-			k_commandTurnBottom
+			k_moveLeft = 0,
+			k_moveTop,
+			k_moveRight,
+			k_moveBottom
 		};
 
-		std::queue<int32> m_commands;
-		int32 m_currentDirection;
+		Vector3 m_directions[4];
+		int		m_currentDirection;
+		float	m_velocity;
+		int		m_turnCommand;
+
+		bool m_isBlocked;
+		bool m_isMoving;
 	};
 
 	class Pacman: public Character 
