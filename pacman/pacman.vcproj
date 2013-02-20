@@ -258,6 +258,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\game_objects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_objects.h"
+				>
+			</File>
+			<File
 				RelativePath=".\gameplay_state.cpp"
 				>
 			</File>
