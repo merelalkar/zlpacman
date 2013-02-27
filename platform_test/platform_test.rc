@@ -15,7 +15,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Russian resources
+// русский resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 #ifdef _WIN32
@@ -116,6 +116,8 @@ END
 IDB_FELT                BITMAP                  "..\\temp\\FELT.bmp"
 IDB_CARDBACK            BITMAP                  "..\\temp\\CARDBACK.bmp"
 IDB_CARDKING            BITMAP                  "..\\platform\\card.bmp"
+IDB_FISH                BITMAP                  "fish.bmp"
+IDB_PINGO               BITMAP                  "resources\\pingo.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -131,6 +133,13 @@ IDR_WAVE6               WAVE                    "resources\\WAVE\\129.wav"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// PNG
+//
+
+IDB_PNG_FISH            PNG                     "angelfish1sheet.png"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -143,7 +152,7 @@ BEGIN
     IDC_PLATFORM_TEST       "PLATFORM_TEST"
 END
 
-#endif    // Russian resources
+#endif    // русский resources
 /////////////////////////////////////////////////////////////////////////////
 
 

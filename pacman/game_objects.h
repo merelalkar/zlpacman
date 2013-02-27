@@ -15,6 +15,15 @@ namespace Pegas
 		k_actorClyde
 	};
 
+	enum CollisionGroups
+	{
+		k_collisionGroupPill = 1,
+		k_collisionGroupSuperPill,
+		k_collisionGroupBonus,
+		k_collisionGroupWall,
+		k_collisionGroupTonnel
+	};
+
 	class Character: public IEventListener
 	{
 	public:
@@ -51,9 +60,19 @@ namespace Pegas
 
 	class Pacman: public Character 
 	{
+	public:
+		virtual void handleEvent(EventPtr evt);
+		virtual void update(float deltaTime);
+
+	private:
+		int32 m_prevRow;
+		int32 m_prevColumn;
 	};
 
 	class Ghost: public Character 
 	{
+	public:
+		virtual void handleEvent(EventPtr evt);
+		virtual void update(float deltaTime);
 	};
 }

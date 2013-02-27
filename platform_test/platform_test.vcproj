@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib winmm.lib"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -173,9 +173,11 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{15E459B8-D29E-4DD2-86E7-607A6594B53A}"
+			RelativePathToProject=".\engine\engine.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{4FED7CDC-62F2-41A0-A078-9506BF819BEC}"
+			RelativePathToProject=".\platform\platform.vcproj"
 		/>
 	</References>
 	<Files>
@@ -265,6 +267,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\angelfish1sheet.png"
+				>
+			</File>
+			<File
 				RelativePath="..\platform\card.bmp"
 				>
 			</File>
@@ -274,6 +280,14 @@
 			</File>
 			<File
 				RelativePath="..\temp\FELT.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\fish.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\pingo.bmp"
 				>
 			</File>
 			<File

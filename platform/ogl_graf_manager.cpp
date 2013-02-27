@@ -197,6 +197,8 @@ void OGLGrafManager::drawSprite(const SpriteParameters& params)
 	{
 		glBindTexture(GL_TEXTURE_2D, pTexture->getTexture());
 	}
+	GLfloat minU = 0;
+	GLfloat minV = 0;
 	GLfloat maxU = pTexture->getMaxUCoord();
 	GLfloat maxV = pTexture->getMaxVCoord();
 	
@@ -205,18 +207,27 @@ void OGLGrafManager::drawSprite(const SpriteParameters& params)
 	GLint right = params._left + params._width;
 	GLint bottom = params._top + params._height;
 
-	if((params._flags & k_repeatTextureAlongX) == k_repeatTextureAlongX)
-		maxU = (params._width * 1.0) / pTexture->getImageWidth();
+	if((params._flags & k_customTextureCoords) == k_customTextureCoords)
+	{
+		minU = params._minU;
+		minV = params._minV;
+		maxU = params._maxU;
+		maxV = params._maxV;
+	}else
+	{
+		if((params._flags & k_repeatTextureAlongX) == k_repeatTextureAlongX)
+			maxU = (params._width * 1.0) / pTexture->getImageWidth();
 
-	if((params._flags & k_repeatTextureAlongY) == k_repeatTextureAlongY)
-		maxV = (params._height * 1.0) / pTexture->getImageHeight();
+		if((params._flags & k_repeatTextureAlongY) == k_repeatTextureAlongY)
+			maxV = (params._height * 1.0) / pTexture->getImageHeight();
+	}
 
 	glBegin(GL_QUADS);
 	
-	glTexCoord2f(0.0f, maxV); glVertex2i(left, top);
+	glTexCoord2f(minU, maxV); glVertex2i(left, top);
 	glTexCoord2f(maxU, maxV); glVertex2i(right, top);
-	glTexCoord2f(maxU, 0.0f); glVertex2i(right, bottom);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(left, bottom);
+	glTexCoord2f(maxU, minV); glVertex2i(right, bottom);
+	glTexCoord2f(minU, minV); glVertex2i(left, bottom);
 
 	glEnd();
 

@@ -7,8 +7,7 @@
 class TestUnit: public Pegas::IDrawable, public Pegas::Singleton<TestUnit>
 {
 public:
-	TestUnit(HINSTANCE hInstance): 
-	  Singleton(*this), m_hInstance(hInstance), m_isActive(false) {};
+	TestUnit(HINSTANCE hInstance);
 	virtual ~TestUnit() {};
 	
 	void init(HWND hWnd);
@@ -30,12 +29,20 @@ private:
 	HWND					m_hWnd;
 	bool                    m_isActive;
 
+	Pegas::WindowsOSUtils			m_OSUtils;
+
 	Pegas::OGLGrafManager			m_grafManager;
 	Pegas::WinMMSoundManager        m_soundPlayer;
 	Pegas::StringResourceManager	m_stringManager;
 	Pegas::TextureResourceManager	m_textureManager;
 	Pegas::FontResourceManager		m_fontManager;
 	Pegas::SoundResourceManager     m_soundManager;
+
+	Pegas::ProcessManager			m_processManager;
+	Pegas::MILLISECONDS				m_lastTime;
+
+	Pegas::SpriteParameters* m_animSprite;
+	Pegas::SpriteParameters* m_animSprite2;
 };
 
 #endif

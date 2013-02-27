@@ -4,6 +4,9 @@
 
 using namespace Pegas;
 
+/*************************************************************************************************************
+	Character
+**************************************************************************************************************/
 void Character::handleEvent(EventPtr evt)
 {
 	if(evt->getType() == Event_ChangeDirection::k_type)
@@ -172,4 +175,40 @@ void Character::update(float deltaTime)
 			}
 		}
 	}//if(m_turnCommand != -1)
+}
+
+/******************************************************************************************************************************
+	Pacman
+*******************************************************************************************************************************/
+void Pacman::handleEvent(EventPtr evt)
+{
+	
+	Character::handleEvent(evt);
+}
+
+void Pacman::update(float deltaTime)
+{
+	Character::update(deltaTime);
+
+	if(m_isMoving)
+	{
+		int32 row, column;
+		m_tileGrid->pointToCell((CURCOORD)m_position._x, (CURCOORD)m_position._y, row, column);
+		if(row != m_prevRow && column != m_prevColumn)
+		{
+			m_prevRow = row;
+			m_prevColumn = column;
+
+			int32 collisionGroup = 0;
+			m_tileGrid->isObstacle(row, column, &collisionGroup);
+
+			if(collisionGroup == k_collisionGroupPill 
+				|| collisionGroup == k_collisionGroupSuperPill 
+				|| collisionGroup == k_collisionGroupBonus)
+			{
+				EventPtr newEvent(new Event_PacmanSwallowedPill(collisionGroup));
+				TheEventMgr.pushEventToQueye(newEvent);
+			}
+		}//if(row != m_prevRow && column != m_prevColumn)
+	}//if(m_isMoving)
 }

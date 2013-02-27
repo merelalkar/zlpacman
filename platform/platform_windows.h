@@ -17,5 +17,6 @@
 #include "winmm_sound_manager.h"
 #include "ogl_graf_manager.h"
 #include "file_stream.h"
+#include "sprite_animation.h"
 
 #endif

@@ -7,6 +7,8 @@ using namespace Pegas;
 const RESOURCEID k_textureCardBack = 1;
 const RESOURCEID k_textureCardKing = 2;
 const RESOURCEID k_textureFelt = 3;
+const RESOURCEID k_textureFish = 4;
+const RESOURCEID k_texturePingo = 5;
 
 const RESOURCEID k_stringYouWinThePrize = 1;
 const RESOURCEID k_stringScores = 2;
@@ -23,6 +25,16 @@ const RESOURCEID k_soundNoValidTurn = 4;
 const RESOURCEID k_soundTakeCard = 5;
 const RESOURCEID k_soundYouWin = 6;
 
+TestUnit::TestUnit(HINSTANCE hInstance): 
+	  Singleton(*this)  
+{
+	m_hInstance = hInstance;
+	m_isActive =  false;
+	m_animSprite = 0;
+	m_animSprite2 = 0;
+	m_lastTime = 0;
+}
+
 
 void TestUnit::init(HWND hWnd)
 {
@@ -31,12 +43,32 @@ void TestUnit::init(HWND hWnd)
 
 	m_grafManager.initialize(hWnd);
 	m_grafManager.addLayout(this);
+
+	m_lastTime = m_OSUtils.getCurrentTime();
+
+	SpriteAnimation* process = new SpriteAnimation(k_textureFish, 2, 2);
+	process->setFPS(8);
+	m_animSprite = process->getSprite();
+	m_processManager.attachProcess(ProcessPtr(process));
+
+	process = new SpriteAnimation(k_texturePingo, 10, 8);
+	process->setNumFrames(0, 10);
+	process->setFPS(8);
+
+	m_animSprite2 = process->getSprite();
+	m_processManager.attachProcess(ProcessPtr(process));
+
+	m_isActive = true;
 }
 
 void TestUnit::run()
 {
 	if(!m_isActive)
 		return;
+
+	MILLISECONDS currentTime = m_OSUtils.getCurrentTime();
+	m_processManager.updateProcesses(currentTime - m_lastTime);
+	m_lastTime = currentTime;
 
 	m_grafManager.render();
 }
@@ -84,6 +116,26 @@ void TestUnit::draw(GrafManager& context)
 
 	context.drawSprite(sprite);
 
+	if(m_animSprite)
+	{
+		m_animSprite->_left = 210;
+		m_animSprite->_top = 130;
+		m_animSprite->_width = 128;
+		m_animSprite->_height = 128;
+		
+		context.drawSprite(*m_animSprite);
+	}
+
+	if(m_animSprite2)
+	{
+		m_animSprite2->_left = 410;
+		m_animSprite2->_top = 130;
+		m_animSprite2->_width = 128;
+		m_animSprite2->_height = 128;
+		
+		context.drawSprite(*m_animSprite2);
+	}
+
 	
 	context.drawRectangle(10, 10, 100, 100, 0xffff0000, 0xff0000ff);
 	context.drawEllipse(110, 10, 100, 100, 0xff000000, 0xff00ff00);
@@ -118,6 +170,8 @@ void TestUnit::registerResources()
 	m_textureManager.registerResource(k_textureCardBack, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_CARDBACK));
 	m_textureManager.registerResource(k_textureCardKing, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_CARDKING));
 	m_textureManager.registerResource(k_textureFelt, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_FELT));
+	m_textureManager.registerResource(k_textureFish, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_FISH));
+	m_textureManager.registerResource(k_texturePingo, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PINGO));
 
 	m_fontManager.registerResource(k_fontBig, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 72));
 	m_fontManager.registerResource(k_fontSmall, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 12));

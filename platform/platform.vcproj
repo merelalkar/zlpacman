@@ -156,6 +156,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\sprite_animation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\windows_os_utils.h"
 				>
 			</File>
@@ -181,6 +185,10 @@
 			</File>
 			<File
 				RelativePath=".\platform_windows.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sprite_animation.cpp"
 				>
 			</File>
 			<File
