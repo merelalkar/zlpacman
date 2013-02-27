@@ -11,7 +11,8 @@ namespace Pegas
         k_stretchTextureAlongY = 0x00000002,
 		k_repeatTextureAlongX = 0x00000004,
 		k_repeatTextureAlongY = 0x00000008,
-	    k_invertTextureColors = 0x00000010
+	    k_invertTextureColors = 0x00000010,
+		k_customTextureCoords = 0x00000020
 	};
 
 	struct SpriteParameters
@@ -22,6 +23,11 @@ namespace Pegas
 		CURCOORD	_height;
 		RESOURCEID	_texture;
 		FLAGSET     _flags;
+
+		float		_minU;
+		float		_minV;
+		float		_maxU;
+		float		_maxV;
 	};
 
 	struct TextParameters
