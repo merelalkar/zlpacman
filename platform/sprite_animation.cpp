@@ -49,6 +49,7 @@ void SpriteAnimation::update(MILLISECONDS deltaTime)
 		m_sprite->_maxU = (*m_currentFrame)._u1;
 		m_sprite->_minV = (*m_currentFrame)._v0;
 		m_sprite->_maxV = (*m_currentFrame)._v1;
+
 		m_sprite->_flags = k_customTextureCoords;
 	}
 }
@@ -79,12 +80,18 @@ void SpriteAnimation::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 			int32 index = (j * m_textureSheetWidth) + i;
 			if(index < m_startFrame) 
 				continue;
+			if(index >= (m_startFrame + m_numFrames))
+				break;
 
 			Frame frame;
 			frame._u0 = _pitchU * i;
 			frame._u1 = frame._u0 + _pitchU;
-			frame._v0 = _pitchV * j;
+			frame._v0 = pTexture->getMaxVCoord() - (_pitchV * (j + 1));
 			frame._v1 = frame._v0 + _pitchV;
+
+			frame._index = num;
+			frame._i = i;
+			frame._j = j;
 
 			m_frames.push_back(frame);
 			num++;
