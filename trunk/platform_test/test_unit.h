@@ -41,6 +41,7 @@ private:
 	Pegas::ProcessManager			m_processManager;
 	Pegas::MILLISECONDS				m_lastTime;
 
+	Pegas::SpriteAnimation*  m_pingo;
 	Pegas::SpriteParameters* m_animSprite;
 	Pegas::SpriteParameters* m_animSprite2;
 };

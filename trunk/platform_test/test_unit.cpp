@@ -47,16 +47,16 @@ void TestUnit::init(HWND hWnd)
 	m_lastTime = m_OSUtils.getCurrentTime();
 
 	SpriteAnimation* process = new SpriteAnimation(k_textureFish, 2, 2);
-	process->setFPS(8);
+	process->setFPS(16);
 	m_animSprite = process->getSprite();
 	m_processManager.attachProcess(ProcessPtr(process));
 
-	process = new SpriteAnimation(k_texturePingo, 10, 8);
-	process->setNumFrames(0, 10);
-	process->setFPS(8);
+	m_pingo = new SpriteAnimation(k_texturePingo, 10, 8);
+	m_pingo->setNumFrames(0, 10);
+	m_pingo->setFPS(32);
 
-	m_animSprite2 = process->getSprite();
-	m_processManager.attachProcess(ProcessPtr(process));
+	m_animSprite2 = m_pingo->getSprite();
+	m_processManager.attachProcess(ProcessPtr(m_pingo));
 
 	m_isActive = true;
 }
@@ -88,6 +88,7 @@ void TestUnit::resize(int width, int height)
 
 void TestUnit::draw(GrafManager& context)
 {
+	/*
 	Pegas::SpriteParameters sprite;
 	sprite._left = 0;
 	sprite._top = 0;
@@ -114,7 +115,11 @@ void TestUnit::draw(GrafManager& context)
 	sprite._texture = k_textureCardKing;
 	sprite._flags = k_invertTextureColors;
 
-	context.drawSprite(sprite);
+	context.drawSprite(sprite);*/
+	
+	context.drawRectangle(10, 10, 100, 100, 0xffff0000, 0xff0000ff);
+	context.drawEllipse(110, 10, 100, 100, 0xff000000, 0xff00ff00);
+	context.drawLine(10, 120, 610, 120, 0xff0000ff);
 
 	if(m_animSprite)
 	{
@@ -124,6 +129,8 @@ void TestUnit::draw(GrafManager& context)
 		m_animSprite->_height = 128;
 		
 		context.drawSprite(*m_animSprite);
+
+		context.drawRectangle(210, 130, 128, 128, 0xffff0000, 0);
 	}
 
 	if(m_animSprite2)
@@ -134,13 +141,21 @@ void TestUnit::draw(GrafManager& context)
 		m_animSprite2->_height = 128;
 		
 		context.drawSprite(*m_animSprite2);
-	}
+		context.drawRectangle(410, 130, 128, 128, 0xffff0000, 0);
 
-	
-	context.drawRectangle(10, 10, 100, 100, 0xffff0000, 0xff0000ff);
-	context.drawEllipse(110, 10, 100, 100, 0xff000000, 0xff00ff00);
-	context.drawLine(10, 120, 210, 120, 0xff0000ff);
-	
+		SpriteAnimation::Frame& frame = m_pingo->getCurrentFrame();
+		tchar buffer[64];
+		wsprintf(buffer, _text("index = %d, i = %d, j = %d"), frame._index, frame._i, frame._j);
+
+		TextParameters tp;
+		tp._left = 410;
+		tp._top = 270;
+		tp._color = 0xffffffff;
+		tp._font = k_fontSmall;
+
+		context.drawText(buffer, tp);
+	}
+	/*
 	CURCOORD width, height;
 	context.getTextExtent(k_stringYouWinThePrize, k_fontBig, width, height);
 	
@@ -150,7 +165,7 @@ void TestUnit::draw(GrafManager& context)
 	tp._color = 0xffffffff;
 	tp._font = k_fontBig;
 
-	context.drawText(k_stringYouWinThePrize, tp);
+	context.drawText(k_stringYouWinThePrize, tp);*/
 	
 }
 
