@@ -1,7 +1,7 @@
 #include "platform_windows.h"
 using namespace Pegas;
 
-SpriteAnimation::SpriteAnimation(RESOURCEID texture, int32 textureSheetWidth, int32 textureSheetHeight)
+SpriteAnimation::SpriteAnimation(RESOURCEID texture, int32 textureSheetWidth, int32 textureSheetHeight, int32 flags)
 {
 	m_sprite = new SpriteParameters();
 	m_sprite->_texture = texture;
@@ -13,6 +13,16 @@ SpriteAnimation::SpriteAnimation(RESOURCEID texture, int32 textureSheetWidth, in
 	m_fps =  32;
 	m_frameLifeTime = (MILLISECONDS)(1000.0 / m_fps);
 	m_ellapsedTime = 0;
+	m_flags = flags;
+}
+
+SpriteAnimation::~SpriteAnimation()
+{
+	if(m_sprite)
+	{
+		delete m_sprite;
+		m_sprite = 0;
+	}
 }
 
 void SpriteAnimation::setNumFrames(int32 startFrame, int32 numFrames)
@@ -27,7 +37,21 @@ void SpriteAnimation::setFPS(int32 fps)
 	m_frameLifeTime = (MILLISECONDS)(1000.0 / m_fps);
 	m_ellapsedTime = 0;
 }
-		
+
+void SpriteAnimation::setFlags(int32 flags)
+{
+	m_flags = flags;
+}
+
+SpriteAnimation::Frame& SpriteAnimation::getCurrentFrame()
+{
+	if(m_currentFrame != m_frames.end())
+	{
+		return (*m_currentFrame);
+	}
+
+	return m_frames.back();
+}
 		
 void SpriteAnimation::update(MILLISECONDS deltaTime)
 {
@@ -39,7 +63,14 @@ void SpriteAnimation::update(MILLISECONDS deltaTime)
 		++m_currentFrame;
 		if(m_currentFrame == m_frames.end())
 		{
-			m_currentFrame = m_frames.begin();
+			if(m_flags & k_modeLooped)
+			{
+				m_currentFrame = m_frames.begin();
+			}else
+			{
+				terminate();
+				return;
+			}
 		}
 	}
 
@@ -51,15 +82,6 @@ void SpriteAnimation::update(MILLISECONDS deltaTime)
 		m_sprite->_maxV = (*m_currentFrame)._v1;
 
 		m_sprite->_flags = k_customTextureCoords;
-	}
-}
-
-void SpriteAnimation::terminate()
-{
-	if(m_sprite)
-	{
-		delete m_sprite;
-		m_sprite = 0;
 	}
 }
 

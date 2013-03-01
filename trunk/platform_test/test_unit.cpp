@@ -31,7 +31,6 @@ TestUnit::TestUnit(HINSTANCE hInstance):
 	m_hInstance = hInstance;
 	m_isActive =  false;
 	m_animSprite = 0;
-	m_animSprite2 = 0;
 	m_lastTime = 0;
 }
 
@@ -52,11 +51,10 @@ void TestUnit::init(HWND hWnd)
 	m_processManager.attachProcess(ProcessPtr(process));
 
 	m_pingo = new SpriteAnimation(k_texturePingo, 10, 8);
-	m_pingo->setNumFrames(0, 10);
-	m_pingo->setFPS(32);
+	((SpriteAnimation*)m_pingo.get())->setFPS(32);
+	((SpriteAnimation*)m_pingo.get())->setFlags(0);
 
-	m_animSprite2 = m_pingo->getSprite();
-	m_processManager.attachProcess(ProcessPtr(m_pingo));
+	m_processManager.attachProcess(m_pingo);
 
 	m_isActive = true;
 }
@@ -133,28 +131,31 @@ void TestUnit::draw(GrafManager& context)
 		context.drawRectangle(210, 130, 128, 128, 0xffff0000, 0);
 	}
 
-	if(m_animSprite2)
+	if(m_pingo->getStatus() != k_processStatusKilled)
 	{
-		m_animSprite2->_left = 410;
-		m_animSprite2->_top = 130;
-		m_animSprite2->_width = 128;
-		m_animSprite2->_height = 128;
-		
-		context.drawSprite(*m_animSprite2);
+		SpriteParameters* sprite = ((SpriteAnimation*)m_pingo.get())->getSprite();
+
+		sprite->_left = 410;
+		sprite->_top = 130;
+		sprite->_width = 128;
+		sprite->_height = 128;
+
+		context.drawSprite(*sprite);
 		context.drawRectangle(410, 130, 128, 128, 0xffff0000, 0);
-
-		SpriteAnimation::Frame& frame = m_pingo->getCurrentFrame();
-		tchar buffer[64];
-		wsprintf(buffer, _text("index = %d, i = %d, j = %d"), frame._index, frame._i, frame._j);
-
-		TextParameters tp;
-		tp._left = 410;
-		tp._top = 270;
-		tp._color = 0xffffffff;
-		tp._font = k_fontSmall;
-
-		context.drawText(buffer, tp);
 	}
+		
+	SpriteAnimation::Frame& frame = ((SpriteAnimation*)m_pingo.get())->getCurrentFrame();
+	tchar buffer[64];
+	wsprintf(buffer, _text("index = %d, i = %d, j = %d"), frame._index, frame._i, frame._j);
+
+	TextParameters tp;
+	tp._left = 410;
+	tp._top = 270;
+	tp._color = 0xffffffff;
+	tp._font = k_fontSmall;
+
+	context.drawText(buffer, tp);
+	
 	/*
 	CURCOORD width, height;
 	context.getTextExtent(k_stringYouWinThePrize, k_fontBig, width, height);
