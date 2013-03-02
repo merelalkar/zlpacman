@@ -187,7 +187,7 @@ void Pacman::handleEvent(EventPtr evt)
 {
 	if(evt->getType() == Event_CharacterStopped::k_type)
 	{
-		Event_CharacterStopped* pEvent = evt->cats<Event_CharacterStopped>();
+		Event_CharacterStopped* pEvent = evt->cast<Event_CharacterStopped>();
 		if(pEvent->_actorId == m_actorId)
 		{
 			m_animations[k_animationRunning]->suspend();
@@ -196,7 +196,7 @@ void Pacman::handleEvent(EventPtr evt)
 
 	if(evt->getType() == Event_CharacterMoveOn::k_type)
 	{
-		Event_CharacterMoveOn* pEvent = evt->cats<Event_CharacterMoveOn>();
+		Event_CharacterMoveOn* pEvent = evt->cast<Event_CharacterMoveOn>();
 		if(pEvent->_actorId == m_actorId)
 		{
 			m_currentAnimation = k_animationRunning;

@@ -31,7 +31,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	MSG msg;
 	HACCEL hAccelTable;
 
-	GameApplication app(hInstance);
+	Pegas::GameApplication app(hInstance);
 
 	// »нициализаци€ глобальных строк
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -120,8 +120,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    hInst = hInstance; // —охранить дескриптор экземпл€ра в глобальной переменной
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, 0, 480, 800, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
@@ -151,7 +151,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	RECT rect;
 
-	GameApplication& app = GameApplication::getInstance();
+	Pegas::GameApplication& app = Pegas::GameApplication::getInstance();
 
 	switch (message)
 	{

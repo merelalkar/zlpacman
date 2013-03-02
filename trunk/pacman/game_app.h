@@ -1,49 +1,69 @@
-
-#ifndef TEST_UNIT_H
-#define TEST_UNIT_H
-
+#pragma once
 #include "platform_windows.h"
 
-class GameApplication: public Pegas::Singleton<GameApplication>/*, public Pegas::IPlatformContext*/
+namespace Pegas
 {
-public:
-	GameApplication(HINSTANCE hInstance): 
-	  Singleton(*this), m_hInstance(hInstance), m_isActive(false) {};
-	virtual ~GameApplication() {};
-	
-	void init(HWND hWnd);
-	void run();
-	void cleanup();
-	void resize(int width, int height);
-	void activate(bool bActive) { m_isActive = bActive; };
 
-	virtual void draw(Pegas::GrafManager& context);
+	class GameApplication: public Singleton<GameApplication>, public IPlatformContext
+	{
+	public:
+		GameApplication(HINSTANCE hInstance): 
+		  Singleton(*this), m_hInstance(hInstance), m_isActive(false) {};
+		virtual ~GameApplication() {};
+		
+		void init(HWND hWnd);
+		void run();
+		void cleanup();
+		void resize(int width, int height);
+		void activate(bool bActive) { m_isActive = bActive; };		
 
-	//TODO: implement functions
-	/*
-	void addKeyboardController(IKeyboardController* controller);
-	void removeKeyboardController(IKeyboardController* controller);
-	void addMouseController(IMouseController* controller);
-	void removeMouseController(IMouseController* controller);*/
+	public:
 
-private:
-	GameApplication(const GameApplication& src);
-	GameApplication& operator=(const GameApplication& src);
+		virtual void addKeyboardController(IKeyboardController* controller);
+		virtual void removeKeyboardController(IKeyboardController* controller);
+		virtual void addMouseController(IMouseController* controller);
+		virtual void removeMouseController(IMouseController* controller);
+		
+		virtual ProcessHandle attachProcess(ProcessPtr process);
 
-	void registerResources();
-	void playSound();
+		virtual void addGameState(GameStatePtr state);
+		virtual void removeState(GameStateID id);
+		virtual void changeState(GameStateID newStateId);
+		virtual void forwardToState(GameStateID newStateId);
+		virtual void backwardToPreviousState();
 
-	HINSTANCE				m_hInstance;
-	HWND					m_hWnd;
-	bool                    m_isActive;
+	private:
+		std::set<IKeyboardController*> m_keyboardControllers;
+		std::set<IMouseController*>	m_mouseControllers;
 
-	Pegas::OGLGrafManager			m_grafManager;
-	Pegas::WinMMSoundManager        m_soundPlayer;
-	Pegas::StringResourceManager	m_stringManager;
-	Pegas::TextureResourceManager	m_textureManager;
-	Pegas::FontResourceManager		m_fontManager;
-	Pegas::SoundResourceManager     m_soundManager;
-	Pegas::EventManager				m_eventManager;
-};
+		std::map<GameStateID, GameStatePtr> m_statesMap;
+		std::stack<GameStatePtr> m_statesStack;	
 
-#endif
+	private:
+		GameApplication(const GameApplication& src);
+		GameApplication& operator=(const GameApplication& src);
+
+		void registerResources();
+		
+		HINSTANCE				m_hInstance;
+		HWND					m_hWnd;
+		bool                    m_isActive;
+		bool					m_exitApplication;
+
+		//graphics and sound
+		OGLGrafManager			m_grafManager;
+		WinMMSoundManager        m_soundPlayer;
+
+		//resources
+		StringResourceManager	m_stringManager;
+		TextureResourceManager	m_textureManager;
+		FontResourceManager		m_fontManager;
+		SoundResourceManager    m_soundManager;
+
+		//game loop
+		EventManager			m_eventManager;
+		ProcessManager			m_processManager;
+	};
+
+}
+

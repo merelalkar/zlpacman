@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib opengl32.lib glu32.lib engine.lib platform.lib"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\platform\Debug;..\engine\Debug"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -178,6 +178,14 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\bitmap1.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\bitmap2.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\pacman.ico"
 				>
 			</File>
@@ -186,7 +194,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\media\pill_tile.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\small.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\media\super_pill_tile.bmp"
 				>
 			</File>
 		</Filter>
@@ -199,6 +215,10 @@
 			</File>
 			<File
 				RelativePath=".\game_app.h"
+				>
+			</File>
+			<File
+				RelativePath=".\game_resources.h"
 				>
 			</File>
 			<File
