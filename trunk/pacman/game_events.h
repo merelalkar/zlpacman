@@ -13,7 +13,9 @@ namespace Pegas
 		k_eventCharacterMoveOn,
 		k_eventEnableCharacterControl,
 		k_eventDisableCharacterControl,
-		k_eventPacmanSwallowedPill
+		k_eventPacmanSwallowedPill,
+		k_eventPacmanDeath,
+		k_eventPacmanDeathComplete
 	};
 
 	struct Event_ChangeDirection: public Event
@@ -106,5 +108,23 @@ namespace Pegas
 		static const EventType k_type = k_eventPacmanSwallowedPill;
 
 		int _pill;
+	};
+
+	struct Event_PacmanDeath: public Event
+	{
+	public:
+		Event_PacmanDeath()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventPacmanDeath;		
+	};
+
+	struct Event_PacmanDeathComplete: public Event
+	{
+	public:
+		Event_PacmanDeathComplete()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventPacmanDeathComplete;		
 	};
 }

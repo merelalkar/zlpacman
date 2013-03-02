@@ -63,10 +63,22 @@ namespace Pegas
 	public:
 		virtual void handleEvent(EventPtr evt);
 		virtual void update(float deltaTime);
+		virtual void draw();
 
 	private:
 		int32 m_prevRow;
 		int32 m_prevColumn;
+
+		enum Animation
+		{
+			k_animationRunning = 0,
+			k_animationDeath,
+			k_animationTotal
+		};
+
+		IPlatformContext* m_platform;
+		ProcessPtr	m_animations[k_animationTotal];
+		int32		m_currentAnimation;
 	};
 
 	class Ghost: public Character 
