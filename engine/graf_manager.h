@@ -7,16 +7,24 @@ namespace Pegas
 {
 	enum SpiteDrawingFlags
 	{
-		k_stretchTextureAlongX = 0x00000001,
-        k_stretchTextureAlongY = 0x00000002,
-		k_repeatTextureAlongX = 0x00000004,
-		k_repeatTextureAlongY = 0x00000008,
-	    k_invertTextureColors = 0x00000010,
-		k_customTextureCoords = 0x00000020
+		k_stretchTextureAlongX = 1,
+        k_stretchTextureAlongY = 2,
+		k_repeatTextureAlongX = 4,
+		k_repeatTextureAlongY = 8,
+	    k_invertTextureColors = 16,
+		k_customTextureCoords = 32,
+		k_flipHorizontal = 64,
+		k_flipVertical = 128
 	};
 
 	struct SpriteParameters
 	{
+		SpriteParameters()
+		{
+			_flags = 0;
+			_angle = 0.0f;			
+		}
+
 		CURCOORD	_left;
 		CURCOORD	_top;
 		CURCOORD	_width;
@@ -24,6 +32,7 @@ namespace Pegas
 		RESOURCEID	_texture;
 		FLAGSET     _flags;
 
+		float		_angle;
 		float		_minU;
 		float		_minV;
 		float		_maxU;

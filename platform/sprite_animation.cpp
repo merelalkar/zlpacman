@@ -81,7 +81,7 @@ void SpriteAnimation::update(MILLISECONDS deltaTime)
 		m_sprite->_minV = (*m_currentFrame)._v0;
 		m_sprite->_maxV = (*m_currentFrame)._v1;
 
-		m_sprite->_flags = k_customTextureCoords;
+		m_sprite->_flags |= k_customTextureCoords;
 	}
 }
 

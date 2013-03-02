@@ -201,11 +201,11 @@ void OGLGrafManager::drawSprite(const SpriteParameters& params)
 	GLfloat minV = 0;
 	GLfloat maxU = pTexture->getMaxUCoord();
 	GLfloat maxV = pTexture->getMaxVCoord();
-	
+	/*
 	GLint left = params._left;
 	GLint top = params._top;
 	GLint right = params._left + params._width;
-	GLint bottom = params._top + params._height;
+	GLint bottom = params._top + params._height;*/
 
 	if((params._flags & k_customTextureCoords) == k_customTextureCoords)
 	{
@@ -222,14 +222,37 @@ void OGLGrafManager::drawSprite(const SpriteParameters& params)
 			maxV = (params._height * 1.0) / pTexture->getImageHeight();
 	}
 
+	if(params._flags & k_flipHorizontal)
+	{
+		std::swap(minU, maxU);
+	}
+
+	if(params._flags &	k_flipVertical)
+	{
+		std::swap(minV, maxV);
+	}
+
+	glPushMatrix();
+	glTranslatef((GLfloat)(params._left + (params._width * 0.5f)), 
+		(GLfloat)(params._top + (params._height * 0.5f)), 0.0f);
+	glRotatef(params._angle, 0.0f, 0.0f, 1.0f);
+	glScalef((GLfloat)params._width, (GLfloat)params._height, 1.0f);
+
 	glBegin(GL_QUADS);
-	
+	/*
 	glTexCoord2f(minU, maxV); glVertex2i(left, top);
 	glTexCoord2f(maxU, maxV); glVertex2i(right, top);
 	glTexCoord2f(maxU, minV); glVertex2i(right, bottom);
-	glTexCoord2f(minU, minV); glVertex2i(left, bottom);
+	glTexCoord2f(minU, minV); glVertex2i(left, bottom);*/
+
+	glTexCoord2f(minU, maxV); glVertex2f(-0.5f, -0.5f);
+	glTexCoord2f(maxU, maxV); glVertex2f(0.5f, -0.5f);
+	glTexCoord2f(maxU, minV); glVertex2f(0.5f, 0.5f);
+	glTexCoord2f(minU, minV); glVertex2f(-0.5f, 0.5f);
 
 	glEnd();
+
+	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
 }

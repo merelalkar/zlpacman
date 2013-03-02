@@ -51,8 +51,9 @@ void TestUnit::init(HWND hWnd)
 	m_processManager.attachProcess(ProcessPtr(process));
 
 	m_pingo = new SpriteAnimation(k_texturePingo, 10, 8);
-	((SpriteAnimation*)m_pingo.get())->setFPS(32);
-	((SpriteAnimation*)m_pingo.get())->setFlags(0);
+	((SpriteAnimation*)m_pingo.get())->setNumFrames(0, 10);
+	((SpriteAnimation*)m_pingo.get())->setFPS(16);
+	//((SpriteAnimation*)m_pingo.get())->setFlags(0);
 
 	m_processManager.attachProcess(m_pingo);
 
@@ -139,6 +140,9 @@ void TestUnit::draw(GrafManager& context)
 		sprite->_top = 130;
 		sprite->_width = 128;
 		sprite->_height = 128;
+		//sprite->_flags |= k_flipVertical;
+		sprite->_angle = -90.0f;
+		
 
 		context.drawSprite(*sprite);
 		context.drawRectangle(410, 130, 128, 128, 0xffff0000, 0);

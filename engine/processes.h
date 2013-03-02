@@ -1,12 +1,11 @@
 #pragma once
 
 #include "smart_pointer.h"
+#include "interfaces.h"
 
 
 namespace Pegas
 {
-		class Process;
-
 		enum ProcessStatus
 		{
 			k_processStatusNotStarted, //процесс только что создан, и будет запущен в следующем цикле
@@ -14,10 +13,7 @@ namespace Pegas
 			k_processStatusRunning, //процесс выполняеться
 			k_processStatusKilled, //процесс завершил работу и будет удален в следующем цикле
 			k_processStatusUnknown //состояние процесса какого-то хера установить не удаеться, возможно его просто нет
-		};
-
-		typedef int ProcessHandle;
-		typedef SmartPointer<Process> ProcessPtr;
+		};		
 
 		class ProcessManager
 		{

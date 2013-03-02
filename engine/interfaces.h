@@ -30,6 +30,10 @@ namespace Pegas
 
 		typedef IEventListener* EventListenerPtr;
 
+		class Process;
+		typedef int ProcessHandle;
+		typedef SmartPointer<Process> ProcessPtr;
+
 
 		class IUpdate
 		{
@@ -234,12 +238,17 @@ namespace Pegas
 		/***********************************************************************************************************
 			IPlatformContext;
 		************************************************************************************************************/
+		/*class Process;
+		typedef int ProcessHandle;
+		typedef SmartPointer<Process> ProcessPtr;*/
+
 		class IPlatformContext
 		{
 			virtual void addKeyboardController(IKeyboardController* controller) = 0;
 			virtual void removeKeyboardController(IKeyboardController* controller) = 0;
 			virtual void addMouseController(IMouseController* controller) = 0;
 			virtual void removeMouseController(IMouseController* controller) = 0;
+			virtual ProcessHandle attachProcess(ProcessPtr process) = 0;
 		};
 
 

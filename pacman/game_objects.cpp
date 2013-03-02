@@ -2,6 +2,9 @@
 #include "game_objects.h"
 #include "game_events.h"
 
+//Sprite animation class
+#include "platform_windows.h"
+
 using namespace Pegas;
 
 /*************************************************************************************************************
@@ -182,7 +185,31 @@ void Character::update(float deltaTime)
 *******************************************************************************************************************************/
 void Pacman::handleEvent(EventPtr evt)
 {
-	
+	if(evt->getType() == Event_CharacterStopped::k_type)
+	{
+		Event_CharacterStopped* pEvent = evt->cats<Event_CharacterStopped>();
+		if(pEvent->_actorId == m_actorId)
+		{
+			m_animations[k_animationRunning]->suspend();
+		}
+	}
+
+	if(evt->getType() == Event_CharacterMoveOn::k_type)
+	{
+		Event_CharacterMoveOn* pEvent = evt->cats<Event_CharacterMoveOn>();
+		if(pEvent->_actorId == m_actorId)
+		{
+			m_currentAnimation = k_animationRunning;
+			m_animations[k_animationRunning]->resume();
+		}
+	}
+
+	if(evt->getType() == Event_PacmanDeath::k_type)
+	{
+		m_currentAnimation = k_animationDeath;
+		m_platform->attachProcess(m_animations[k_animationDeath]);
+	}
+
 	Character::handleEvent(evt);
 }
 
@@ -211,4 +238,37 @@ void Pacman::update(float deltaTime)
 			}
 		}//if(row != m_prevRow && column != m_prevColumn)
 	}//if(m_isMoving)
+}
+
+void Pacman::draw()
+{
+	if(m_currentAnimation < 0 || m_currentAnimation >= k_animationTotal)
+		return;
+
+	if(m_animations[m_currentAnimation]->getStatus() == k_processStatusKilled)
+		return;
+
+	SpriteAnimation* animation = (SpriteAnimation*)m_animations[m_currentAnimation].get();
+	SpriteParameters* sprite =  animation->getSprite();
+
+	sprite->_left = (CURCOORD)(m_position._x - (sprite->_width * 0.5f));
+	sprite->_top =	(CURCOORD)(m_position._y - (sprite->_height * 0.5f));
+		
+	switch(m_currentDirection)
+	{
+	case k_moveLeft:
+		sprite->_angle = 0.0f;
+		break;
+	case k_moveTop:
+		sprite->_angle = -90.0f;
+		break;
+	case k_moveRight:
+		sprite->_angle = 180.0f;
+		break;
+	case k_moveBottom:
+		sprite->_angle = 90.0f;
+		break;
+	};
+
+	GrafManager::getInstance().drawSprite(*sprite);
 }
