@@ -238,25 +238,32 @@ namespace Pegas
 		/***********************************************************************************************************
 			IPlatformContext;
 		************************************************************************************************************/
-		/*class Process;
-		typedef int ProcessHandle;
-		typedef SmartPointer<Process> ProcessPtr;*/
+		typedef int32 GameStateID;
+		
+		class IGameState;
+		typedef SmartPointer<IGameState> GameStatePtr; 
 
 		class IPlatformContext
 		{
+		public:
 			virtual void addKeyboardController(IKeyboardController* controller) = 0;
 			virtual void removeKeyboardController(IKeyboardController* controller) = 0;
 			virtual void addMouseController(IMouseController* controller) = 0;
 			virtual void removeMouseController(IMouseController* controller) = 0;
 			virtual ProcessHandle attachProcess(ProcessPtr process) = 0;
+
+			virtual void addGameState(GameStatePtr state) = 0;
+			virtual void removeState(GameStateID id) = 0;
+			virtual void changeState(GameStateID newStateId) = 0;
+			virtual void forwardToState(GameStateID newStateId) = 0;
+			virtual void backwardToPreviousState() = 0;
 		};
 
 
 		/***********************************************************************************************************
 			IGameState
 		***********************************************************************************************************/
-		typedef int32 GameStateID;
-
+		
 		class IGameState
 		{
 		public:
@@ -273,9 +280,6 @@ namespace Pegas
 		protected:
 			GameStateID	m_id;
 		};
-
-		//typedef SmartPointer<DefaultGameState> GameStatePtr;
-		typedef SmartPointer<IGameState> GameStatePtr;
 
 		/***********************************************************************************************************
 			IScreenLayer
