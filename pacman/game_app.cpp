@@ -78,6 +78,98 @@ void GameApplication::registerResources()
 	m_stringManager.loadAll();*/
 }
 
+void GameApplication::processInput(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	BYTE kbstate[256];
+	GetKeyboardState(kbstate);
+
+	int32 flags = 0;
+	if(kbstate[VK_SHIFT] & 0x80) flags |= k_keyFlagShift;
+	if(kbstate[VK_CONTROL] & 0x80) flags |=	k_keyFlagCtrl;
+	if(kbstate[VK_MENU] & 0x80) flags |= k_keyFlagAlt;
+	if(kbstate[VK_CAPITAL] & 0x1) flags |= k_keyFlagCapsLock;
+	if(kbstate[VK_SCROLL] & 0x1) flags |= k_keyFlagScrollLock;
+	if(kbstate[VK_NUMLOCK] & 0x1) flags |= k_keyFlagNumLock;
+
+	switch(message)
+	{
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+	case WM_CHAR:
+		
+		if(message == WM_KEYDOWN)
+		{
+			flags |= (lParam & 0x40000000) ? k_keyFlagRepeat : 0;
+		}	
+
+		for(std::set<IKeyboardController*>::iterator it = m_keyboardControllers.begin(); it != m_keyboardControllers.end(); ++it)
+		{
+			if(message == WM_KEYDOWN)
+			{
+				(*it)->onKeyDown((KeyCode)wParam, flags);
+			}
+			if(message == WM_KEYUP)
+			{
+				(*it)->onKeyUp((KeyCode)wParam, flags);
+			}
+
+			if(message == WM_CHAR)
+			{
+				(*it)->onChar((tchar)wParam);
+			}
+		}
+		break;
+			
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONDOWN:
+	case WM_MBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_LBUTTONUP:
+	case WM_MBUTTONUP:
+	case WM_LBUTTONDBLCLK:
+	case WM_RBUTTONDBLCLK:
+	case WM_MBUTTONDBLCLK:
+	case WM_MOUSEMOVE:
+	case WM_MOUSEWHEEL:
+
+		MouseButton button = 0;
+		if(message == WM_RBUTTONDOWN || message == WM_RBUTTONUP || message == WM_RBUTTONDBLCLK) button = k_mouseButtonRight;
+		if(message == WM_LBUTTONDOWN || message == WM_LBUTTONUP || message == WM_LBUTTONDBLCLK) button = k_mouseButtonLeft;
+		if(message == WM_MBUTTONDOWN || message == WM_MBUTTONUP  || message == WM_MBUTTONDBLCLK) button = k_mouseButtonMiddle;
+		if(message == WM_LBUTTONDBLCLK || message == WM_RBUTTONDBLCLK || message == WM_MBUTTONDBLCLK) flags |= k_keyFlagRepeat;
+
+		float x = LOWORD(lParam);
+		float y = HIWORD(lParam);
+
+		for(std::set<IMouseController*>::iterator it = m_mouseControllers.begin(); it != m_mouseControllers.end(); ++it)
+		{
+			switch(message)
+			{
+				case WM_RBUTTONDOWN:
+				case WM_LBUTTONDOWN:
+				case WM_MBUTTONDOWN:
+				case WM_LBUTTONDBLCLK:
+				case WM_RBUTTONDBLCLK:
+				case WM_MBUTTONDBLCLK:
+					(*it)->onMouseButtonDown(button, x, y, flags);
+					break;
+				case WM_RBUTTONUP:
+				case WM_LBUTTONUP:
+				case WM_MBUTTONUP:
+					(*it)->onMouseButtonUp(button, x, y, flags);
+					break;
+				case WM_MOUSEMOVE:
+					(*it)->onMouseMove(x, y, flags);
+					break;
+				case WM_MOUSEWHEEL:
+					(*it)->onMouseWheel(HIWORD(wParam) / 120, flags);
+					break;
+			}
+		}//for(std::set<IMouseController*>::iterator it !=	m_mouseControllers.begin(); it != m_mouseControllers.end(); ++it)
+		break;
+	}//switch(message)
+}
+
 /***********************************************************************************************************************
 	Platform Context implementation
 ***********************************************************************************************************************/
