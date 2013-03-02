@@ -15,7 +15,9 @@ namespace Pegas
 		void run();
 		void cleanup();
 		void resize(int width, int height);
-		void activate(bool bActive) { m_isActive = bActive; };		
+		void activate(bool bActive) { m_isActive = bActive; };
+
+		void processInput(UINT message, WPARAM wParam, LPARAM lParam);
 
 	public:
 

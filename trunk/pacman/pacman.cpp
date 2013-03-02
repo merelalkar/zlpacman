@@ -153,6 +153,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	Pegas::GameApplication& app = Pegas::GameApplication::getInstance();
 
+	if((message > WM_MOUSEFIRST && message < WM_MOUSELAST) || 
+		(message > WM_KEYFIRST && message < WM_KEYLAST))
+	{
+		app.processInput(message, wParam, lParam);
+		return 0;
+	}
+
 	switch (message)
 	{
 	case WM_CREATE: 
@@ -199,6 +206,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+
 	return 0;
 }
 
