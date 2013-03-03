@@ -210,6 +210,14 @@
 			Name="app"
 			>
 			<File
+				RelativePath=".\default_game_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\default_game_state.h"
+				>
+			</File>
+			<File
 				RelativePath=".\game_app.cpp"
 				>
 			</File>

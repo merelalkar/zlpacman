@@ -6,12 +6,50 @@ namespace Pegas
 	class BaseScreenLayer: public IScreenLayer, public IKeyboardController, public IMouseController
 	{
 	public:
-		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags) = 0;
-		virtual void onMouseButtonUp(MouseButton button, float x, float y, MouseFlags flags) = 0;
-		virtual void onMouseMove(float x, float y, MouseFlags flags) = 0;
-		virtual void onMouseWheel(NumNothes wheel, MouseFlags flags) = 0;
+		BaseScreenLayer(const LayerType& type, const LayerId& id, bool modal): 
+		  IScreenLayer(type, id), m_modal(modal)  {}
+
+		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);
+		virtual void onMouseButtonUp(MouseButton button, float x, float y, MouseFlags flags);
+		virtual void onMouseMove(float x, float y, MouseFlags flags);
+		virtual void onMouseWheel(NumNothes wheel, MouseFlags flags);
+
+		virtual void onKeyDown(KeyCode key, KeyFlags flags);
+		virtual void onKeyUp(KeyCode key, KeyFlags flags);
+		virtual void onChar(tchar ch);
+
+		void setModal(bool modal) { m_modal = modal; }
+		bool isModal() { return m_modal; }
 
 	protected:
 		bool m_modal;
+	};
+
+	typedef SmartPointer<BaseScreenLayer> BaseScreenLayerPtr;
+
+	class DefaultGameState: public IGameState, public IKeyboardController, public IMouseController
+	{
+	public:
+		DefaultGameState(const GameStateID& id): IGameState(id) {}
+
+		virtual void enter(IPlatformContext* context);
+		virtual void leave(IPlatformContext* context);
+		virtual void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit);
+		virtual void render(IPlatformContext* context);
+
+		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);
+		virtual void onMouseButtonUp(MouseButton button, float x, float y, MouseFlags flags);
+		virtual void onMouseMove(float x, float y, MouseFlags flags);
+		virtual void onMouseWheel(NumNothes wheel, MouseFlags flags);
+
+		virtual void onKeyDown(KeyCode key, KeyFlags flags);
+		virtual void onKeyUp(KeyCode key, KeyFlags flags);
+		virtual void onChar(tchar ch);
+
+	public:
+		void pushLayer(BaseScreenLayerPtr layer);
+
+	protected:
+		std::list<BaseScreenLayerPtr> m_layers;	
 	};
 }

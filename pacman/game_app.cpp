@@ -47,6 +47,7 @@ void GameApplication::run()
 	if(!m_statesStack.empty())
 	{
 		m_statesStack.top()->update(this, deltaTime, 0);
+		m_statesStack.top()->render(this);
 	}
 }
 
