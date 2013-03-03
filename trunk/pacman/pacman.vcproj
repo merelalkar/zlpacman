@@ -210,14 +210,6 @@
 			Name="app"
 			>
 			<File
-				RelativePath=".\default_game_state.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\default_game_state.h"
-				>
-			</File>
-			<File
 				RelativePath=".\game_app.cpp"
 				>
 			</File>
@@ -315,6 +307,34 @@
 			</File>
 			<File
 				RelativePath=".\tile_grid.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="gui"
+			>
+			<File
+				RelativePath=".\default_game_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\default_game_state.h"
+				>
+			</File>
+			<File
+				RelativePath=".\gui_layer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\gui_layer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pacman_game_screens.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pacman_game_screens.h"
 				>
 			</File>
 		</Filter>
