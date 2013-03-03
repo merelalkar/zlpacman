@@ -42,6 +42,9 @@ namespace Pegas
 		virtual void destroy();
 		virtual void render();
 
+		virtual void beginScene();
+		virtual void endScene();
+
 		virtual CURCOORD getCanvasWidth();
 		virtual CURCOORD getCanvasHeight();
 

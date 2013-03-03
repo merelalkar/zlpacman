@@ -29,8 +29,9 @@ const RESOURCEID k_soundYouWin = 6;
 void GameApplication::init(HWND hWnd)
 {
 	registerResources();
-	
-	m_grafManager.initialize(hWnd);	
+	m_grafManager.initialize(hWnd);
+
+	m_lastTime = m_utils.getCurrentTime();
 }
 
 void GameApplication::run()
@@ -38,7 +39,15 @@ void GameApplication::run()
 	if(!m_isActive)
 		return;
 
-	m_grafManager.render();
+	MILLISECONDS deltaTime = m_utils.getCurrentTime() - m_lastTime;
+
+	m_eventManager.processEvents();
+	m_processManager.updateProcesses(deltaTime);
+
+	if(!m_statesStack.empty())
+	{
+		m_statesStack.top()->update(this, deltaTime, 0);
+	}
 }
 
 void GameApplication::cleanup()
@@ -47,6 +56,7 @@ void GameApplication::cleanup()
 	m_stringManager.destroyAll();
 	m_textureManager.destroyAll();
 	m_fontManager.destroyAll();
+	m_soundManager.destroyAll();
 }
 
 void GameApplication::resize(int width, int height)

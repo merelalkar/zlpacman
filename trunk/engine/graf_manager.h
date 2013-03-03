@@ -63,7 +63,10 @@ namespace Pegas
 		typedef std::list<IDrawable*> DrawableLayoutsList;
         
         virtual void destroy() = 0;
-		virtual void render() = 0;
+		virtual void render() { };
+
+		virtual void beginScene() = 0;
+		virtual void endScene() = 0;
 
 		virtual CURCOORD getCanvasWidth() = 0;
 		virtual CURCOORD getCanvasHeight() = 0;
