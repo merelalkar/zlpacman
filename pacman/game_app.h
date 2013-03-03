@@ -52,9 +52,10 @@ namespace Pegas
 		bool                    m_isActive;
 		bool					m_exitApplication;
 
-		//graphics and sound
+		//graphics, sound and tools
 		OGLGrafManager			m_grafManager;
-		WinMMSoundManager        m_soundPlayer;
+		WinMMSoundManager       m_soundPlayer;
+		WindowsOSUtils			m_utils;
 
 		//resources
 		StringResourceManager	m_stringManager;
@@ -65,6 +66,7 @@ namespace Pegas
 		//game loop
 		EventManager			m_eventManager;
 		ProcessManager			m_processManager;
+		MILLISECONDS			m_lastTime;
 	};
 
 }

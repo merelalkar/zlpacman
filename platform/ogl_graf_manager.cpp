@@ -77,10 +77,7 @@ void OGLGrafManager::destroy()
 
 void OGLGrafManager::render()
 {
-	wglMakeCurrent(m_deviceContext, m_glRenderContext);
-
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	beginScene();
 
 	for(DrawableLayoutsList::iterator it = m_layouts.begin();
 		it != m_layouts.end(); ++it)
@@ -88,8 +85,20 @@ void OGLGrafManager::render()
 		(*it)->draw(*this);
 	}
 
-	glFlush();
+	endScene();	
+}
 
+void OGLGrafManager::beginScene()
+{
+	wglMakeCurrent(m_deviceContext, m_glRenderContext);
+
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);	
+}
+
+void OGLGrafManager::endScene()
+{
+	glFlush();
 	SwapBuffers(m_deviceContext);
 }
 
