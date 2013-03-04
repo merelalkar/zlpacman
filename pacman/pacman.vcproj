@@ -337,6 +337,14 @@
 				RelativePath=".\pacman_game_screens.h"
 				>
 			</File>
+			<File
+				RelativePath=".\standart_widgets.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\standart_widgets.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
