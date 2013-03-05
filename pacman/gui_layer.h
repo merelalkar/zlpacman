@@ -3,9 +3,15 @@
 
 namespace Pegas
 {
+	typedef int32 WidgetID;
+
 	class Widget
 	{
 	public:
+		Widget(WidgetID id): m_id(id) {}
+
+		WidgetID getID() const { return m_id; }
+
 		virtual bool isPointIn(float x, float y) { return false; }
 		virtual void setFocus() {}
 		virtual void killFocus() {}
@@ -20,8 +26,12 @@ namespace Pegas
 		virtual void onChar(tchar ch) {}
 
 		virtual void render(IPlatformContext* context) {}
+
+	protected:
+		WidgetID m_id;
 	};
 
+	
 	typedef SmartPointer<Widget> WidgetPtr;
 
 	class GUILayer: public BaseScreenLayer

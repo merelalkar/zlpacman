@@ -15,7 +15,13 @@ namespace Pegas
 		k_eventDisableCharacterControl,
 		k_eventPacmanSwallowedPill,
 		k_eventPacmanDeath,
-		k_eventPacmanDeathComplete
+		k_eventPacmanDeathComplete,
+
+		k_eventGUI_ButtonClick,
+		k_eventGUI_StartFadein,
+		k_eventGUI_StartFadeout,
+		k_eventGUI_FadeinComplete,
+		k_eventGUI_FadeoutComplete
 	};
 
 	struct Event_ChangeDirection: public Event
@@ -126,5 +132,65 @@ namespace Pegas
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type = k_eventPacmanDeathComplete;		
+	};
+
+	/***************************************************************************************************
+		GUI events;
+	****************************************************************************************************/
+	class Widget;
+	struct Event_GUI_ButtonClick: public Event
+	{
+	public:
+		Event_GUI_ButtonClick(Widget* button): m_button(button) {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGUI_ButtonClick;
+
+		Widget* m_button;
+	};
+
+	/*************************************************************************************************************
+		Fader events;
+	**************************************************************************************************************/
+	struct Event_GUI_StartFadein: public Event
+	{
+	public:
+		Event_GUI_StartFadein(float lengthInSeconds = 1.0f): 
+		  _lengthInSeconds(lengthInSeconds) {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGUI_StartFadein;
+
+		float _lengthInSeconds;
+	};
+
+	struct Event_GUI_StartFadeout: public Event
+	{
+	public:
+		Event_GUI_StartFadeout(float lengthInSeconds = 1.0f): 
+		  _lengthInSeconds(lengthInSeconds)  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGUI_StartFadeout;
+
+		float _lengthInSeconds;
+	};
+
+	struct Event_GUI_FadeinComplete: public Event
+	{
+	public:
+		Event_GUI_FadeinComplete()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGUI_FadeinComplete;		
+	};
+
+	struct Event_GUI_FadeoutComplete: public Event
+	{
+	public:
+		Event_GUI_FadeoutComplete()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGUI_FadeoutComplete;		
 	};
 }
