@@ -54,7 +54,7 @@ void ButtonWidget::recalcTextPosition()
 		{
 			GrafManager::getInstance().getTextExtent(m_caption, m_styles[i]._font, width, height);
 			m_styles[i]._left =	m_x + (m_width - (float)width) * 0.5;
-			m_styles[i]._top = m_y + (m_height - (float)height) * 0.5;
+			m_styles[i]._top = m_y + m_height - ((m_height - (float)height) * 1.5);
 		}
 	}//if(m_caption != "")
 }
@@ -93,7 +93,7 @@ void ButtonWidget::disable()
 
 void ButtonWidget::render(IPlatformContext* context)
 {
-	if(m_isVisible) return;
+	if(!m_isVisible) return;
 
 	GrafManager::getInstance().drawRectangle((CURCOORD)m_x, (CURCOORD)m_y, (CURCOORD)m_width, (CURCOORD)m_height, 
 		m_styles[m_currentState]._borderColor, m_styles[m_currentState]._fillColor);

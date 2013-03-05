@@ -7,7 +7,17 @@ namespace Pegas
 	{
 	public:
 		BaseScreenLayer(const LayerType& type, const LayerId& id, bool modal): 
-		  IScreenLayer(type, id), m_modal(modal)  {}
+		  IScreenLayer(type, id), m_modal(modal)  
+		  {
+			  setActivity(true);
+		  }
+		virtual ~BaseScreenLayer() {}
+
+		//IScreenLayer default implementation
+		virtual void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit) {};
+		virtual void render(IPlatformContext* context) {};
+		virtual void create(IPlatformContext* context) {};
+		virtual void destroy(IPlatformContext* context) {};
 
 		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);
 		virtual void onMouseButtonUp(MouseButton button, float x, float y, MouseFlags flags);
@@ -31,6 +41,7 @@ namespace Pegas
 	{
 	public:
 		DefaultGameState(const GameStateID& id): IGameState(id) {}
+		virtual ~DefaultGameState() {}	
 
 		virtual void enter(IPlatformContext* context);
 		virtual void leave(IPlatformContext* context);
@@ -50,6 +61,7 @@ namespace Pegas
 		void pushLayer(BaseScreenLayerPtr layer);
 
 	protected:
-		std::list<BaseScreenLayerPtr> m_layers;	
+		std::list<BaseScreenLayerPtr> m_layers;
+		IPlatformContext* m_platform;
 	};
 }

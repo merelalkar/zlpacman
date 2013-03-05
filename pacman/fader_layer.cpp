@@ -11,6 +11,8 @@ FaderLayer::FaderLayer(const LayerId& id)
 	m_color = 0;
 	m_fadeLength = m_ellapsedTime = 0;
 	m_fadein = false;
+
+	setActivity(false);
 }
 
 void FaderLayer::create(IPlatformContext* context)

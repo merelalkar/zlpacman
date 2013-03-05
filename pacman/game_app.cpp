@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "game_app.h"
 #include "game_resources.h"
+#include "pacman_game_screens.h"
 
 #include "resource.h"
 
@@ -32,14 +33,23 @@ void GameApplication::init(HWND hWnd)
 	m_grafManager.initialize(hWnd);
 
 	m_lastTime = m_utils.getCurrentTime();
+
+	addGameState(GameStatePtr(new MainMenu()));
+	changeState(k_stateMainMenu);
 }
 
-void GameApplication::run()
+bool GameApplication::run()
 {
-	if(!m_isActive)
-		return;
+	if(!m_isActive || m_exitApplication)
+	{
+		return false;
+	}
 
 	MILLISECONDS deltaTime = m_utils.getCurrentTime() - m_lastTime;
+	if(deltaTime > 0)
+	{
+		m_lastTime = m_utils.getCurrentTime();
+	}
 
 	m_eventManager.processEvents();
 	m_processManager.updateProcesses(deltaTime);
@@ -49,6 +59,8 @@ void GameApplication::run()
 		m_statesStack.top()->update(this, deltaTime, 0);
 		m_statesStack.top()->render(this);
 	}
+
+	return m_exitApplication;
 }
 
 void GameApplication::cleanup()
@@ -70,8 +82,10 @@ void GameApplication::registerResources()
 	m_textureManager.registerResource(k_textureMaze, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_MAZE));
 	m_textureManager.registerResource(k_texturePillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PILL_TILE));
 	m_textureManager.registerResource(k_textureSuperPillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_SUPER_PILL_TILE));
-	
+	m_textureManager.registerResource(k_texturePacmanLogo, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PACMAN_LOGO));
+		
 	m_fontManager.registerResource(k_fontMain, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 12));
+	m_fontManager.registerResource(k_fontMenuButton, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 36));
 
 	/*m_soundManager.registerResource(k_soundPassNewSeries, MAKE_INT_RESOURCE_CODE(m_hInstance, IDR_WAVE1));
 	m_soundManager.registerResource(k_soundReleaseCard, MAKE_INT_RESOURCE_CODE(m_hInstance, IDR_WAVE2));
@@ -287,4 +301,9 @@ void GameApplication::backwardToPreviousState()
 	m_statesStack.top()->leave(this);
 	m_statesStack.pop();
 	m_statesStack.top()->enter(this);
+}
+
+void GameApplication::shutdownGame()
+{
+	m_exitApplication = true;
 }

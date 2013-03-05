@@ -8,11 +8,11 @@ namespace Pegas
 	{
 	public:
 		GameApplication(HINSTANCE hInstance): 
-		  Singleton(*this), m_hInstance(hInstance), m_isActive(false) {};
+		  Singleton(*this), m_hInstance(hInstance), m_isActive(false), m_exitApplication(false) {};
 		virtual ~GameApplication() {};
 		
 		void init(HWND hWnd);
-		void run();
+		bool run();
 		void cleanup();
 		void resize(int width, int height);
 		void activate(bool bActive) { m_isActive = bActive; };
@@ -33,6 +33,7 @@ namespace Pegas
 		virtual void changeState(GameStateID newStateId);
 		virtual void forwardToState(GameStateID newStateId);
 		virtual void backwardToPreviousState();
+		virtual void shutdownGame();
 
 	private:
 		std::set<IKeyboardController*> m_keyboardControllers;
