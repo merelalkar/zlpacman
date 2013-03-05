@@ -9,6 +9,7 @@ namespace Pegas
 	{
 	public:
 		Widget(WidgetID id): m_id(id) {}
+		virtual ~Widget() {}
 
 		WidgetID getID() const { return m_id; }
 

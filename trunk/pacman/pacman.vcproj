@@ -178,6 +178,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\media\bitmap1.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
@@ -360,5 +364,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="pacman.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

@@ -61,8 +61,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
             } 
         } 
         
-		app.run();
+		if(app.run())
+		{
+			break;
+		}
     }
+
+	app.cleanup();
 
 
 	return (int) msg.wParam;
@@ -153,8 +158,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	Pegas::GameApplication& app = Pegas::GameApplication::getInstance();
 
-	if((message > WM_MOUSEFIRST && message < WM_MOUSELAST) || 
-		(message > WM_KEYFIRST && message < WM_KEYLAST))
+	if((message > WM_MOUSEFIRST && message < WM_MOUSELAST) 
+		|| 	(message > WM_KEYFIRST && message < WM_KEYLAST)
+		|| message == WM_MOUSEMOVE)
 	{
 		app.processInput(message, wParam, lParam);
 		return 0;
@@ -203,6 +209,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		app.cleanup();
 		PostQuitMessage(0);
 		break;
+		
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

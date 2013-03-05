@@ -25,6 +25,7 @@ namespace Pegas
 		class IEventListener
 		{
 		public:
+			virtual ~IEventListener() {}
 			virtual void handleEvent(EventPtr evt) = 0;
 		};
 
@@ -38,12 +39,14 @@ namespace Pegas
 		class IUpdate
 		{
 		public:
+			virtual ~IUpdate() {}
 			virtual void update(float deltaTime, float timeLimit) = 0;
 		};
 
 		class IRenderable
 		{
 		public:
+			virtual ~IRenderable() {}
 			virtual void render() = 0;
 		};
 
@@ -257,6 +260,7 @@ namespace Pegas
 			virtual void changeState(GameStateID newStateId) = 0;
 			virtual void forwardToState(GameStateID newStateId) = 0;
 			virtual void backwardToPreviousState() = 0;
+			virtual void shutdownGame() = 0;
 		};
 
 

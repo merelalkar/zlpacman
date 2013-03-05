@@ -90,14 +90,17 @@ void DefaultGameState::pushLayer(BaseScreenLayerPtr layer)
 {
 	if(m_layers.size() > 0)
 	{
-		layer->setSuccessor(m_layers.back().get());
+		layer->setSuccessor(m_layers.back().get());		
 	}
 
 	m_layers.push_back(layer);
+	layer->create(m_platform);
 }
 
 void DefaultGameState::enter(IPlatformContext* context)
 {
+	m_platform = context;
+
 	context->addKeyboardController(this);
 	context->addMouseController(this);
 }
@@ -106,6 +109,11 @@ void DefaultGameState::leave(IPlatformContext* context)
 {
 	context->removeKeyboardController(this);
 	context->removeMouseController(this);
+
+	for(std::list<BaseScreenLayerPtr>::iterator it = m_layers.begin(); it != m_layers.end(); ++it)
+	{
+		(*it)->destroy(context);
+	}
 }
 
 void DefaultGameState::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit)
@@ -123,7 +131,7 @@ void DefaultGameState::render(IPlatformContext* context)
 {
 	GrafManager::getInstance().beginScene();
 	
-	for(std::list<BaseScreenLayerPtr>::reverse_iterator it = m_layers.rbegin(); it != m_layers.rend(); ++it)
+	for(std::list<BaseScreenLayerPtr>::iterator it = m_layers.begin(); it != m_layers.end(); ++it)
 	{
 		if((*it)->isActive())
 		{
