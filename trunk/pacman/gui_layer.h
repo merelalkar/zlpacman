@@ -39,11 +39,16 @@ namespace Pegas
 	{
 	public:
 		GUILayer(const LayerId& id, bool modal): 
-		  BaseScreenLayer(_text("GUI"), id, modal) {}
+		  BaseScreenLayer(_text("GUI"), id, modal)  
+		{
+			m_focusedWidget = -1;
+		}
 
 		void addWidget(WidgetPtr widget);
 		void changeFocusNext();
 		void changeFocusPrev();
+
+		WidgetPtr getFocusedWidget();
 
 		virtual void render(IPlatformContext* context);
 		virtual void create(IPlatformContext* context);
@@ -59,10 +64,10 @@ namespace Pegas
 		virtual void onChar(tchar ch);
 
 	protected:
-		typedef std::list<WidgetPtr> WidgetList;
+		typedef std::vector<WidgetPtr> WidgetList;
 		typedef WidgetList::iterator WidgetListIt;
 
 		WidgetList		m_widgets;
-		WidgetListIt	m_focusedWidget;
+		int32			m_focusedWidget;
 	};
 }
