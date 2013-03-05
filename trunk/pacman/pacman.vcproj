@@ -322,6 +322,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fader_layer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fader_layer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\gui_layer.cpp"
 				>
 			</File>
