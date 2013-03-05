@@ -158,8 +158,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	Pegas::GameApplication& app = Pegas::GameApplication::getInstance();
 
-	if((message > WM_MOUSEFIRST && message < WM_MOUSELAST) 
-		|| 	(message > WM_KEYFIRST && message < WM_KEYLAST)
+	if((message >= WM_MOUSEFIRST && message <= WM_MOUSELAST) 
+		|| 	(message >= WM_KEYFIRST && message <= WM_KEYLAST)
 		|| message == WM_MOUSEMOVE)
 	{
 		app.processInput(message, wParam, lParam);

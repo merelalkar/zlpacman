@@ -3,6 +3,16 @@
 
 using namespace Pegas;
 
+WidgetPtr GUILayer::getFocusedWidget()
+{
+	if(m_widgets.size() > 0 && m_focusedWidget != -1)
+	{
+		return m_widgets[m_focusedWidget];
+	}
+
+	return WidgetPtr(); 
+}
+
 void GUILayer::addWidget(WidgetPtr widget)
 {
 	m_widgets.push_back(widget);	
@@ -12,36 +22,36 @@ void GUILayer::changeFocusNext()
 {
 	if(m_widgets.size() == 0) return;
 
-	if(m_focusedWidget != m_widgets.end())
+	if(m_focusedWidget != -1)
 	{
-		(*m_focusedWidget)->killFocus();
+		m_widgets[m_focusedWidget]->killFocus();
 	}
 
 	m_focusedWidget++;
-	if(m_focusedWidget == m_widgets.end())
+	if(m_focusedWidget >= m_widgets.size())
 	{
-		m_focusedWidget = m_widgets.begin();
+		m_focusedWidget = 0;
 	}
 
-	(*m_focusedWidget)->setFocus();	
+	m_widgets[m_focusedWidget]->setFocus();	
 }
 
 void GUILayer::changeFocusPrev()
 {
 	if(m_widgets.size() == 0) return;
 
-	if(m_focusedWidget != m_widgets.end())
+	if(m_focusedWidget != -1)
 	{
-		(*m_focusedWidget)->killFocus();
+		m_widgets[m_focusedWidget]->killFocus();
 	}
 
 	m_focusedWidget--;
-	if(m_focusedWidget == m_widgets.end())
+	if(m_focusedWidget < 0)
 	{
-		m_focusedWidget = --m_widgets.end();
+		m_focusedWidget = m_widgets.size() - 1;
 	}
 
-	(*m_focusedWidget)->setFocus();
+	m_widgets[m_focusedWidget]->setFocus();
 }
 
 void GUILayer::render(IPlatformContext* context)
@@ -54,7 +64,7 @@ void GUILayer::render(IPlatformContext* context)
 
 void GUILayer::create(IPlatformContext* context)
 {
-	m_focusedWidget = m_widgets.end();
+	m_focusedWidget = -1;
 }
 
 void GUILayer::destroy(IPlatformContext* context)
@@ -66,25 +76,28 @@ void GUILayer::onMouseButtonDown(MouseButton button, float x, float y, MouseFlag
 {
 	if(isActive())
 	{
-		for(WidgetListIt it = m_widgets.begin(); it != m_widgets.end(); ++it)
+		WidgetPtr focused = getFocusedWidget(); 
+		for(int32 i = 0; i < m_widgets.size(); i++)
 		{
-			if((*it) == (*m_focusedWidget)) continue;
+			WidgetPtr current = m_widgets[i];
 
-			if((*it)->isPointIn(x, y))
+			if(focused.IsValid() && current == focused) continue;
+
+			if(current->isPointIn(x, y))
 			{
-				(*it)->setFocus();
-				(*it)->onMouseButtonDown(button, x, y, flags);
+				current->setFocus();
+				current->onMouseButtonDown(button, x, y, flags);
 
-				if(m_focusedWidget != m_widgets.end())
+				if(focused.IsValid())
 				{
-					(*m_focusedWidget)->killFocus();
+					focused->killFocus();
 				}
 
-				m_focusedWidget = it;
+				m_focusedWidget = i;
 				break;
 
 			}//if((*it)->isPointIn(x, y))
-		}//for(WidgetListIt it = m_widgets.begin(); it != m_widgets.end(); ++it)
+		}//for(int32 i = 0; i < m_widgets.size(); i++)
 	}//if(isActive())
 
 	BaseScreenLayer::onMouseButtonDown(button, x, y, flags);
@@ -92,23 +105,28 @@ void GUILayer::onMouseButtonDown(MouseButton button, float x, float y, MouseFlag
 
 void GUILayer::onMouseButtonUp(MouseButton button, float x, float y, MouseFlags flags)
 {
+	WidgetPtr focused = getFocusedWidget();
+
 	if(isActive())
 	{
-		for(WidgetListIt it = m_widgets.begin(); it != m_widgets.end(); ++it)
+		
+		for(int32 i = 0; i < m_widgets.size(); i++)
 		{
-			if((*it) == (*m_focusedWidget)) continue;
+			WidgetPtr current = m_widgets[i];
+		
+			if(focused.IsValid() && current == focused) continue;
 
-			if((*it)->isPointIn(x, y))
+			if(current->isPointIn(x, y))
 			{
-				(*it)->onMouseButtonUp(button, x, y, flags);
+				current->onMouseButtonUp(button, x, y, flags);
 				break;
 			}//if((*it)->isPointIn(x, y))
 		}//for(WidgetListIt it = m_widgets.begin(); it != m_widgets.end(); ++it)
 	}//if(isActive())
 
-	if(m_focusedWidget != m_widgets.end())
+	if(focused.IsValid())
 	{
-		(*m_focusedWidget)->onMouseButtonUp(button, x, y, flags);
+		focused->onMouseButtonUp(button, x, y, flags);
 	}
 
 	BaseScreenLayer::onMouseButtonUp(button, x, y, flags);
@@ -129,9 +147,10 @@ void GUILayer::onMouseMove(float x, float y, MouseFlags flags)
 
 void GUILayer::onMouseWheel(NumNothes wheel, MouseFlags flags)
 {
-	if(m_focusedWidget != m_widgets.end())
+	WidgetPtr focused = getFocusedWidget();
+	if(focused.IsValid())
 	{
-		(*m_focusedWidget)->onMouseWheel(wheel, flags);
+		focused->onMouseWheel(wheel, flags);
 	}
 
 	BaseScreenLayer::onMouseWheel(wheel, flags);
@@ -139,30 +158,33 @@ void GUILayer::onMouseWheel(NumNothes wheel, MouseFlags flags)
 
 void GUILayer::onKeyDown(KeyCode key, KeyFlags flags)
 {
-	if(m_focusedWidget != m_widgets.end())
+	WidgetPtr focused = getFocusedWidget();
+	if(focused.IsValid())
 	{
-		(*m_focusedWidget)->onKeyDown(key, flags);
-	}
+		focused->onKeyDown(key, flags);
+	}	
 
 	BaseScreenLayer::onKeyDown(key, flags);
 }
 
 void GUILayer::onKeyUp(KeyCode key, KeyFlags flags)
 {
-	if(m_focusedWidget != m_widgets.end())
+	WidgetPtr focused = getFocusedWidget();
+	if(focused.IsValid())
 	{
-		(*m_focusedWidget)->onKeyUp(key, flags);
-	}
+		focused->onKeyUp(key, flags);
+	}	
 
 	BaseScreenLayer::onKeyUp(key, flags);
 }
 
 void GUILayer::onChar(tchar ch)
 {
-	if(m_focusedWidget != m_widgets.end())
+	WidgetPtr focused = getFocusedWidget();
+	if(focused.IsValid())
 	{
-		(*m_focusedWidget)->onChar(ch);
-	}
+		focused->onChar(ch);
+	}	
 
 	BaseScreenLayer::onChar(ch);
 }
