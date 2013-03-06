@@ -21,7 +21,11 @@ namespace Pegas
 		k_eventGUI_StartFadein,
 		k_eventGUI_StartFadeout,
 		k_eventGUI_FadeinComplete,
-		k_eventGUI_FadeoutComplete
+		k_eventGUI_FadeoutComplete,
+
+		k_eventGame_ChangeState,
+		k_eventGame_ForwardToState,
+		k_eventGame_BackwardToPreviousState
 	};
 
 	struct Event_ChangeDirection: public Event
@@ -156,7 +160,10 @@ namespace Pegas
 	{
 	public:
 		Event_GUI_StartFadein(float lengthInSeconds = 1.0f): 
-		  _lengthInSeconds(lengthInSeconds) {}
+		  _lengthInSeconds(lengthInSeconds) 
+		  {
+			  OSUtils::getInstance().debugOutput("Event_GUI_StartFadein [time = %.4f]", lengthInSeconds);
+		  }
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type = k_eventGUI_StartFadein;
@@ -168,7 +175,10 @@ namespace Pegas
 	{
 	public:
 		Event_GUI_StartFadeout(float lengthInSeconds = 1.0f): 
-		  _lengthInSeconds(lengthInSeconds)  {}
+		  _lengthInSeconds(lengthInSeconds)  
+		  {
+			  OSUtils::getInstance().debugOutput("Event_GUI_StartFadeout [time = %.4f]", lengthInSeconds);
+		  }
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type = k_eventGUI_StartFadeout;
@@ -179,7 +189,10 @@ namespace Pegas
 	struct Event_GUI_FadeinComplete: public Event
 	{
 	public:
-		Event_GUI_FadeinComplete()  {}
+		Event_GUI_FadeinComplete()  
+		{
+			OSUtils::getInstance().debugOutput("Event_GUI_FadeinComplete");
+		}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type = k_eventGUI_FadeinComplete;		
@@ -188,9 +201,60 @@ namespace Pegas
 	struct Event_GUI_FadeoutComplete: public Event
 	{
 	public:
-		Event_GUI_FadeoutComplete()  {}
+		Event_GUI_FadeoutComplete()  
+		{
+			OSUtils::getInstance().debugOutput("Event_GUI_FadeoutComplete");
+		}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type = k_eventGUI_FadeoutComplete;		
+	};
+
+	/*************************************************************************************************************
+		Global Game events
+	**************************************************************************************************************/
+	/*
+		k_eventGame_ChangeState,
+		k_eventGame_ForwardToState,
+		k_eventGame_BackwardToPreviousState
+	*/
+	struct Event_Game_ChangeState: public Event
+	{
+	public:
+		Event_Game_ChangeState(const GameStateID& id): _id(id)  
+		{
+			OSUtils::getInstance().debugOutput("Event_Game_ChangeState [id = %d]", id);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGame_ChangeState;
+
+		GameStateID _id;
+	};
+
+	struct Event_Game_ForwardToState: public Event
+	{
+	public:
+		Event_Game_ForwardToState(const GameStateID& id): _id(id)  
+		{
+			OSUtils::getInstance().debugOutput("Event_Game_ForwardToState [id = %d]", id);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGame_ForwardToState;
+
+		GameStateID _id;
+	};
+
+	struct Event_Game_BackwardToPreviousState: public Event
+	{
+	public:
+		Event_Game_BackwardToPreviousState() 
+		{
+			OSUtils::getInstance().debugOutput("Event_Game_BackwardToPreviousState");			
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type = k_eventGame_BackwardToPreviousState;		
 	};
 }

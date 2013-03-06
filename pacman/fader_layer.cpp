@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "fader_layer.h"
 
-#include "game_events.h"
+
 
 using namespace Pegas;
 
@@ -10,9 +10,7 @@ FaderLayer::FaderLayer(const LayerId& id)
 {
 	m_color = 0;
 	m_fadeLength = m_ellapsedTime = 0;
-	m_fadein = false;
-
-	setActivity(false);
+	m_fadein = false;	
 }
 
 void FaderLayer::create(IPlatformContext* context)
@@ -47,13 +45,14 @@ void FaderLayer::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLI
 	m_ellapsedTime+= deltaTime;
 	if(m_ellapsedTime >= m_fadeLength)
 	{
-		setActivity(false);
+		m_fadeLength = -1;
 		if(m_fadein)
 		{
 			EventPtr evt(new Event_GUI_FadeinComplete());
 			TheEventMgr.pushEventToQueye(evt);
 		}else
 		{
+			setActivity(false);
 			EventPtr evt(new Event_GUI_FadeoutComplete());
 			TheEventMgr.pushEventToQueye(evt);
 		}

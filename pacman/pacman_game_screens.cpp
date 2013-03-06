@@ -6,7 +6,31 @@
 #include "standart_widgets.h"
 #include "fader_layer.h"
 
+
 using namespace Pegas;
+
+class ChangeStateTask: public Process
+{
+public:
+	ChangeStateTask(IPlatformContext* platform, GameStateID	newStateId)
+	{
+		m_platform = platform;
+		m_newStateId = newStateId;
+	}
+
+	virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner)
+	{
+		Process::start(myHandle, owner);
+
+		m_platform->changeState(m_newStateId);
+	}
+
+	virtual void update(MILLISECONDS deltaTime) {}
+
+private:
+	IPlatformContext* m_platform;
+	GameStateID	m_newStateId;
+};
 
 /*****************************************************************************************
 	Main Menu 
@@ -31,6 +55,8 @@ MainMenuLayer::MainMenuLayer():
 
 void MainMenuLayer::create(IPlatformContext* context)
 {
+	GUILayer::create(context);
+
 	m_platform = context;
 
 	TheEventMgr.addEventListener(this, Event_GUI_FadeinComplete::k_type);
@@ -96,6 +122,8 @@ void MainMenuLayer::create(IPlatformContext* context)
 
 void MainMenuLayer::destroy(IPlatformContext* context)
 {
+	GUILayer::destroy(context);
+
 	TheEventMgr.removeEventListener(this);
 }
 
@@ -134,7 +162,7 @@ void MainMenuLayer::handleEvent(EventPtr evt)
 			m_platform->shutdownGame();
 		}else
 		{
-			m_platform->changeState(k_stateEditor);
+			m_platform->changeState(k_stateEditor);			
 		}
 	}
 }
@@ -161,5 +189,83 @@ void MainMenu::enter(IPlatformContext* context)
 	pushLayer(BaseScreenLayerPtr(new FaderLayer(k_layerFader)));
 
 	EventPtr evt(new Event_GUI_StartFadeout(2));
+	TheEventMgr.triggerEvent(evt);
+}
+
+/*****************************************************************************************************************
+	Editor
+*****************************************************************************************************************/
+const CURCOORD EditorLayer::k_mazeWidth = 470;
+const CURCOORD EditorLayer::k_mazeHeight = 519;
+
+const CURCOORD EditorLayer::k_topBarHeight = 15;
+const CURCOORD EditorLayer::k_bottomBarHeight = 10;
+
+EditorLayer::EditorLayer(IPlatformContext* context): GUILayer(k_layerEditor, false)
+{
+	m_context = context;	
+}
+
+void EditorLayer::create(IPlatformContext* context)
+{
+	GUILayer::create(context);
+
+	CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
+	CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
+
+	CURCOORD scaledMazeWidth, scaledMazeHeight;
+	scaledMazeWidth = canvasWidth - 10;
+	scaledMazeHeight = (CURCOORD)((k_mazeHeight * scaledMazeWidth * 1.0) / k_mazeWidth);
+
+	m_maze._texture = k_textureMaze;
+	m_maze._top = k_topBarHeight;
+	m_maze._left = 5;
+	m_maze._width = scaledMazeWidth;
+	m_maze._height = scaledMazeHeight;
+
+	m_workZone_fromX = 0;
+	m_workZone_fromY = scaledMazeHeight + k_topBarHeight + k_bottomBarHeight;
+	m_workZone_toX = canvasWidth;
+	m_workZone_toY = m_workZone_fromY;
+}
+
+void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
+{
+	GUILayer::onKeyDown(key, flags);
+
+	if(key == IKeyboardController::k_keyCodeESCAPE)
+	{
+		ProcessPtr process(new Fadein());
+		ProcessPtr process2(new ChangeStateTask(m_context, k_stateMainMenu));
+
+		process->attachNext(process2);
+		m_context->attachProcess(process);		
+	}
+}
+
+void EditorLayer::render(IPlatformContext* context)
+{
+	GUILayer::render(context);
+
+	GrafManager::getInstance().drawSprite(m_maze);
+	GrafManager::getInstance().drawLine(m_workZone_fromX, m_workZone_fromY, m_workZone_toX, m_workZone_toY, 0xff0000ff);
+}
+
+
+/*******************************************************************/
+Editor::Editor():
+	DefaultGameState(k_stateEditor)
+{
+	
+}
+
+void Editor::enter(IPlatformContext* context)
+{
+	DefaultGameState::enter(context);
+
+	pushLayer(BaseScreenLayerPtr(new EditorLayer(context)));
+	pushLayer(BaseScreenLayerPtr(new FaderLayer(k_layerFader)));
+
+	EventPtr evt(new Event_GUI_StartFadeout(1));
 	TheEventMgr.triggerEvent(evt);
 }

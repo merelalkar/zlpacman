@@ -34,3 +34,17 @@ MILLISECONDS WindowsOSUtils::getCurrentTime()
 {
 	return timeGetTime();
 }
+
+void _cdecl WindowsOSUtils::debugOutput(const char* message, ...)
+{
+	char buf[512];
+
+	va_list argList;
+	va_start(argList, message);
+
+    _vsnprintf(buf, sizeof(buf)-1, message, argList);
+	va_end(argList);
+
+	OutputDebugStringA(buf);
+	OutputDebugStringA("\n");
+}

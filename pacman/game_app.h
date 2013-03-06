@@ -4,7 +4,7 @@
 namespace Pegas
 {
 
-	class GameApplication: public Singleton<GameApplication>, public IPlatformContext
+	class GameApplication: public Singleton<GameApplication>, public IPlatformContext, public IEventListener
 	{
 	public:
 		GameApplication(HINSTANCE hInstance): 
@@ -18,6 +18,8 @@ namespace Pegas
 		void activate(bool bActive) { m_isActive = bActive; };
 
 		void processInput(UINT message, WPARAM wParam, LPARAM lParam);
+
+		virtual void handleEvent(EventPtr evt);
 
 	public:
 
@@ -47,6 +49,10 @@ namespace Pegas
 		GameApplication& operator=(const GameApplication& src);
 
 		void registerResources();
+
+		void _changeState(GameStateID newStateId);
+		void _forwardToState(GameStateID newStateId);
+		void _backwardToPreviousState();
 		
 		HINSTANCE				m_hInstance;
 		HWND					m_hWnd;

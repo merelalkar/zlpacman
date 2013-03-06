@@ -80,7 +80,7 @@ namespace Pegas
 	public:
 		enum
 		{
-			k_colorKey = 0x000000ff
+			k_colorKey = 0x00000000
 		};
 
 		TextureResource();
