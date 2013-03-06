@@ -7,6 +7,9 @@ namespace Pegas
 {
 		typedef int EventType;
 
+		struct Event;
+		typedef SmartPointer<Event> EventPtr;
+
 		struct Event
 		{
 		public:
@@ -18,9 +21,10 @@ namespace Pegas
 			{
 				return static_cast<T*>(this);
 			}
+
 		};
 
-		typedef SmartPointer<Event> EventPtr;
+		
 
 		class IEventListener
 		{

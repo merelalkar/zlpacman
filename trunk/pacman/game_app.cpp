@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "game_app.h"
 #include "game_resources.h"
+#include "game_events.h"
 #include "pacman_game_screens.h"
 
 #include "resource.h"
@@ -34,7 +35,12 @@ void GameApplication::init(HWND hWnd)
 
 	m_lastTime = m_utils.getCurrentTime();
 
+	TheEventMgr.addEventListener(this, Event_Game_ChangeState::k_type);
+	TheEventMgr.addEventListener(this, Event_Game_ForwardToState::k_type);
+	TheEventMgr.addEventListener(this, Event_Game_BackwardToPreviousState::k_type);
+
 	addGameState(GameStatePtr(new MainMenu()));
+	addGameState(GameStatePtr(new Editor()));
 	changeState(k_stateMainMenu);
 }
 
@@ -65,6 +71,8 @@ bool GameApplication::run()
 
 void GameApplication::cleanup()
 {
+	TheEventMgr.removeEventListener(this);
+
 	m_grafManager.destroy();
 	m_stringManager.destroyAll();
 	m_textureManager.destroyAll();
@@ -236,7 +244,8 @@ void GameApplication::addGameState(GameStatePtr state)
 {
 	if(m_statesMap.count(state->getID()) == 0)
 	{
-		m_statesMap.insert(std::make_pair(state->getID(), state));		
+		//m_statesMap.insert(std::make_pair(state->getID(), state));
+		m_statesMap[state->getID()] = state;
 	}
 }
 
@@ -258,23 +267,46 @@ void GameApplication::removeState(GameStateID id)
 
 void GameApplication::changeState(GameStateID newStateId)
 {
-	if(m_statesMap.count(newStateId) == 0)
-	{
-		m_exitApplication = true;
-		return;
-	}
-
-	if(!m_statesStack.empty())
-	{
-		m_statesStack.top()->leave(this);
-		m_statesStack.pop();
-	}
-
-	m_statesStack.push(m_statesMap[newStateId]);
-	m_statesStack.top()->enter(this);
+	EventPtr evt(new Event_Game_ChangeState(newStateId));
+	TheEventMgr.pushEventToQueye(evt);
 }
 
 void GameApplication::forwardToState(GameStateID newStateId)
+{
+	EventPtr evt(new Event_Game_ForwardToState(newStateId));
+	TheEventMgr.pushEventToQueye(evt);
+}
+
+void GameApplication::backwardToPreviousState()
+{
+	EventPtr evt(new Event_Game_BackwardToPreviousState());
+	TheEventMgr.pushEventToQueye(evt);
+}
+
+void GameApplication::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_Game_ChangeState::k_type)
+	{
+		Event_Game_ChangeState* pEvent = evt->cast<Event_Game_ChangeState>();
+		_changeState(pEvent->_id);
+	}
+
+	if(evt->getType() == Event_Game_ForwardToState::k_type)
+	{
+		Event_Game_ForwardToState* pEvent = evt->cast<Event_Game_ForwardToState>();
+		_forwardToState(pEvent->_id);
+	}
+
+	if(evt->getType() == Event_Game_BackwardToPreviousState::k_type)
+	{
+		_backwardToPreviousState();
+	}
+}
+
+/************************************************************************************************
+	actual changing state
+**************************************************************************************************/
+void GameApplication::_changeState(GameStateID newStateId)
 {
 	if(m_statesMap.count(newStateId) == 0)
 	{
@@ -284,13 +316,40 @@ void GameApplication::forwardToState(GameStateID newStateId)
 
 	if(!m_statesStack.empty())
 	{
+		if(m_statesStack.top()->getID() == newStateId)
+		{
+			return;
+		}
+
+		m_statesStack.top()->leave(this);
+		m_statesStack.pop();
+	}
+
+	m_statesStack.push(m_statesMap[newStateId]);
+	m_statesStack.top()->enter(this);
+}
+
+void GameApplication::_forwardToState(GameStateID newStateId)
+{
+	if(m_statesMap.count(newStateId) == 0)
+	{
+		m_exitApplication = true;
+		return;
+	}
+
+	if(!m_statesStack.empty())
+	{
+		if(m_statesStack.top()->getID() == newStateId)
+		{
+			return;
+		}
 		m_statesStack.top()->leave(this);				
 	}
 	m_statesStack.push(m_statesMap[newStateId]);
 	m_statesStack.top()->enter(this);
 }
 
-void GameApplication::backwardToPreviousState()
+void GameApplication::_backwardToPreviousState()
 {
 	if(m_statesStack.size() < 2)
 	{

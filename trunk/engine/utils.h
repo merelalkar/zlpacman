@@ -13,6 +13,7 @@ namespace Pegas
 
 		virtual void showMessage(const String& message, const String& caption) = 0;
 		virtual void showMessage(RESOURCEID messageID, RESOURCEID captionID) = 0;
+		virtual void _cdecl debugOutput(const char* message, ...) = 0;
 		
 		virtual bool confirm(const String& message, const String& caption) = 0;
 		virtual bool confirm(RESOURCEID messageID, RESOURCEID captionID) = 0;

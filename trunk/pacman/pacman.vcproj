@@ -178,15 +178,19 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\media\bitmap1.bmp"
-				>
-			</File>
-			<File
 				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
 			<File
+				RelativePath=".\media\bitmap1.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\bitmap2.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\bmp00001.bmp"
 				>
 			</File>
 			<File
