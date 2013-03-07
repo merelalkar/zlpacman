@@ -26,21 +26,26 @@ namespace Pegas
 			m_handle = myHandle;
 			m_owner = owner;
 			m_currentStatus = k_processStatusRunning;
+
+			OSUtils::getInstance().debugOutput("process [0x%x] started", this);
 		}
 
 		void Process::suspend()
 		{
 			m_currentStatus = k_processStatusSuspended;
+			OSUtils::getInstance().debugOutput("process [0x%x] suspended", this);
 		}
 		
 		void Process::resume()
 		{
 			m_currentStatus = k_processStatusRunning;
+			OSUtils::getInstance().debugOutput("process [0x%x] resumed", this);
 		}
 
 		void Process::terminate()
 		{
 			m_currentStatus = k_processStatusKilled;
+			OSUtils::getInstance().debugOutput("process [0x%x] terminated", this);
 		}
 
 		void Process::attachNext(ProcessPtr nextProcess)

@@ -5,7 +5,7 @@
 
 namespace Pegas
 {
-		typedef int EventType;
+		typedef std::string EventType;
 
 		struct Event;
 		typedef SmartPointer<Event> EventPtr;
