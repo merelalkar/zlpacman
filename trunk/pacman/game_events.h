@@ -35,7 +35,7 @@ namespace Pegas
 		  _actorId(actorId), _newDirection(newDirection)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventChangeDirection;
+		static const EventType k_type;
 
 		int _actorId;
 		int _newDirection;
@@ -47,7 +47,7 @@ namespace Pegas
 		Event_CancelChangingDirection(int actorId): _actorId(actorId)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventCancelChangeDirection;
+		static const EventType k_type;
 
 		int _actorId;
 	};
@@ -59,7 +59,7 @@ namespace Pegas
 		  _actorId(actorId), _newDirection(newDirection)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventDirectionChanged;
+		static const EventType k_type;
 
 		int _actorId;
 		int _newDirection;
@@ -71,7 +71,7 @@ namespace Pegas
 		Event_CharacterStopped(int actorId): _actorId(actorId)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventCharacterStoped;
+		static const EventType k_type;
 
 		int _actorId;
 	};
@@ -82,7 +82,7 @@ namespace Pegas
 		Event_CharacterMoveOn(int actorId): _actorId(actorId)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventCharacterMoveOn;
+		static const EventType k_type;
 
 		int _actorId;
 	};
@@ -93,7 +93,7 @@ namespace Pegas
 		Event_EnableCharacterControl(int actorId): _actorId(actorId)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventEnableCharacterControl;
+		static const EventType k_type;
 
 		int _actorId;
 	};
@@ -104,7 +104,7 @@ namespace Pegas
 		Event_DisableCharacterControl(int actorId): _actorId(actorId)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventDisableCharacterControl;
+		static const EventType k_type;
 
 		int _actorId;
 	};
@@ -115,7 +115,7 @@ namespace Pegas
 		Event_PacmanSwallowedPill(int pill): _pill(pill)  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventPacmanSwallowedPill;
+		static const EventType k_type;
 
 		int _pill;
 	};
@@ -126,7 +126,7 @@ namespace Pegas
 		Event_PacmanDeath()  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventPacmanDeath;		
+		static const EventType k_type;		
 	};
 
 	struct Event_PacmanDeathComplete: public Event
@@ -135,7 +135,7 @@ namespace Pegas
 		Event_PacmanDeathComplete()  {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventPacmanDeathComplete;		
+		static const EventType k_type;		
 	};
 
 	/***************************************************************************************************
@@ -148,7 +148,7 @@ namespace Pegas
 		Event_GUI_ButtonClick(Widget* button): m_button(button) {}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGUI_ButtonClick;
+		static const EventType k_type;
 
 		Widget* m_button;
 	};
@@ -166,7 +166,7 @@ namespace Pegas
 		  }
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGUI_StartFadein;
+		static const EventType k_type;
 
 		float _lengthInSeconds;
 	};
@@ -181,7 +181,7 @@ namespace Pegas
 		  }
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGUI_StartFadeout;
+		static const EventType k_type;
 
 		float _lengthInSeconds;
 	};
@@ -195,7 +195,7 @@ namespace Pegas
 		}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGUI_FadeinComplete;		
+		static const EventType k_type;		
 	};
 
 	struct Event_GUI_FadeoutComplete: public Event
@@ -207,17 +207,12 @@ namespace Pegas
 		}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGUI_FadeoutComplete;		
+		static const EventType k_type;		
 	};
 
 	/*************************************************************************************************************
 		Global Game events
 	**************************************************************************************************************/
-	/*
-		k_eventGame_ChangeState,
-		k_eventGame_ForwardToState,
-		k_eventGame_BackwardToPreviousState
-	*/
 	struct Event_Game_ChangeState: public Event
 	{
 	public:
@@ -227,7 +222,7 @@ namespace Pegas
 		}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGame_ChangeState;
+		static const EventType k_type;
 
 		GameStateID _id;
 	};
@@ -241,7 +236,7 @@ namespace Pegas
 		}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGame_ForwardToState;
+		static const EventType k_type;
 
 		GameStateID _id;
 	};
@@ -255,6 +250,6 @@ namespace Pegas
 		}
 
 		virtual EventType getType() const { return k_type; }
-		static const EventType k_type = k_eventGame_BackwardToPreviousState;		
+		static const EventType k_type;		
 	};
 }
