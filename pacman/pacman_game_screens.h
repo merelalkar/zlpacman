@@ -97,6 +97,9 @@ namespace Pegas
 		CURCOORD m_maxGridWidth;
 		CURCOORD m_minGridHeight;
 		CURCOORD m_maxGridHeight;
+		
+		CURCOORD m_prevGridWidth;
+		CURCOORD m_prevGridHeight;
 
 		int32 m_minRows;
 		int32 m_minColumns;

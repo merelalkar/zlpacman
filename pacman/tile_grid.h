@@ -77,6 +77,8 @@ namespace Pegas
 		int32 packCoords(int32 row, int32 col);
 		void  extractCoords(int32 packedVal, int32& row, int32& col);
 
+		void updateCellSize();
+
 		CURCOORD	m_left;
 		CURCOORD	m_top;
 		CURCOORD	m_width;
@@ -113,7 +115,7 @@ namespace Pegas
 	inline void  TileGrid::extractCoords(int32 packedVal, int32& row, int32& col)
 	{
 		col = packedVal & 0x0000ffff;
-		row = (packedVal >> 16) & 0xffff0000;
+		row = (packedVal >> 16)/* & 0xffff0000*/;
 	}
 
 }
