@@ -178,11 +178,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\bitmap1.bmp"
+				RelativePath=".\media\bitmap1.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\media\bitmap1.bmp"
+				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
 			<File
@@ -203,6 +203,10 @@
 			</File>
 			<File
 				RelativePath=".\media\pill_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\pill_tile2.bmp"
 				>
 			</File>
 			<File
