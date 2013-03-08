@@ -34,6 +34,8 @@ void TileGrid::create(int32 rows, int32 cols)
 			m_cells[col][row] = k_emptyCellTileId;
 		}
 	}
+
+	updateCellSize();
 }
 
 void TileGrid::destroy()
@@ -47,7 +49,10 @@ void TileGrid::destroy()
 	delete[] m_cells;
 
 	m_cells = 0;
-	m_tileRenderMap.clear();
+	for(TILEID id = 0; id < m_tileRenderMap.size(); id++)
+	{
+		m_tileRenderMap[id].clear();
+	}
 }
 
 void TileGrid::load(ISerializer& stream)
@@ -114,6 +119,8 @@ void TileGrid::draw()
 
 	for(TILEID id = 0; id < m_tileRenderMap.size(); id++)
 	{
+		if(m_tilesDescs[id]._texture <= 0) continue;
+
 		TILES_RENDER_LIST& renderList = m_tileRenderMap[id];
 		params._texture = m_tilesDescs[id]._texture;
 
@@ -182,6 +189,21 @@ void TileGrid::debugDraw(int32 flags)
 	}//if(flags & k_debugDrawObstacles)
 }
 
+void TileGrid::updateCellSize()
+{
+	assert(m_numCols > 0);
+	assert(m_numRows > 0);
+
+	if(m_width > 0 && m_height > 0)
+	{
+		m_cellWidth = (CURCOORD)((m_width * 1.0) / m_numCols);
+		m_cellHeight = (CURCOORD)((m_height * 1.0) / m_numRows);
+	}
+
+	//m_width = m_cellWidth * m_numCols;
+	//m_height = m_cellHeight * m_numRows;	
+}
+
 void TileGrid::setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height)
 {
 	m_left = left;
@@ -189,11 +211,7 @@ void TileGrid::setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD hei
 	m_width = width;
 	m_height = height;
 
-	assert(m_numCols > 0);
-	assert(m_numRows > 0);
-
-	m_cellWidth = (CURCOORD)((m_width * 1.0) / m_numCols);
-	m_cellHeight = (CURCOORD)((m_height * 1.0) / m_numRows);
+	updateCellSize();
 }
 
 void TileGrid::getArea(CURCOORD& left, CURCOORD& top, CURCOORD& width, CURCOORD& height)
@@ -209,6 +227,7 @@ TILEID TileGrid::addTileDesc(const TileDesc& desc)
 	TILEID id = (TILEID)m_tilesDescs.size();
 	m_tilesDescs.push_back(desc);
 	m_tilesDescs[id]._id = id;
+	m_tileRenderMap.push_back(TILES_RENDER_LIST());
 
 	return id;
 }
@@ -230,6 +249,7 @@ TILEID TileGrid::setTile(int32 row, int32 col, TILEID tile)
 	m_cells[col][row] = tile;
 
 	int32 value = packCoords(row, col);
+	
 	if(prevId != k_emptyCellTileId)
 	{
 		m_tileRenderMap[prevId].erase(value);

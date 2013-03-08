@@ -236,6 +236,9 @@ void EditorLayer::create(IPlatformContext* context)
 	m_tileGrid.create(30, 30);
 	m_tileGrid.setArea(m_maze._left, m_maze._top, m_maze._width, m_maze._height);
 
+	m_prevGridWidth = m_tileGrid.getWidth();
+	m_prevGridHeight = m_tileGrid.getHeight();
+
 	m_currentEditorMode = k_editorMode_None;
 	m_gridPanStep = 1;
 	m_gridSizingStep = 1;
@@ -326,34 +329,34 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 
 			if(key == IKeyboardController::k_keyCodeUP)
 			{
-				height-= m_gridSizingStep;
+				m_prevGridHeight-= m_gridSizingStep;
 
-				if(height < m_minGridHeight) 
-					height = m_minGridHeight;
+				if(m_prevGridHeight < m_minGridHeight) 
+					m_prevGridHeight = m_minGridHeight;
 			}
 			if(key == IKeyboardController::k_keyCodeDOWN)
 			{
-				height+= m_gridSizingStep;
+				m_prevGridHeight+= m_gridSizingStep;
 
-				if(height > m_maxGridHeight) 
-					height = m_maxGridHeight;
+				if(m_prevGridHeight > m_maxGridHeight) 
+					m_prevGridHeight = m_maxGridHeight;
 			}
 			if(key == IKeyboardController::k_keyCodeLEFT)
 			{
-				width-= m_gridSizingStep;
+				m_prevGridWidth-= m_gridSizingStep;
 
-				if(width < m_minGridWidth) 
-					width = m_minGridWidth;
+				if(m_prevGridWidth < m_minGridWidth) 
+					m_prevGridWidth = m_minGridWidth;
 			}
 			if(key == IKeyboardController::k_keyCodeRIGHT)
 			{
-				width+= m_gridSizingStep;
+				m_prevGridWidth+= m_gridSizingStep;
 
-				if(width > m_maxGridWidth) 
-					width = m_maxGridWidth;
+				if(m_prevGridWidth > m_maxGridWidth) 
+					m_prevGridWidth = m_maxGridWidth;
 			}			
 
-			m_tileGrid.setArea(left, top, width, height);
+			m_tileGrid.setArea(left, top, m_prevGridWidth, m_prevGridHeight);
 		}
 
 		if(m_currentEditorMode == k_editorMode_GridCellsTweak)
@@ -427,14 +430,22 @@ void EditorLayer::onMouseButtonDown(MouseButton button, float x, float y, MouseF
 	{
 		TILEID currentID = m_tileGrid.getTilePoint((CURCOORD)x, (CURCOORD)y);
 		currentID = currentID != m_pilleID ? m_pilleID : TileGrid::k_emptyCellTileId;
-		m_tileGrid.setTilePoint((CURCOORD)x, (CURCOORD)y, currentID); 
+		m_tileGrid.setTilePoint((CURCOORD)x, (CURCOORD)y, currentID);
+
+		int32 row, col;
+		m_tileGrid.pointToCell((CURCOORD)x, (CURCOORD)y, row, col);
+		OSUtils::getInstance().debugOutput("tile clicked [row = %d, column = %d]", row, col);
 	}
 
 	if(button == k_mouseButtonLeft && m_currentEditorMode == k_editorMode_ObstaclePlacement)
 	{
 		TILEID currentID = m_tileGrid.getTilePoint((CURCOORD)x, (CURCOORD)y);
 		currentID = currentID != m_obstacleID ? m_obstacleID : TileGrid::k_emptyCellTileId;
-		m_tileGrid.setTilePoint((CURCOORD)x, (CURCOORD)y, currentID); 
+		m_tileGrid.setTilePoint((CURCOORD)x, (CURCOORD)y, currentID);
+
+		int32 row, col;
+		m_tileGrid.pointToCell((CURCOORD)x, (CURCOORD)y, row, col);
+		OSUtils::getInstance().debugOutput("tile clicked [row = %d, column = %d]", row, col);
 	}
 }
 
