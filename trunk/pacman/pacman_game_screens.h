@@ -66,14 +66,42 @@ namespace Pegas
 
 		virtual void create(IPlatformContext* context);
 		virtual void onKeyDown(KeyCode key, KeyFlags flags);
+		virtual void onKeyUp(KeyCode key, KeyFlags flags);
 		virtual void render(IPlatformContext* context);
 
 		//virtual void destroy(IPlatformContext* context);
 		//virtual void handleEvent(EventPtr evt);
 	private:
+		//режимы редактора
+		enum EditorMode
+		{
+			k_editorMode_None, //никаких действий 
+			k_editorMode_GridPan, //перемещение сетки по экрану (SPACE + UP/DOWN/LEFT/RIGHT)
+			k_editorMode_GridSizing, //изменение ширины и высоты сетки (S + UP/DOWN/LEFT/RIGHT)
+			k_editorMode_GridCellsTweak, //изменение количества ячеек по горизонтали и вертикали (CTRL + UP/DOWN/LEFT/RIGHT)
+			k_editorMode_PillsPlacement,//расстановка пилюль (еды) (Р (англ "Pills") + кликнуть мышью в ячейку сетки)
+			k_editorMode_ObstaclePlacement //расстановка препятствий (O ("Obstacles") + кликнуть мышью в ячейку сетки)
+		};
+
+		EditorMode m_currentEditorMode;
+		int32	 m_debugDrawFlags;
+
+		CURCOORD m_gridPanStep;
+		CURCOORD m_gridSizingStep;
+
+		CURCOORD m_minGridWidth;
+		CURCOORD m_maxGridWidth;
+		CURCOORD m_minGridHeight;
+		CURCOORD m_maxGridHeight;
+
+		int32 m_minRows;
+		int32 m_minColumns;
+	private:
 		IPlatformContext* m_context;	
 		
 		TileGrid m_tileGrid;
+		
+
 		SpriteParameters m_maze;
 
 		CURCOORD m_workZone_fromX;
