@@ -67,6 +67,7 @@ namespace Pegas
 		virtual void create(IPlatformContext* context);
 		virtual void onKeyDown(KeyCode key, KeyFlags flags);
 		virtual void onKeyUp(KeyCode key, KeyFlags flags);
+		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);
 		virtual void render(IPlatformContext* context);
 
 		//virtual void destroy(IPlatformContext* context);
@@ -79,12 +80,15 @@ namespace Pegas
 			k_editorMode_GridPan, //перемещение сетки по экрану (SPACE + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_GridSizing, //изменение ширины и высоты сетки (S + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_GridCellsTweak, //изменение количества €чеек по горизонтали и вертикали (CTRL + UP/DOWN/LEFT/RIGHT)
-			k_editorMode_PillsPlacement,//расстановка пилюль (еды) (– (англ "Pills") + кликнуть мышью в €чейку сетки)
-			k_editorMode_ObstaclePlacement //расстановка преп€тствий (O ("Obstacles") + кликнуть мышью в €чейку сетки)
+			k_editorMode_PillsPlacement,//расстановка пилюль (еды) (1 + кликнуть мышью в €чейку сетки)
+			k_editorMode_ObstaclePlacement //расстановка преп€тствий (2 + кликнуть мышью в €чейку сетки)
 		};
 
 		EditorMode m_currentEditorMode;
 		int32	 m_debugDrawFlags;
+
+		TILEID m_pilleID;
+		TILEID m_obstacleID;
 
 		CURCOORD m_gridPanStep;
 		CURCOORD m_gridSizingStep;
@@ -100,8 +104,6 @@ namespace Pegas
 		IPlatformContext* m_context;	
 		
 		TileGrid m_tileGrid;
-		
-
 		SpriteParameters m_maze;
 
 		CURCOORD m_workZone_fromX;
