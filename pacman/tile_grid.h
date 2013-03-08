@@ -47,6 +47,7 @@ namespace Pegas
 		void debugDraw(int32 flags = k_debugDrawGrid | k_debugDrawObstacles);
 		
 		void setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height);
+		void getArea(CURCOORD& left, CURCOORD& top, CURCOORD& width, CURCOORD& height);
 
 		TILEID addTileDesc(const TileDesc& desc);
 		TileDesc getTileDesc(TILEID tile);

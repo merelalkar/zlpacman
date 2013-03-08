@@ -196,6 +196,14 @@ void TileGrid::setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD hei
 	m_cellHeight = (CURCOORD)((m_height * 1.0) / m_numRows);
 }
 
+void TileGrid::getArea(CURCOORD& left, CURCOORD& top, CURCOORD& width, CURCOORD& height)
+{
+	left = m_left;
+	top =  m_top;
+	width = m_width;
+	height = m_height;
+}
+
 TILEID TileGrid::addTileDesc(const TileDesc& desc)
 {
 	TILEID id = (TILEID)m_tilesDescs.size();

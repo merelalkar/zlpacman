@@ -213,6 +213,7 @@ void EditorLayer::create(IPlatformContext* context)
 	CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
 	CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
 
+	//maze sprite setup
 	CURCOORD scaledMazeWidth, scaledMazeHeight;
 	scaledMazeWidth = canvasWidth - 10;
 	scaledMazeHeight = (CURCOORD)((k_mazeHeight * scaledMazeWidth * 1.0) / k_mazeWidth);
@@ -223,11 +224,41 @@ void EditorLayer::create(IPlatformContext* context)
 	m_maze._width = scaledMazeWidth;
 	m_maze._height = scaledMazeHeight;
 
+	//work zone line
 	m_workZone_fromX = 0;
 	m_workZone_fromY = scaledMazeHeight + k_topBarHeight + k_bottomBarHeight;
 	m_workZone_toX = canvasWidth;
 	m_workZone_toY = m_workZone_fromY;
+
+	//tile grid setup
+	m_debugDrawFlags = TileGrid::k_debugDrawGrid | TileGrid::k_debugDrawObstacles;
+
+	m_tileGrid.create(30, 30);
+	m_tileGrid.setArea(m_maze._left, m_maze._top, m_maze._width, m_maze._height);
+
+	m_currentEditorMode = k_editorMode_None;
+	m_gridPanStep = 1;
+	m_gridSizingStep = 1;
+
+	m_minGridWidth = m_maze._width;
+	m_maxGridWidth = canvasWidth;
+	m_minGridHeight = m_maze._height;
+	m_maxGridHeight = canvasHeight;
+
+	m_minRows = m_minColumns = 5;
 }
+
+/*
+	//режимы редактора
+		enum EditorMode
+		{
+			k_editorMode_None, //никаких действий 
+			k_editorMode_GridPan, //перемещение сетки по экрану (SPACE + UP/DOWN/LEFT/RIGHT)
+			k_editorMode_GridCellsTweak, //изменение количества €чеек по горизонтали и вертикали (CTRL + UP/DOWN/LEFT/RIGHT)
+			k_editorMode_PillsPlacement,//расстановка пилюль (еды) (– (англ "Pills") + кликнуть мышью в €чейку сетки)
+			k_editorMode_ObstaclePlacement //расстановка преп€тствий (O ("Obstacles") + кликнуть мышью в €чейку сетки)
+		};
+*/
 
 void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 {
@@ -241,6 +272,145 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		process->attachNext(process2);
 		m_context->attachProcess(process);		
 	}
+
+	if(key == IKeyboardController::k_keyCodeSPACE)
+	{
+		m_currentEditorMode = k_editorMode_GridPan;
+	}
+
+	if(key == IKeyboardController::k_keyCodeCTRL)
+	{
+		m_currentEditorMode = k_editorMode_GridCellsTweak;
+	}
+
+	if(key == IKeyboardController::k_keyCode_P)
+	{
+		m_currentEditorMode = k_editorMode_PillsPlacement;
+	}
+
+	if(key == IKeyboardController::k_keyCode_O)
+	{
+		m_currentEditorMode = k_editorMode_ObstaclePlacement;
+	}
+
+	if(key == IKeyboardController::k_keyCode_S)
+	{
+		m_currentEditorMode = k_editorMode_GridSizing;
+	}
+
+	if(key == IKeyboardController::k_keyCodeUP
+		|| key == IKeyboardController::k_keyCodeDOWN
+		|| key == IKeyboardController::k_keyCodeLEFT
+		|| key == IKeyboardController::k_keyCodeRIGHT)
+	{
+		if(m_currentEditorMode == k_editorMode_GridPan)
+		{
+			CURCOORD left, top, width, height;
+			m_tileGrid.getArea(left, top, width, height);
+
+			switch(key)
+			{
+			case IKeyboardController::k_keyCodeUP:
+				top-= m_gridPanStep;
+				break;
+			case IKeyboardController::k_keyCodeDOWN:
+				top+= m_gridPanStep;
+				break;
+			case IKeyboardController::k_keyCodeLEFT:
+				left-= m_gridPanStep;
+				break;
+			case IKeyboardController::k_keyCodeRIGHT:
+				left+= m_gridPanStep;
+				break;
+			};
+
+			m_tileGrid.setArea(left, top, width, height);
+		}
+
+		if(m_currentEditorMode == k_editorMode_GridSizing)
+		{
+			CURCOORD left, top, width, height;
+			m_tileGrid.getArea(left, top, width, height);
+
+			switch(key)
+			{
+			case IKeyboardController::k_keyCodeUP:
+				height-= m_gridSizingStep;
+				if(height < m_minGridHeight) height = m_minGridHeight;
+				break;
+			case IKeyboardController::k_keyCodeDOWN:
+				height+= m_gridSizingStep;
+				if(height > m_maxGridHeight) height = m_maxGridHeight;
+				break;
+			case IKeyboardController::k_keyCodeLEFT:
+				width-= m_gridSizingStep;
+				if(width < m_minGridWidth) width = m_minGridWidth;
+				break;
+			case IKeyboardController::k_keyCodeRIGHT:
+				width+= m_gridSizingStep;
+				if(width > m_maxGridWidth) width = m_maxGridWidth;
+				break;
+			};
+
+			m_tileGrid.setArea(left, top, width, height);
+		}
+
+		if(m_currentEditorMode == k_editorMode_GridCellsTweak)
+		{
+			int32 numRows = m_tileGrid.getNumRows();
+			int32 numColumns = m_tileGrid.getNumColumns();
+
+			switch(key)
+			{
+			case IKeyboardController::k_keyCodeUP:
+				numRows++;
+				break;
+			case IKeyboardController::k_keyCodeDOWN:
+				numRows--;
+				if(numRows < m_minRows) numRows = m_minRows;
+				break;
+			case IKeyboardController::k_keyCodeLEFT:
+				numColumns--;
+				if(numColumns < m_minColumns) numColumns = m_minColumns;
+				break;
+			case IKeyboardController::k_keyCodeRIGHT:
+				numColumns++;
+				break;
+			};
+
+			m_tileGrid.create(numRows, numColumns);
+		}
+	}
+
+	if(key == IKeyboardController::k_keyCode_Q && !(flags & k_keyFlagRepeat))
+	{
+		if(m_debugDrawFlags && TileGrid::k_debugDrawGrid)
+			m_debugDrawFlags &= (~TileGrid::k_debugDrawGrid);
+		else
+			m_debugDrawFlags |= TileGrid::k_debugDrawGrid;
+	}
+
+	if(key == IKeyboardController::k_keyCode_A && !(flags & k_keyFlagRepeat))
+	{
+		if(m_debugDrawFlags && TileGrid::k_debugDrawObstacles)
+			m_debugDrawFlags &= (~TileGrid::k_debugDrawObstacles);
+		else
+			m_debugDrawFlags |= TileGrid::k_debugDrawObstacles;
+	}
+}
+
+void EditorLayer::onKeyUp(KeyCode key, KeyFlags flags)
+{
+	GUILayer::onKeyUp(key, flags);
+
+	if(key == IKeyboardController::k_keyCodeSPACE
+		|| key == IKeyboardController::k_keyCodeCTRL
+		|| key == IKeyboardController::k_keyCode_P
+		|| key == IKeyboardController::k_keyCode_O
+		|| key == IKeyboardController::k_keyCode_S)
+	{
+		m_currentEditorMode = k_editorMode_None;
+	}
 }
 
 void EditorLayer::render(IPlatformContext* context)
@@ -249,6 +419,9 @@ void EditorLayer::render(IPlatformContext* context)
 
 	GrafManager::getInstance().drawSprite(m_maze);
 	GrafManager::getInstance().drawLine(m_workZone_fromX, m_workZone_fromY, m_workZone_toX, m_workZone_toY, 0xff0000ff);
+
+	m_tileGrid.draw();
+	m_tileGrid.debugDraw(m_debugDrawFlags);
 }
 
 
