@@ -168,6 +168,12 @@ int TextureResource::inreaseInstanceCounter()
 	{
 		s_deviseContext = CreateCompatibleDC(NULL);
 		s_pTextureValidSizes = new std::set<int>();
+		s_pTextureValidSizes->insert(1);
+		s_pTextureValidSizes->insert(2);
+		s_pTextureValidSizes->insert(4);
+		s_pTextureValidSizes->insert(8);
+		s_pTextureValidSizes->insert(16);
+		s_pTextureValidSizes->insert(32);
 		s_pTextureValidSizes->insert(64);
 		s_pTextureValidSizes->insert(128);
 		s_pTextureValidSizes->insert(256);
