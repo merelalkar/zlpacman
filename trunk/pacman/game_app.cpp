@@ -41,7 +41,8 @@ void GameApplication::init(HWND hWnd)
 
 	addGameState(GameStatePtr(new MainMenu()));
 	addGameState(GameStatePtr(new Editor()));
-	changeState(k_stateMainMenu);
+	//changeState(k_stateMainMenu);
+	changeState(k_stateEditor);
 }
 
 bool GameApplication::run()
