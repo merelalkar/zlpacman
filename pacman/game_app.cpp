@@ -89,7 +89,7 @@ void GameApplication::resize(int width, int height)
 void GameApplication::registerResources()
 {
 	m_textureManager.registerResource(k_textureMaze, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_MAZE));
-	m_textureManager.registerResource(k_texturePillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PILL_TILE));
+	m_textureManager.registerResource(k_texturePillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PILL_TILE2));
 	m_textureManager.registerResource(k_textureSuperPillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_SUPER_PILL_TILE));
 	m_textureManager.registerResource(k_texturePacmanLogo, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PACMAN_LOGO));
 		

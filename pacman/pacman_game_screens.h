@@ -79,6 +79,7 @@ namespace Pegas
 			k_editorMode_None, //никаких действий 
 			k_editorMode_GridPan, //перемещение сетки по экрану (SPACE + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_GridSizing, //изменение ширины и высоты сетки (S + UP/DOWN/LEFT/RIGHT)
+			k_editorMode_GridCellSizing, //изменение размера €чейки сетки (C + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_GridCellsTweak, //изменение количества €чеек по горизонтали и вертикали (CTRL + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_PillsPlacement,//расстановка пилюль (еды) (1 + кликнуть мышью в €чейку сетки)
 			k_editorMode_ObstaclePlacement //расстановка преп€тствий (2 + кликнуть мышью в €чейку сетки)
@@ -93,13 +94,17 @@ namespace Pegas
 		CURCOORD m_gridPanStep;
 		CURCOORD m_gridSizingStep;
 
+		float m_currentCellSize;
+		float m_cellSizingStep;
+
 		CURCOORD m_minGridWidth;
 		CURCOORD m_maxGridWidth;
 		CURCOORD m_minGridHeight;
 		CURCOORD m_maxGridHeight;
-		
+				
 		CURCOORD m_prevGridWidth;
 		CURCOORD m_prevGridHeight;
+
 
 		int32 m_minRows;
 		int32 m_minColumns;

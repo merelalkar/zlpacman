@@ -48,6 +48,7 @@ namespace Pegas
 		
 		void setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height);
 		void getArea(CURCOORD& left, CURCOORD& top, CURCOORD& width, CURCOORD& height);
+		void setCellSize(CURCOORD width, CURCOORD height);
 
 		TILEID addTileDesc(const TileDesc& desc);
 		TileDesc getTileDesc(TILEID tile);

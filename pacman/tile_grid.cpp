@@ -200,8 +200,22 @@ void TileGrid::updateCellSize()
 		m_cellHeight = (CURCOORD)((m_height * 1.0) / m_numRows);
 	}
 
-	//m_width = m_cellWidth * m_numCols;
-	//m_height = m_cellHeight * m_numRows;	
+	m_width = m_cellWidth * m_numCols;
+	m_height = m_cellHeight * m_numRows;	
+}
+
+void TileGrid::setCellSize(CURCOORD width, CURCOORD height)
+{
+	assert(m_numCols > 0);
+	assert(m_numRows > 0);
+	assert(width > 0);
+	assert(height > 0);
+
+	m_cellWidth = width;
+	m_cellHeight = height;
+
+	m_width = m_cellWidth * m_numCols;
+	m_height = m_cellHeight * m_numRows;
 }
 
 void TileGrid::setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height)

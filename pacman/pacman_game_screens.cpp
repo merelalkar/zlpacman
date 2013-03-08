@@ -233,7 +233,7 @@ void EditorLayer::create(IPlatformContext* context)
 	//tile grid setup
 	m_debugDrawFlags = TileGrid::k_debugDrawGrid | TileGrid::k_debugDrawObstacles;
 
-	m_tileGrid.create(30, 30);
+	m_tileGrid.create(30, 33);
 	m_tileGrid.setArea(m_maze._left, m_maze._top, m_maze._width, m_maze._height);
 
 	m_prevGridWidth = m_tileGrid.getWidth();
@@ -242,6 +242,10 @@ void EditorLayer::create(IPlatformContext* context)
 	m_currentEditorMode = k_editorMode_None;
 	m_gridPanStep = 1;
 	m_gridSizingStep = 1;
+
+	m_currentCellSize = m_tileGrid.getCellWidth();
+	m_cellSizingStep = 0.1;
+	m_tileGrid.setCellSize((CURCOORD)m_currentCellSize, (CURCOORD)m_currentCellSize);
 
 	m_minGridWidth = m_maze._width;
 	m_maxGridWidth = canvasWidth;
@@ -291,6 +295,11 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		m_currentEditorMode = k_editorMode_GridSizing;
 	}
+	
+	if(key == IKeyboardController::k_keyCode_C)
+	{
+		m_currentEditorMode = k_editorMode_GridCellSizing;
+	}
 
 	if(key == IKeyboardController::k_keyCodeUP
 		|| key == IKeyboardController::k_keyCodeDOWN
@@ -338,8 +347,8 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 			{
 				m_prevGridHeight+= m_gridSizingStep;
 
-				if(m_prevGridHeight > m_maxGridHeight) 
-					m_prevGridHeight = m_maxGridHeight;
+				/*if(m_prevGridHeight > m_maxGridHeight) 
+					m_prevGridHeight = m_maxGridHeight;*/
 			}
 			if(key == IKeyboardController::k_keyCodeLEFT)
 			{
@@ -352,11 +361,26 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 			{
 				m_prevGridWidth+= m_gridSizingStep;
 
-				if(m_prevGridWidth > m_maxGridWidth) 
-					m_prevGridWidth = m_maxGridWidth;
+				/*if(m_prevGridWidth > m_maxGridWidth) 
+					m_prevGridWidth = m_maxGridWidth;*/
 			}			
 
 			m_tileGrid.setArea(left, top, m_prevGridWidth, m_prevGridHeight);
+		}
+
+		if(m_currentEditorMode == k_editorMode_GridCellSizing)
+		{
+			if(key == IKeyboardController::k_keyCodeUP)
+			{
+				m_currentCellSize+= m_cellSizingStep;				
+			}
+			if(key == IKeyboardController::k_keyCodeDOWN)
+			{
+				m_currentCellSize-= m_cellSizingStep;
+				if(m_currentCellSize < 5) m_currentCellSize = 5;				
+			}
+			
+			m_tileGrid.setCellSize((CURCOORD)m_currentCellSize, (CURCOORD)m_currentCellSize);
 		}
 
 		if(m_currentEditorMode == k_editorMode_GridCellsTweak)
@@ -416,7 +440,8 @@ void EditorLayer::onKeyUp(KeyCode key, KeyFlags flags)
 		|| key == IKeyboardController::k_keyCodeCTRL
 		|| key == IKeyboardController::k_keyCode_1
 		|| key == IKeyboardController::k_keyCode_2
-		|| key == IKeyboardController::k_keyCode_S)
+		|| key == IKeyboardController::k_keyCode_S
+		|| key == IKeyboardController::k_keyCode_C)
 	{
 		m_currentEditorMode = k_editorMode_None;
 	}

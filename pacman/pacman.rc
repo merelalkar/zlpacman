@@ -142,6 +142,7 @@ IDB_PILL_TILE           BITMAP                  "media\\pill_tile.bmp"
 IDB_SUPER_PILL_TILE     BITMAP                  "media\\super_pill_tile.bmp"
 IDB_PACMAN_LOGO         BITMAP                  "media\\bitmap1.bmp"
 IDB_MAZE                BITMAP                  "media\\bmp00001.bmp"
+IDB_PILL_TILE2          BITMAP                  "media\\pill_tile2.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
