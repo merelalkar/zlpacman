@@ -24,6 +24,7 @@ private:
 
 	void registerResources();
 	void playSound();
+	void testFileIO();
 
 	HINSTANCE				m_hInstance;
 	HWND					m_hWnd;

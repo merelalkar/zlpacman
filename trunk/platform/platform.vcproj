@@ -140,7 +140,7 @@
 			Name="header"
 			>
 			<File
-				RelativePath=".\file_stream.h"
+				RelativePath=".\file.h"
 				>
 			</File>
 			<File
@@ -172,7 +172,7 @@
 			Name="source"
 			>
 			<File
-				RelativePath=".\file_stream.cpp"
+				RelativePath=".\file.cpp"
 				>
 			</File>
 			<File
