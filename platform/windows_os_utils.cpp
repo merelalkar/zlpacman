@@ -1,4 +1,3 @@
-
 #include "platform_windows.h"
 using namespace Pegas;
 

@@ -34,11 +34,99 @@ TestUnit::TestUnit(HINSTANCE hInstance):
 	m_lastTime = 0;
 }
 
+void TestUnit::testFileIO()
+{
+	File outFile, inFile;
+	
+	outFile.open(_text("test.data"), File::WRITE_ONLY);
+	
+	int8 data_out_int8 = 0xaa;
+	uint8 data_out_uint8 = 0xbb;
+	int16 data_out_int16 = 0xcccc;
+	uint16 data_out_uint16 = 0xdddd;
+	int32 data_out_int32 = 0xfafafa;
+	uint32 data_out_uint32 = 0xfbfbfb;
+	float data_out_float = 1234.56789;
+	bool data_out_bool = false;
+
+	std::vector<String> outStrings;
+	outStrings.push_back(_text("May it be an evening star"));
+	outStrings.push_back(_text("Shines down upon you"));
+	outStrings.push_back(_text("You walk a lonely road"));
+	outStrings.push_back(_text("Your heart will be true"));
+	outStrings.push_back(_text("Oh! How far you are from home"));
+		
+	outFile << data_out_int8;
+	outFile << data_out_int16;
+	outFile << data_out_int32;
+
+	outFile << data_out_uint8;
+	outFile << data_out_uint16;
+	outFile << data_out_uint32;
+	
+	outFile << data_out_float;
+	outFile << data_out_bool;
+
+	outFile << (int32)outStrings.size();
+	for(int i = 0; i < outStrings.size(); i++)
+	{
+		outFile << outStrings[i];
+	}
+
+	outFile.close();
+
+	int8 data_in_int8;
+	uint8 data_in_uint8;
+	int16 data_in_int16;
+	uint16 data_in_uint16;
+	int32 data_in_int32;
+	uint32 data_in_uint32;
+	float data_in_float;
+	bool data_in_bool;
+	std::vector<String> inStrings;
+
+	inFile.open(_text("test.data"), File::READ_ONLY);
+	
+	inFile >> data_in_int8;
+	inFile >> data_in_int16;
+	inFile >> data_in_int32;
+
+	inFile >> data_in_uint8;
+	inFile >> data_in_uint16;
+	inFile >> data_in_uint32;
+	
+	inFile >> data_in_float;
+	inFile >> data_in_bool;
+
+	int32 numStrings;
+	inFile >> numStrings;
+	for(int32 i = 0; i < numStrings; i++)
+	{
+		String str;
+		inFile >> str;
+
+		inStrings.push_back(str);
+	}
+	
+	inFile.close();
+
+	assert(data_out_int8 == data_in_int8);
+	assert(data_out_uint8 == data_in_uint8);
+	assert(data_out_int16 == data_in_int16);
+	assert(data_out_uint16 == data_in_uint16);
+	assert(data_out_int32 == data_in_int32);
+	assert(data_out_uint32 == data_in_uint32);
+	assert(data_out_float == data_in_float);
+	assert(data_out_bool == data_in_bool);
+
+	OSUtils::getInstance().debugOutput("File IO test succeful complete");
+}
 
 void TestUnit::init(HWND hWnd)
 {
 	registerResources();
 	playSound();
+	testFileIO();
 
 	m_grafManager.initialize(hWnd);
 	m_grafManager.addLayout(this);
