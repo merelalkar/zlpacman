@@ -226,14 +226,11 @@ void Pacman::update(float deltaTime)
 			m_prevRow = row;
 			m_prevColumn = column;
 
-			int32 collisionGroup = 0;
-			m_tileGrid->isObstacle(row, column, &collisionGroup);
+			TILEID tile = m_tileGrid->getTile(row, column);
 
-			if(collisionGroup == k_collisionGroupPill 
-				|| collisionGroup == k_collisionGroupSuperPill 
-				|| collisionGroup == k_collisionGroupBonus)
+			if(tile == k_tilePill || tile == k_tileSuperPill || tile == k_tileBonus)
 			{
-				EventPtr newEvent(new Event_PacmanSwallowedPill(collisionGroup));
+				EventPtr newEvent(new Event_PacmanSwallowedPill(tile));
 				TheEventMgr.pushEventToQueye(newEvent);
 			}
 		}//if(row != m_prevRow && column != m_prevColumn)

@@ -60,5 +60,28 @@ namespace Pegas
 	};
 
 	typedef FaderProcess<Event_GUI_StartFadein, Event_GUI_FadeinComplete> Fadein;
-	typedef FaderProcess<Event_GUI_StartFadeout, Event_GUI_FadeoutComplete> Fadeot;	
+	typedef FaderProcess<Event_GUI_StartFadeout, Event_GUI_FadeoutComplete> Fadeot;
+
+	class ChangeStateTask: public Process
+	{
+	public:
+		ChangeStateTask(IPlatformContext* platform, GameStateID	newStateId)
+		{
+			m_platform = platform;
+			m_newStateId = newStateId;
+		}
+
+		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner)
+		{
+			Process::start(myHandle, owner);
+
+			m_platform->changeState(m_newStateId);
+		}
+
+		virtual void update(MILLISECONDS deltaTime) {}
+
+	private:
+		IPlatformContext* m_platform;
+		GameStateID	m_newStateId;
+	};
 }

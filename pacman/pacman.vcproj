@@ -178,11 +178,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\media\bitmap1.bmp"
+				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\bitmap1.bmp"
+				RelativePath=".\media\bitmap1.bmp"
 				>
 			</File>
 			<File
@@ -334,11 +334,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\editor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\editor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\fader_layer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\fader_layer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\game_screen.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_screen.h"
 				>
 			</File>
 			<File
