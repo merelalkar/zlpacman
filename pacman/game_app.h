@@ -30,6 +30,10 @@ namespace Pegas
 		
 		virtual ProcessHandle attachProcess(ProcessPtr process);
 
+		virtual ISerializer* createFile(const String fileName);
+		virtual ISerializer* openFile(const String fileName, uint32 mode);
+		virtual void closeFile(ISerializer* file);
+
 		virtual void addGameState(GameStatePtr state);
 		virtual void removeState(GameStateID id);
 		virtual void changeState(GameStateID newStateId);
@@ -42,7 +46,10 @@ namespace Pegas
 		std::set<IMouseController*>	m_mouseControllers;
 
 		std::map<GameStateID, GameStatePtr> m_statesMap;
-		std::stack<GameStatePtr> m_statesStack;	
+		std::stack<GameStatePtr> m_statesStack;
+
+		typedef SmartPointer<File> FilePtr;
+		std::list<FilePtr> m_openedFiles;
 
 	private:
 		GameApplication(const GameApplication& src);

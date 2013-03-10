@@ -74,6 +74,8 @@ void GameApplication::cleanup()
 {
 	TheEventMgr.removeEventListener(this);
 
+	m_openedFiles.clear();
+
 	m_grafManager.destroy();
 	m_stringManager.destroyAll();
 	m_textureManager.destroyAll();
@@ -366,4 +368,40 @@ void GameApplication::_backwardToPreviousState()
 void GameApplication::shutdownGame()
 {
 	m_exitApplication = true;
+}
+
+ISerializer* GameApplication::createFile(const String fileName)
+{
+	FilePtr result = new File();
+	if(result->create(fileName))
+	{
+		m_openedFiles.push_back(result);
+		return result.get();
+	}	
+	
+	return 0;
+}
+
+ISerializer* GameApplication::openFile(const String fileName, uint32 mode)
+{
+	FilePtr result = new File();
+	if(result->open(fileName, mode))
+	{
+		m_openedFiles.push_back(result);
+		return result.get();
+	}	
+	
+	return 0;
+}
+
+void GameApplication::closeFile(ISerializer* file)
+{
+	for(std::list<FilePtr>::iterator it = m_openedFiles.begin(); it != m_openedFiles.end(); ++it)
+	{
+		if((*it) == file)
+		{
+			m_openedFiles.erase(it);
+			break;
+		}
+	}
 }

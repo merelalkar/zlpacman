@@ -248,7 +248,16 @@ namespace Pegas
 		typedef int32 GameStateID;
 		
 		class IGameState;
-		typedef SmartPointer<IGameState> GameStatePtr; 
+		typedef SmartPointer<IGameState> GameStatePtr;
+
+		enum FileOpenMode
+		{
+			k_fileOpenMode_ReadOnly,
+			k_fileOpenMode_WriteOnly,
+			k_fileOpenMode_ReadWrite,
+			k_fileOpenMode_AppendOnly,
+			k_fileOpenMode_ReadAndAppend
+		};
 
 		class IPlatformContext
 		{
@@ -257,7 +266,11 @@ namespace Pegas
 			virtual void removeKeyboardController(IKeyboardController* controller) = 0;
 			virtual void addMouseController(IMouseController* controller) = 0;
 			virtual void removeMouseController(IMouseController* controller) = 0;
+			
 			virtual ProcessHandle attachProcess(ProcessPtr process) = 0;
+			virtual ISerializer* createFile(const String fileName) = 0;
+			virtual ISerializer* openFile(const String fileName, uint32 mode) = 0;
+			virtual void closeFile(ISerializer* file) = 0;
 
 			virtual void addGameState(GameStatePtr state) = 0;
 			virtual void removeState(GameStateID id) = 0;
