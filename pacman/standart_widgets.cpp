@@ -18,6 +18,8 @@ ButtonWidget::ButtonWidget(WidgetID id): Widget(id)
 	m_isVisible = true;
 	m_isFocused = false;
 
+	m_styles[k_buttonStateActive]._textColor = 0xff00ff00;
+	m_styles[k_buttonStateActive]._borderColor = 0xff00ff00;
 	m_styles[k_buttonStateDisabled]._textColor = 0xffaaaaaa;
 	m_styles[k_buttonStateDisabled]._borderColor = 0xffaaaaaa;
 }
@@ -54,7 +56,7 @@ void ButtonWidget::recalcTextPosition()
 		{
 			GrafManager::getInstance().getTextExtent(m_caption, m_styles[i]._font, width, height);
 			m_styles[i]._left =	m_x + (m_width - (float)width) * 0.5;
-			m_styles[i]._top = m_y + m_height - ((m_height - (float)height) * 1.5);
+			m_styles[i]._top = m_y + m_height - ((m_height - (float)height) * 0.5);
 		}
 	}//if(m_caption != "")
 }

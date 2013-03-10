@@ -201,6 +201,12 @@ const CURCOORD EditorLayer::k_mazeHeight = 519;
 const CURCOORD EditorLayer::k_topBarHeight = 15;
 const CURCOORD EditorLayer::k_bottomBarHeight = 10;
 
+enum EditorButtons
+{
+	k_editorButtonSave = 1,
+	k_editorButtonLoad
+};
+
 EditorLayer::EditorLayer(IPlatformContext* context): GUILayer(k_layerEditor, false)
 {
 	m_context = context;	
@@ -209,6 +215,8 @@ EditorLayer::EditorLayer(IPlatformContext* context): GUILayer(k_layerEditor, fal
 void EditorLayer::create(IPlatformContext* context)
 {
 	GUILayer::create(context);
+
+	TheEventMgr.addEventListener(this, Event_GUI_ButtonClick::k_type);
 
 	CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
 	CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
@@ -256,6 +264,96 @@ void EditorLayer::create(IPlatformContext* context)
 
 	m_pilleID = m_tileGrid.addTileDesc(TileDesc(k_texturePillTile, false));
 	m_obstacleID = m_tileGrid.addTileDesc(TileDesc(0, true));
+
+	//editor buttons;
+	float buttonLeft = 5;
+	float buttonTop = m_workZone_fromY + 5;
+	float buttonWidth = 100;
+	float buttonHeight = 30;
+
+	ButtonWidget* saveButton = new ButtonWidget(k_editorButtonSave);
+	saveButton->setPosition(buttonLeft, buttonTop);
+	saveButton->setSize(buttonWidth, buttonHeight);
+	saveButton->setCaption(_text("save"));
+
+	addWidget(WidgetPtr(saveButton));
+
+	buttonTop+= buttonHeight + 10;
+
+	ButtonWidget* loadButton = new ButtonWidget(k_editorButtonLoad);
+	loadButton->setPosition(buttonLeft, buttonTop);
+	loadButton->setSize(buttonWidth, buttonHeight);
+	loadButton->setCaption(_text("load"));
+
+	addWidget(WidgetPtr(loadButton));
+}
+
+void EditorLayer::destroy(IPlatformContext* context)
+{
+	GUILayer::destroy(context);
+
+	TheEventMgr.removeEventListener(this);
+}
+
+void EditorLayer::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_GUI_ButtonClick::k_type)
+	{
+		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
+		
+		if(pEvent->m_button->getID() == k_editorButtonSave)
+		{
+			CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
+			CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
+
+			tchar fileName[256];
+#ifdef		_UNICODE
+			wsprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);  
+#else
+			sprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);
+#endif
+			
+			ISerializer* fileStream = m_context->createFile(fileName);
+			if(fileStream)
+			{
+				OSUtils::getInstance().debugOutput("saving...");
+
+				m_tileGrid.save(*fileStream);
+				m_context->closeFile(fileStream);
+
+				OSUtils::getInstance().debugOutput("saving complete");
+			}else
+			{
+				OSUtils::getInstance().debugOutput("can not create file");
+			}
+		}
+
+		if(pEvent->m_button->getID() == k_editorButtonLoad)
+		{
+			CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
+			CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
+
+			tchar fileName[256];
+#ifdef		_UNICODE
+			wsprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);  
+#else
+			sprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);
+#endif
+			ISerializer* fileStream = m_context->openFile(fileName, FileOpenMode::k_readOnly);
+			if(fileStream)
+			{
+				OSUtils::getInstance().debugOutput("loading...");
+
+				m_tileGrid.load(*fileStream);
+				m_context->closeFile(fileStream);
+
+				OSUtils::getInstance().debugOutput("loading complete");
+			}else
+			{
+				OSUtils::getInstance().debugOutput("can not open file");
+			}
+		}
+	}
 }
 
 void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)

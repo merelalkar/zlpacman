@@ -370,10 +370,16 @@ void GameApplication::shutdownGame()
 	m_exitApplication = true;
 }
 
-ISerializer* GameApplication::createFile(const String fileName)
+ISerializer* GameApplication::createFile(const String& fileName)
 {
+	String path = fileName;
+	if(path.find(_text(".map")) != String::npos)
+	{
+		path = _text("./maps/") + fileName;
+	}
+
 	FilePtr result = new File();
-	if(result->create(fileName))
+	if(result->create(path))
 	{
 		m_openedFiles.push_back(result);
 		return result.get();
@@ -382,10 +388,16 @@ ISerializer* GameApplication::createFile(const String fileName)
 	return 0;
 }
 
-ISerializer* GameApplication::openFile(const String fileName, uint32 mode)
+ISerializer* GameApplication::openFile(const String& fileName, uint32 mode)
 {
+	String path = fileName;
+	if(path.find(_text(".map")) != String::npos)
+	{
+		path = _text("./maps/") + fileName;
+	}
+
 	FilePtr result = new File();
-	if(result->open(fileName, mode))
+	if(result->open(path, mode))
 	{
 		m_openedFiles.push_back(result);
 		return result.get();

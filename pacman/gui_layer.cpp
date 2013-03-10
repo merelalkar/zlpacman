@@ -98,7 +98,14 @@ void GUILayer::onMouseButtonDown(MouseButton button, float x, float y, MouseFlag
 
 			}//if((*it)->isPointIn(x, y))
 		}//for(int32 i = 0; i < m_widgets.size(); i++)
+
+		if(focused.IsValid())
+		{
+			focused->onMouseButtonDown(button, x, y, flags);
+		}
 	}//if(isActive())
+
+	
 
 	BaseScreenLayer::onMouseButtonDown(button, x, y, flags);
 }

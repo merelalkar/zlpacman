@@ -252,11 +252,11 @@ namespace Pegas
 
 		enum FileOpenMode
 		{
-			k_fileOpenMode_ReadOnly,
-			k_fileOpenMode_WriteOnly,
-			k_fileOpenMode_ReadWrite,
-			k_fileOpenMode_AppendOnly,
-			k_fileOpenMode_ReadAndAppend
+			k_readOnly,
+			k_writeOnly,
+			k_readWrite,
+			k_appendOnly,
+			k_readAndAppend
 		};
 
 		class IPlatformContext
@@ -268,8 +268,8 @@ namespace Pegas
 			virtual void removeMouseController(IMouseController* controller) = 0;
 			
 			virtual ProcessHandle attachProcess(ProcessPtr process) = 0;
-			virtual ISerializer* createFile(const String fileName) = 0;
-			virtual ISerializer* openFile(const String fileName, uint32 mode) = 0;
+			virtual ISerializer* createFile(const String& fileName) = 0;
+			virtual ISerializer* openFile(const String& fileName, uint32 mode) = 0;
 			virtual void closeFile(ISerializer* file) = 0;
 
 			virtual void addGameState(GameStatePtr state) = 0;

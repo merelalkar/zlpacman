@@ -63,14 +63,31 @@ void TileGrid::load(ISerializer& stream)
 	
 	
 	stream >> m_numRows >> m_numCols;
+	stream >> (int32&)m_left >> (int32&)m_top;
+	stream >> (int32&)m_cellWidth >> (int32&)m_cellHeight;
+
 	assert(m_numRows > 0);
 	assert(m_numCols > 0);
+	assert(m_cellWidth > 0);
+	assert(m_cellHeight > 0);
+
+	m_width = m_cellWidth * m_numCols;
+	m_height = m_cellHeight * m_numRows;
 
 	int32 numTileDescs;
 	stream >> numTileDescs;
-	assert(numTileDescs > 0);
+	if(numTileDescs > 0)
+	{
+		TileDesc desc;
+		for(int32 i = 0; i < numTileDescs; i++)
+		{
+			stream >> (int32&)desc._texture;
+			stream >> desc._isObstacle;
+			stream >> desc._collisionGroup;
 
-	m_tileRenderMap.resize(numTileDescs);
+			addTileDesc(desc);
+		}
+	}	
 
 	m_cells = new int32*[m_numCols];
 	for(int32 col = 0;  col < m_numCols; col++)
@@ -96,8 +113,17 @@ void TileGrid::save(ISerializer& stream)
 	if(!m_cells) return;
 
 	stream << m_numRows << m_numCols;
+	stream << (int32)m_left << (int32)m_top;
+	stream << (int32)m_cellWidth << (int32)m_cellHeight;
+
 	stream << (int32)m_tilesDescs.size();
-	
+	for(int32 i = 0; i < m_tilesDescs.size(); i++)
+	{
+		stream << (int32)m_tilesDescs[i]._texture;
+		stream << m_tilesDescs[i]._isObstacle;
+		stream << m_tilesDescs[i]._collisionGroup;
+	}
+
 	for(int32 col = 0;  col < m_numCols; col++)
 	{
 		for(int32 row = 0; row < m_numRows; row++)
