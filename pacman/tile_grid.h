@@ -47,30 +47,30 @@ namespace Pegas
 		void draw();
 		void debugDraw(int32 flags = k_debugDrawGrid | k_debugDrawObstacles);
 		
-		void setArea(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height);
-		void getArea(CURCOORD& left, CURCOORD& top, CURCOORD& width, CURCOORD& height);
-		void setCellSize(CURCOORD width, CURCOORD height);
+		void setArea(float left, float top, float width, float height);
+		void getArea(float& left, float& top, float& width, float& height);
+		void setCellSize(float width, float height);
 
 		TILEID addTileDesc(const TileDesc& desc);
 		TileDesc getTileDesc(TILEID tile);
 		TILEID setTile(int32 row, int32 col, TILEID tile);
-		TILEID setTilePoint(CURCOORD x, CURCOORD y, TILEID tile);
+		TILEID setTilePoint(float x, float y, TILEID tile);
 		TILEID getTile(int32 row, int32 col);
-		TILEID getTilePoint(CURCOORD x, CURCOORD y);
+		TILEID getTilePoint(float x, float y);
 
-		bool isObstaclePoint(CURCOORD x, CURCOORD y, int32* collisionGroup = 0);
+		bool isObstaclePoint(float x, float y, int32* collisionGroup = 0);
 		bool isObstacle(int32 row, int32 col, int32* collisionGroup = 0);
 
-		void pointToCell(CURCOORD x, CURCOORD y, int32& row, int32& col);
-		void cellCoords(int32 row, int32 col, CURCOORD& x, CURCOORD& y);
+		void pointToCell(float x, float y, int32& row, int32& col);
+		void cellCoords(int32 row, int32 col, float& x, float& y);
 
-		CURCOORD getLeft() const { return m_left; }
-		CURCOORD getTop() const { return m_top; }
-		CURCOORD getWidth() const { return m_width; }
-		CURCOORD getHeight() const { return m_height; }
+		float getLeft() const { return m_left; }
+		float getTop() const { return m_top; }
+		float getWidth() const { return m_width; }
+		float getHeight() const { return m_height; }
 
-		CURCOORD	getCellWidth() const { return m_cellWidth; }
-		CURCOORD	getCellHeight() const { return m_cellHeight; }
+		float	getCellWidth() const { return m_cellWidth; }
+		float	getCellHeight() const { return m_cellHeight; }
 		
 		int32 getNumRows() const { return m_numRows; }
 		int32 getNumColumns() const { return m_numCols; }
@@ -81,13 +81,13 @@ namespace Pegas
 
 		void updateCellSize();
 
-		CURCOORD	m_left;
-		CURCOORD	m_top;
-		CURCOORD	m_width;
-		CURCOORD	m_height;
+		float	m_left;
+		float	m_top;
+		float	m_width;
+		float	m_height;
 
-		CURCOORD	m_cellWidth;
-		CURCOORD	m_cellHeight;
+		float	m_cellWidth;
+		float	m_cellHeight;
 
 		
 		int32		m_numRows;

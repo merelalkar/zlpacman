@@ -4,12 +4,7 @@
 
 namespace Pegas
 {
-	typedef int CURCOORD;
-	typedef int RESOURCEID;
-	typedef unsigned long FLAGSET;
 	
-	typedef int FONTSIZE;
-	typedef unsigned int RGBCOLOR;
 
 #ifdef _UNICODE
 	
@@ -30,10 +25,10 @@ namespace Pegas
 	typedef int ANIMATIONID;
 	typedef int MILLISECONDS;
 
-	typedef signed long     int32;
+	typedef signed int     int32;
 	typedef signed short    int16;
 	typedef signed char     int8;
-	typedef unsigned long   uint32;
+	typedef unsigned int   uint32;
 	typedef unsigned short  uint16;
 	typedef unsigned char   uint8;
 
@@ -56,6 +51,13 @@ namespace Pegas
 	extern const float	MIN_REAL32;
 	extern const float	MAX_REAL32;
 	extern const float	TINY_REAL32;
+
+	typedef float CURCOORD;
+	typedef int32 RESOURCEID;
+	typedef uint32 FLAGSET;
+	
+	typedef int32 FONTSIZE;
+	typedef uint32 RGBCOLOR;
 }
 
 #endif //PEGAS_TYPES_H
