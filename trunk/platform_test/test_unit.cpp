@@ -50,7 +50,7 @@ void TestUnit::testFileIO()
 	bool data_out_bool = false;
 
 	std::vector<String> outStrings;
-	outStrings.push_back(_text("May it be an evening star"));
+	outStrings.push_back(_text("строка по русски"));
 	outStrings.push_back(_text("Shines down upon you"));
 	outStrings.push_back(_text("You walk a lonely road"));
 	outStrings.push_back(_text("Your heart will be true"));
