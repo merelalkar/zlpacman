@@ -3,6 +3,7 @@
 #include "game_resources.h"
 #include "game_events.h"
 #include "pacman_game_screens.h"
+#include "editor.h"
 
 #include "resource.h"
 

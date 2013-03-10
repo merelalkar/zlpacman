@@ -17,11 +17,23 @@ namespace Pegas
 
 	enum CollisionGroups
 	{
-		k_collisionGroupPill = 1,
-		k_collisionGroupSuperPill,
-		k_collisionGroupBonus,
-		k_collisionGroupWall,
-		k_collisionGroupTonnel
+		k_collisionGroupDefault = 0,
+		k_collisionGroupDoor
+	};
+
+	enum Tiles
+	{
+		k_tilePill = 0,
+		k_tileWall,
+		k_tileSuperPill,
+		k_tilePacman,
+		k_tileDoor,
+		k_tileTunnel,
+		k_tileBlinky,
+		k_tilePinky,
+		k_tileInky,
+		k_tileClyde,
+		k_tileBonus
 	};
 
 	class Character: public IEventListener
