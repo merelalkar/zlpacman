@@ -252,7 +252,7 @@ void EditorLayer::create(IPlatformContext* context)
 	m_gridSizingStep = 1;
 
 	m_currentCellSize = m_tileGrid.getCellWidth();
-	m_cellSizingStep = 0.1;
+	m_cellSizingStep = 0.05;
 	m_tileGrid.setCellSize((CURCOORD)m_currentCellSize, (CURCOORD)m_currentCellSize);
 
 	m_minGridWidth = m_maze._width;
@@ -303,8 +303,8 @@ void EditorLayer::handleEvent(EventPtr evt)
 		
 		if(pEvent->m_button->getID() == k_editorButtonSave)
 		{
-			CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
-			CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
+			int32 canvasWidth = (int32)GrafManager::getInstance().getCanvasWidth();
+			int32 canvasHeight = (int32)GrafManager::getInstance().getCanvasHeight();
 
 			tchar fileName[256];
 #ifdef		_UNICODE
@@ -330,8 +330,8 @@ void EditorLayer::handleEvent(EventPtr evt)
 
 		if(pEvent->m_button->getID() == k_editorButtonLoad)
 		{
-			CURCOORD canvasWidth = GrafManager::getInstance().getCanvasWidth();
-			CURCOORD canvasHeight = GrafManager::getInstance().getCanvasHeight();
+			int32 canvasWidth = (int32)GrafManager::getInstance().getCanvasWidth();
+			int32 canvasHeight = (int32)GrafManager::getInstance().getCanvasHeight();
 
 			tchar fileName[256];
 #ifdef		_UNICODE

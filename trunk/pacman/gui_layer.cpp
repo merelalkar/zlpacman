@@ -81,8 +81,6 @@ void GUILayer::onMouseButtonDown(MouseButton button, float x, float y, MouseFlag
 		{
 			WidgetPtr current = m_widgets[i];
 
-			if(focused.IsValid() && current == focused) continue;
-
 			if(current->isPointIn(x, y))
 			{
 				current->setFocus();
@@ -97,12 +95,7 @@ void GUILayer::onMouseButtonDown(MouseButton button, float x, float y, MouseFlag
 				break;
 
 			}//if((*it)->isPointIn(x, y))
-		}//for(int32 i = 0; i < m_widgets.size(); i++)
-
-		if(focused.IsValid())
-		{
-			focused->onMouseButtonDown(button, x, y, flags);
-		}
+		}//for(int32 i = 0; i < m_widgets.size(); i++)		
 	}//if(isActive())
 
 	

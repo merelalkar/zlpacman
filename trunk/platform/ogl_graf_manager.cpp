@@ -104,16 +104,16 @@ void OGLGrafManager::endScene()
 
 CURCOORD OGLGrafManager::getCanvasWidth()
 {
-	GLint values[4];
-	glGetIntegerv(GL_VIEWPORT, values);
+	GLfloat values[4];
+	glGetFloatv(GL_VIEWPORT, values);
 
 	return values[2];
 }
 
 CURCOORD OGLGrafManager::getCanvasHeight()
 {
-	GLint values[4];
-	glGetIntegerv(GL_VIEWPORT, values);
+	GLfloat values[4];
+	glGetFloatv(GL_VIEWPORT, values);
 
 	return values[3];
 }
@@ -125,8 +125,8 @@ void OGLGrafManager::drawLine(CURCOORD fromX, CURCOORD fromY, CURCOORD toX, CURC
 		(color & 0x000000ff), ((color & 0xff000000) >> 24));
 	
 	glBegin(GL_LINES);
-	glVertex2i(fromX, fromY);
-	glVertex2i(toX, toY);
+	glVertex2f(fromX, fromY);
+	glVertex2f(toX, toY);
 	glEnd();
 }
 
@@ -137,10 +137,10 @@ void OGLGrafManager::drawRectangle(CURCOORD left, CURCOORD top, CURCOORD width, 
 		(fill & 0x000000ff), ((fill & 0xff000000) >> 24));
 
 	glBegin(GL_QUADS);
-	glVertex2i(left, top);
-	glVertex2i(left + width, top);
-	glVertex2i(left + width, top + height);
-	glVertex2i(left, top + height);
+	glVertex2f(left, top);
+	glVertex2f(left + width, top);
+	glVertex2f(left + width, top + height);
+	glVertex2f(left, top + height);
 	glEnd();
 
 	if(border == fill) return;
@@ -149,10 +149,10 @@ void OGLGrafManager::drawRectangle(CURCOORD left, CURCOORD top, CURCOORD width, 
 		(border & 0x000000ff), ((border & 0xff000000) >> 24));
 
 	glBegin(GL_LINE_LOOP);
-	glVertex2i(left, top);
-	glVertex2i(left + width, top);
-	glVertex2i(left + width, top + height);
-	glVertex2i(left, top + height);
+	glVertex2f(left, top);
+	glVertex2f(left + width, top);
+	glVertex2f(left + width, top + height);
+	glVertex2f(left, top + height);
 	glEnd();
 }
 
@@ -165,10 +165,10 @@ void OGLGrafManager::drawEllipse(CURCOORD left, CURCOORD top, CURCOORD width, CU
 	glBindTexture(GL_TEXTURE_2D, m_ellipseTexture.getEllipseContentTexture());
 
 	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(left, top);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i(left + width, top);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i(left + width, top + height);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(left, top + height);
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(left, top);
+	glTexCoord2f(1.0f, 1.0f); glVertex2f(left + width, top);
+	glTexCoord2f(1.0f, 0.0f); glVertex2f(left + width, top + height);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(left, top + height);
 	glEnd();
 
 	if(border == fill)
@@ -182,10 +182,10 @@ void OGLGrafManager::drawEllipse(CURCOORD left, CURCOORD top, CURCOORD width, CU
 	glBindTexture(GL_TEXTURE_2D, m_ellipseTexture.getEllipseBorderTexture());
 
 	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(left, top);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i(left + width, top);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i(left + width, top + height);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(left, top + height);
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(left, top);
+	glTexCoord2f(1.0f, 1.0f); glVertex2f(left + width, top);
+	glTexCoord2f(1.0f, 0.0f); glVertex2f(left + width, top + height);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(left, top + height);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
@@ -277,7 +277,7 @@ void OGLGrafManager::drawText(const String& text, const TextParameters& params)
 	glColor4ub(((params._color & 0x00ff0000) >> 16), ((params._color & 0x0000ff00) >> 8), 
 		(params._color & 0x000000ff), ((params._color & 0xff000000) >> 24));
 
-	glRasterPos2i(params._left, params._top);
+	glRasterPos2f(params._left, params._top);
 	glPushAttrib(GL_LIST_BIT);
 	glListBase(fontResource->getFontID());
 	glCallLists(bufferLength, GL_UNSIGNED_BYTE, buffer);
