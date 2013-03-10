@@ -95,6 +95,24 @@ void GameApplication::registerResources()
 	m_textureManager.registerResource(k_texturePillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PILL_TILE));
 	m_textureManager.registerResource(k_textureSuperPillTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_SUPER_PILL_TILE));
 	m_textureManager.registerResource(k_texturePacmanLogo, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PACMAN_LOGO));
+
+	m_textureManager.registerResource(k_texturePacmanStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PACMAN_STATIC_SPRITE));
+	m_textureManager.registerResource(k_textureBlinkyStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_BLINKY_STATIC_SPRITE));
+	m_textureManager.registerResource(k_texturePinkyStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PINKY_STATIC_SPRITE));
+	m_textureManager.registerResource(k_textureInkyStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_INKY_STATIC_SPRITE));
+	m_textureManager.registerResource(k_textureClydeStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_CLYDE_STATIC_SPRITE));
+	m_textureManager.registerResource(k_textureBonusStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_BONUS_STATIC_SPRITE));
+	m_textureManager.registerResource(k_textureLivesText, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_LIVES_TEXT));
+	m_textureManager.registerResource(k_textureScoresText, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_SCORES_TEXT));
+	m_textureManager.registerResource(k_textureGetReadyText, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_GET_READY_TEXT));
+
+	m_textureManager.registerResource(k_texturePacmanEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PACMAN_EDITOR_TILE));
+	m_textureManager.registerResource(k_textureBlinkyEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_BLINKY_EDITOR_TILE));
+	m_textureManager.registerResource(k_texturePinkyEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_PINKY_EDITOR_TILE));
+	m_textureManager.registerResource(k_textureInkyEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_INKY_EDITOR_TILE));
+	m_textureManager.registerResource(k_textureClydeEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_CLYDE_EDITOR_TILE));
+	m_textureManager.registerResource(k_textureTunnelEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_TUNNEL_EDITOR_TILE));
+	m_textureManager.registerResource(k_textureBonusEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_BONUS_EDITOR_TILE));
 		
 	m_fontManager.registerResource(k_fontMain, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 12));
 	m_fontManager.registerResource(k_fontMenuButton, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 36));
