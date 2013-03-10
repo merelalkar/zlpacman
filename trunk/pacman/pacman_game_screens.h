@@ -59,7 +59,7 @@ namespace Pegas
 	*********************************************************************************************************/
 	class TileGrid;
 
-	class EditorLayer: public GUILayer
+	class EditorLayer: public GUILayer, public IEventListener
 	{
 	public:
 		EditorLayer(IPlatformContext* context);
@@ -70,8 +70,8 @@ namespace Pegas
 		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);
 		virtual void render(IPlatformContext* context);
 
-		//virtual void destroy(IPlatformContext* context);
-		//virtual void handleEvent(EventPtr evt);
+		virtual void destroy(IPlatformContext* context);
+		virtual void handleEvent(EventPtr evt);
 	private:
 		//режимы редактора
 		enum EditorMode

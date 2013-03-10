@@ -30,8 +30,8 @@ namespace Pegas
 		
 		virtual ProcessHandle attachProcess(ProcessPtr process);
 
-		virtual ISerializer* createFile(const String fileName);
-		virtual ISerializer* openFile(const String fileName, uint32 mode);
+		virtual ISerializer* createFile(const String& fileName);
+		virtual ISerializer* openFile(const String& fileName, uint32 mode);
 		virtual void closeFile(ISerializer* file);
 
 		virtual void addGameState(GameStatePtr state);

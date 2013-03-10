@@ -125,13 +125,23 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    hInst = hInstance; // —охранить дескриптор экземпл€ра в глобальной переменной
 
-   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, 480, 800, NULL, NULL, hInstance, NULL);
+   //Samsung Galaxy S+ Screen Resolution
+   int WINDOW_WIDTH = 480;
+   int WINDOW_HEIGHT = 800;
+
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, 
+	   CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
       return FALSE;
    }
+
+   RECT rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+   WINDOWINFO info;
+   GetWindowInfo(hWnd, &info);
+   AdjustWindowRectEx(&rect, info.dwStyle, GetMenu(hWnd) != NULL, info.dwExStyle);
+   MoveWindow(hWnd, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), FALSE); 
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -169,10 +179,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE: 
-         
-        GetClientRect(hWnd, &rect); 
+        GetClientRect(hWnd, &rect);
+
 		app.init(hWnd);
 		app.resize(rect.right, rect.bottom);
+        
 		break;
 	case WM_SIZE:
 		

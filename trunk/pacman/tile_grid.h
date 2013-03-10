@@ -7,6 +7,7 @@ namespace Pegas
 	typedef int32 TILEID;
 	struct TileDesc
 	{
+		TileDesc() {};
 			TileDesc(const RESOURCEID& texture, 
 					 bool isObstacle, 
 					 int32	collisionGroup = 0) 
