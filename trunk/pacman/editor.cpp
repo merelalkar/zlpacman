@@ -62,24 +62,18 @@ void EditorLayer::create(IPlatformContext* context)
 	m_tileGrid.create(30, 33);
 	m_tileGrid.setArea(m_maze._left, m_maze._top, m_maze._width, m_maze._height);
 
-	/*
-		enum Tiles
-	{
-		k_tilePill = 0,
-		k_tileWall
-		k_tileSuperPill,
-		k_tilePacman,
-		k_tileDoor,
-		k_tileTunnel,
-		k_tileBlinky,
-		k_tilePinky,
-		k_tileInky,
-		k_tileClyde
-	};
-	*/
 	m_tileGrid.addTileDesc(TileDesc(k_texturePillTile, false));
 	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDefault));
 	m_tileGrid.addTileDesc(TileDesc(k_textureSuperPillTile, false));
+
+	m_tileGrid.addTileDesc(TileDesc(k_texturePacmanEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDoor));
+	m_tileGrid.addTileDesc(TileDesc(k_textureTunnelEditorTile, false));
+
+	m_tileGrid.addTileDesc(TileDesc(k_textureBlinkyEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(k_texturePinkyEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(k_textureInkyEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(k_textureClydeEditorTile, false));
 	
 	m_currentEditorMode = k_editorMode_None;
 	m_gridPanStep = 0.2;
