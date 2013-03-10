@@ -7,7 +7,25 @@ namespace Pegas
 		k_textureMaze = 1,
 		k_texturePillTile,
 		k_textureSuperPillTile,
-		k_texturePacmanLogo
+		k_texturePacmanLogo,
+		
+		k_texturePacmanStaticSprite,
+		k_textureBlinkyStaticSprite,
+		k_texturePinkyStaticSprite,
+		k_textureInkyStaticSprite,
+		k_textureClydeStaticSprite,
+		k_textureBonusStaticSprite,
+		k_textureLivesText,
+		k_textureScoresText,
+		k_textureGetReadyText,
+
+		k_texturePacmanEditorTile,
+		k_textureBlinkyEditorTile,
+		k_texturePinkyEditorTile,
+		k_textureInkyEditorTile,
+		k_textureClydeEditorTile,
+		k_textureTunnelEditorTile,
+		k_textureBonusEditorTile
 	};
 
 	enum FontResorces

@@ -190,7 +190,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\media\blinki_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\blinky_static_sprite.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\media\bmp00001.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\bonus_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\bonus_static_sprite.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\clyde_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\get_ready.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\inky_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\lives_text.bmp"
 				>
 			</File>
 			<File
@@ -202,6 +234,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\media\pacman_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\pacman_static_sprite.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\media\pill_tile.bmp"
 				>
 			</File>
@@ -210,11 +250,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\media\pinky_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\pinky_static_sprite.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\scores_text.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\small.ico"
 				>
 			</File>
 			<File
 				RelativePath=".\media\super_pill_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\tunnel_editor_tile.bmp"
 				>
 			</File>
 		</Filter>
