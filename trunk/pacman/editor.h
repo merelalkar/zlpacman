@@ -47,6 +47,12 @@ namespace Pegas
 		TileGrid m_tileGrid;
 		SpriteParameters m_maze;
 
+		TextParameters m_statusTextParams;
+		String m_status;
+
+		std::map<TILEID, SpriteParameters> m_staticSprites;
+		bool m_showSprites;
+
 		CURCOORD m_workZone_fromX;
 		CURCOORD m_workZone_fromY;
 		CURCOORD m_workZone_toX;

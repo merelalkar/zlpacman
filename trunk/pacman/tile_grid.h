@@ -58,6 +58,9 @@ namespace Pegas
 		TILEID getTile(int32 row, int32 col);
 		TILEID getTilePoint(float x, float y);
 
+		int32 getTiles(TILEID tile, std::list<Vector3>& outTiles);
+		int32 getNumTiles(TILEID tile);
+
 		bool isObstaclePoint(float x, float y, int32* collisionGroup = 0);
 		bool isObstacle(int32 row, int32 col, int32* collisionGroup = 0);
 

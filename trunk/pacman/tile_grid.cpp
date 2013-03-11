@@ -366,3 +366,51 @@ void TileGrid::cellCoords(int32 row, int32 col, CURCOORD& x, CURCOORD& y)
 	x = m_left + (col * m_cellWidth);
 	y = m_top + (row * m_cellHeight);
 }
+
+int32 TileGrid::getTiles(TILEID tile, std::list<Vector3>& outTiles)
+{
+	if(tile == k_emptyCellTileId)
+	{
+		Vector3 coords;
+		for(int32 col = 0;  col < m_numCols; col++)
+		{
+			for(int32 row = 0; row < m_numRows; row++)
+			{
+				if(m_cells[col][row] == k_emptyCellTileId)
+				{
+					cellCoords(row, col, coords._x, coords._y);
+					outTiles.push_back(coords);
+				}
+			}//for(int32 row = 0; row < m_numRows; row++)
+		}//for(int32 col = 0;  col < m_numCols; col++)		
+	}else
+	{
+		int32 row, column;
+		Vector3 coords;
+		for(TILES_RENDER_LIST_IT it = m_tileRenderMap[tile].begin(); it != m_tileRenderMap[tile].end(); ++it)
+		{
+			extractCoords((*it), row, column);
+			cellCoords(row, column, coords._x, coords._y);
+
+			outTiles.push_back(coords);
+		}		
+	}
+
+	return outTiles.size();
+}
+
+int32 TileGrid::getNumTiles(TILEID tile)
+{
+	if(tile == k_emptyCellTileId)
+	{
+		int32 total = m_numRows * m_numCols;
+		for(TILES_MAP_IT it = m_tileRenderMap.begin(); it != m_tileRenderMap.end(); ++it)
+		{
+			total-= it->size();
+		}
+
+		return total;
+	}
+
+	return m_tileRenderMap[tile].size();
+}
