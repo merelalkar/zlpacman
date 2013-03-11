@@ -281,6 +281,10 @@
 				RelativePath=".\media\tunnel_editor_tile.bmp"
 				>
 			</File>
+			<File
+				RelativePath=".\media\tunnel_static_sprite.bmp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="app"
