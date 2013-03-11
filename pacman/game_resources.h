@@ -18,14 +18,14 @@ namespace Pegas
 		k_textureLivesText,
 		k_textureScoresText,
 		k_textureGetReadyText,
-
 		k_texturePacmanEditorTile,
 		k_textureBlinkyEditorTile,
 		k_texturePinkyEditorTile,
 		k_textureInkyEditorTile,
 		k_textureClydeEditorTile,
 		k_textureTunnelEditorTile,
-		k_textureBonusEditorTile
+		k_textureBonusEditorTile,
+		k_textureTunnelStaticSprite
 	};
 
 	enum FontResorces

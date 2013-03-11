@@ -32,8 +32,9 @@
 #define IDB_BLINKY_STATIC_SPRITE        157
 #define IDB_PINKY_STATIC_SPRITE         158
 #define IDB_INKY_STATIC_SPRITE          159
-#define IDB_BITMAP2                     160
 #define IDB_CLYDE_STATIC_SPRITE         160
+#define IDB_BITMAP1                     161
+#define IDB_TUNNEL_STATIC_SPRITE        161
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -41,7 +42,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        161
+#define _APS_NEXT_RESOURCE_VALUE        162
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110

@@ -74,7 +74,36 @@ void EditorLayer::create(IPlatformContext* context)
 	m_tileGrid.addTileDesc(TileDesc(k_texturePinkyEditorTile, false));
 	m_tileGrid.addTileDesc(TileDesc(k_textureInkyEditorTile, false));
 	m_tileGrid.addTileDesc(TileDesc(k_textureClydeEditorTile, false));
-	
+	m_tileGrid.addTileDesc(TileDesc(k_textureBonusEditorTile, false));
+
+	m_showSprites = false;
+
+	SpriteParameters staticSprite;
+	staticSprite._left = staticSprite._top = 0;
+	staticSprite._width = m_tileGrid.getCellWidth();
+	staticSprite._height = m_tileGrid.getCellHeight();
+
+	m_staticSprites[k_tilePacman] = staticSprite;
+	m_staticSprites[k_tilePacman]._texture = k_texturePacmanStaticSprite;
+
+	m_staticSprites[k_tileBlinky] = staticSprite;
+	m_staticSprites[k_tileBlinky]._texture = k_textureBlinkyStaticSprite;
+
+	m_staticSprites[k_tilePinky] = staticSprite;
+	m_staticSprites[k_tilePinky]._texture = k_texturePinkyStaticSprite;
+
+	m_staticSprites[k_textureInkyEditorTile] = staticSprite;
+	m_staticSprites[k_textureInkyEditorTile]._texture = k_textureInkyStaticSprite;
+
+	m_staticSprites[k_textureClydeEditorTile] = staticSprite;
+	m_staticSprites[k_textureClydeEditorTile]._texture = k_textureClydeStaticSprite;
+
+	m_staticSprites[k_tileBonus] = staticSprite;
+	m_staticSprites[k_tileBonus]._texture = k_textureBonusStaticSprite;
+
+	m_staticSprites[k_tileTunnel] = staticSprite;
+	m_staticSprites[k_tileTunnel]._texture = k_textureTunnelStaticSprite;
+		
 	m_currentEditorMode = k_editorMode_None;
 	m_gridPanStep = 0.2;
 	m_cellSizingStep = 0.05;
@@ -101,6 +130,11 @@ void EditorLayer::create(IPlatformContext* context)
 	loadButton->setCaption(_text("load"));
 
 	addWidget(WidgetPtr(loadButton));
+
+	m_statusTextParams._color = 0xffffffff;
+	m_statusTextParams._font = k_fontMain;
+	m_statusTextParams._left = buttonLeft + buttonWidth + 30;
+	m_statusTextParams._top =  buttonTop;
 }
 
 void EditorLayer::destroy(IPlatformContext* context)
@@ -298,60 +332,70 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tilePill;
+		m_status = _text("current mode: tiles placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_2)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileWall;
+		m_status = _text("current mode: wall obstacle placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_3)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileSuperPill;
+		m_status = _text("current mode: super pill placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_4)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tilePacman;
+		m_status = _text("current mode: pacman placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_5)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileDoor;
+		m_status = _text("current mode: room door placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_6)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileTunnel;
+		m_status = _text("current mode: tonnel placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_7)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileBlinky;
+		m_status = _text("current mode: blinky placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_8)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tilePinky;
+		m_status = _text("current mode: pinky placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_9)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileInky;
+		m_status = _text("current mode: inky placement");
 	}
 
 	if(key == IKeyboardController::k_keyCode_0)
 	{
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileClyde;
+		m_status = _text("current mode: clyde placement");
 	}	
 }
 
@@ -365,6 +409,7 @@ void EditorLayer::onKeyUp(KeyCode key, KeyFlags flags)
 		&& key != IKeyboardController::k_keyCodeRIGHT)
 	{
 		m_currentEditorMode = k_editorMode_None;
+		m_status = _text("");
 	}
 }
 
@@ -374,6 +419,21 @@ void EditorLayer::onMouseButtonDown(MouseButton button, float x, float y, MouseF
 
 	if(button == k_mouseButtonLeft && m_currentEditorMode == k_editorMode_TilesPlacement)
 	{
+		if(m_currentTile == k_tilePacman 
+			|| m_currentTile == k_tileBlinky 
+			|| m_currentTile == k_tilePinky
+			|| m_currentTile == k_tileInky
+			|| m_currentTile == k_tileClyde)
+		{
+			//
+			std::list<Vector3> tileCoords;
+			m_tileGrid.getTiles(m_currentTile, tileCoords);
+			for(std::list<Vector3>::iterator it = tileCoords.begin(); it != tileCoords.end(); ++it)
+			{
+				m_tileGrid.setTilePoint(it->_x, it->_y, TileGrid::k_emptyCellTileId); 
+			}
+		}
+
 		TILEID prevID = m_tileGrid.getTilePoint(x, y);
 		prevID = prevID != m_currentTile ? m_currentTile : TileGrid::k_emptyCellTileId;
 		m_tileGrid.setTilePoint(x, y, prevID);
@@ -393,6 +453,8 @@ void EditorLayer::render(IPlatformContext* context)
 
 	m_tileGrid.draw();
 	m_tileGrid.debugDraw(m_debugDrawFlags);
+
+	GrafManager::getInstance().drawText(m_status, m_statusTextParams);
 }
 
 

@@ -214,11 +214,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\media\clyde_static_sprite.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\media\get_ready.bmp"
 				>
 			</File>
 			<File
 				RelativePath=".\media\inky_editor_tile.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\media\inky_static_sprite.bmp"
 				>
 			</File>
 			<File
