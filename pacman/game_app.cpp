@@ -114,6 +114,7 @@ void GameApplication::registerResources()
 	m_textureManager.registerResource(k_textureTunnelEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_TUNNEL_EDITOR_TILE));
 	m_textureManager.registerResource(k_textureBonusEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_BONUS_EDITOR_TILE));
 	m_textureManager.registerResource(k_textureTunnelStaticSprite, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_TUNNEL_STATIC_SPRITE));
+	m_textureManager.registerResource(k_textureGameObjectEditorTile, MAKE_INT_RESOURCE_CODE(m_hInstance, IDB_TUNNEL_STATIC_SPRITE));
 		
 	m_fontManager.registerResource(k_fontMain, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 12));
 	m_fontManager.registerResource(k_fontMenuButton, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 36));

@@ -66,15 +66,15 @@ void EditorLayer::create(IPlatformContext* context)
 	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDefault));
 	m_tileGrid.addTileDesc(TileDesc(k_textureSuperPillTile, false));
 
-	m_tileGrid.addTileDesc(TileDesc(k_texturePacmanEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));
 	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDoor));
 	m_tileGrid.addTileDesc(TileDesc(k_textureTunnelEditorTile, false));
 
-	m_tileGrid.addTileDesc(TileDesc(k_textureBlinkyEditorTile, false));
-	m_tileGrid.addTileDesc(TileDesc(k_texturePinkyEditorTile, false));
-	m_tileGrid.addTileDesc(TileDesc(k_textureInkyEditorTile, false));
-	m_tileGrid.addTileDesc(TileDesc(k_textureClydeEditorTile, false));
-	m_tileGrid.addTileDesc(TileDesc(k_textureBonusEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));
 
 	m_showSprites = false;
 
@@ -92,11 +92,11 @@ void EditorLayer::create(IPlatformContext* context)
 	m_staticSprites[k_tilePinky] = staticSprite;
 	m_staticSprites[k_tilePinky]._texture = k_texturePinkyStaticSprite;
 
-	m_staticSprites[k_textureInkyEditorTile] = staticSprite;
-	m_staticSprites[k_textureInkyEditorTile]._texture = k_textureInkyStaticSprite;
+	m_staticSprites[k_tileInky] = staticSprite;
+	m_staticSprites[k_tileInky]._texture = k_textureInkyStaticSprite;
 
-	m_staticSprites[k_textureClydeEditorTile] = staticSprite;
-	m_staticSprites[k_textureClydeEditorTile]._texture = k_textureClydeStaticSprite;
+	m_staticSprites[k_tileClyde] = staticSprite;
+	m_staticSprites[k_tileClyde]._texture = k_textureClydeStaticSprite;
 
 	m_staticSprites[k_tileBonus] = staticSprite;
 	m_staticSprites[k_tileBonus]._texture = k_textureBonusStaticSprite;
@@ -168,6 +168,18 @@ void EditorLayer::handleEvent(EventPtr evt)
 				OSUtils::getInstance().debugOutput("saving...");
 
 				m_tileGrid.save(*fileStream);
+				
+				(*fileStream) << (int32)m_staticSprites.size();
+				for(std::map<TILEID, SpriteParameters>::iterator it = m_staticSprites.begin(); 
+					it != m_staticSprites.end(); ++it)
+				{
+					(*fileStream) << it->first;
+					(*fileStream) << it->second._left;
+					(*fileStream) << it->second._top;
+					(*fileStream) << it->second._width;
+					(*fileStream) << it->second._height;
+				}
+
 				m_context->closeFile(fileStream);
 
 				OSUtils::getInstance().debugOutput("saving complete");
@@ -194,6 +206,29 @@ void EditorLayer::handleEvent(EventPtr evt)
 				OSUtils::getInstance().debugOutput("loading...");
 
 				m_tileGrid.load(*fileStream);
+				
+				int32 numSprites;
+				TILEID id;
+				CURCOORD left, top, width, height;
+				
+				(*fileStream) >> numSprites;
+				for(int32 i = 0; i < numSprites; i++)
+				{
+					(*fileStream) >> id;
+					(*fileStream) >> left;
+					(*fileStream) >> top;
+					(*fileStream) >> width;
+					(*fileStream) >> height;
+
+					if(m_staticSprites.count(id))
+					{
+						m_staticSprites[id]._left = left;
+						m_staticSprites[id]._top = top;
+						m_staticSprites[id]._width = width;
+						m_staticSprites[id]._height = height;
+					}
+				}//for(int32 i = 0; i < numSprites; i++)				
+
 				m_context->closeFile(fileStream);
 
 				OSUtils::getInstance().debugOutput("loading complete");
@@ -310,6 +345,39 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 
 			m_tileGrid.create(numRows, numColumns);
 		}
+
+		if(m_currentEditorMode == k_editorMode_TilesPlacement && m_showSprites)
+		{
+			if(key == IKeyboardController::k_keyCodeUP)
+			{
+				m_staticSprites[m_currentTile]._height += m_cellSizingStep;
+				m_staticSprites[m_currentTile]._width += m_cellSizingStep;	
+			}
+
+			if(key == IKeyboardController::k_keyCodeDOWN)
+			{
+				m_staticSprites[m_currentTile]._height -= m_cellSizingStep;
+				m_staticSprites[m_currentTile]._width -= m_cellSizingStep;
+
+				if(m_staticSprites[m_currentTile]._height < 5)
+				{
+					m_staticSprites[m_currentTile]._height = 5;
+				}
+
+				if(m_staticSprites[m_currentTile]._width < 5)
+				{
+					m_staticSprites[m_currentTile]._width = 5;
+				}
+			}
+
+			std::list<Vector3> tileCoords;
+			m_tileGrid.getTiles(m_currentTile, tileCoords, true);
+			if(tileCoords.size() > 0)
+			{
+				m_staticSprites[m_currentTile]._left = tileCoords.front()._x - (m_staticSprites[m_currentTile]._width * 0.5);
+				m_staticSprites[m_currentTile]._top = tileCoords.front()._y - (m_staticSprites[m_currentTile]._height * 0.5);
+			}
+		}
 	}
 
 	if(key == IKeyboardController::k_keyCode_Q && !(flags & k_keyFlagRepeat))
@@ -326,6 +394,11 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 			m_debugDrawFlags &= (~TileGrid::k_debugDrawObstacles);
 		else
 			m_debugDrawFlags |= TileGrid::k_debugDrawObstacles;
+	}
+
+	if(key == IKeyboardController::k_keyCode_S && !(flags & k_keyFlagRepeat))
+	{
+		m_showSprites = !m_showSprites;
 	}
 
 	if(key == IKeyboardController::k_keyCode_1)
@@ -396,7 +469,14 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileClyde;
 		m_status = _text("current mode: clyde placement");
-	}	
+	}
+
+	if(key == IKeyboardController::k_keyCode_B)
+	{
+		m_currentEditorMode = k_editorMode_TilesPlacement;
+		m_currentTile = k_tileBonus;
+		m_status = _text("current mode: bonus placement");
+	}
 }
 
 void EditorLayer::onKeyUp(KeyCode key, KeyFlags flags)
@@ -409,6 +489,7 @@ void EditorLayer::onKeyUp(KeyCode key, KeyFlags flags)
 		&& key != IKeyboardController::k_keyCodeRIGHT)
 	{
 		m_currentEditorMode = k_editorMode_None;
+		m_currentTile = TileGrid::k_emptyCellTileId;
 		m_status = _text("");
 	}
 }
@@ -425,7 +506,6 @@ void EditorLayer::onMouseButtonDown(MouseButton button, float x, float y, MouseF
 			|| m_currentTile == k_tileInky
 			|| m_currentTile == k_tileClyde)
 		{
-			//
 			std::list<Vector3> tileCoords;
 			m_tileGrid.getTiles(m_currentTile, tileCoords);
 			for(std::list<Vector3>::iterator it = tileCoords.begin(); it != tileCoords.end(); ++it)
@@ -441,6 +521,14 @@ void EditorLayer::onMouseButtonDown(MouseButton button, float x, float y, MouseF
 		int32 row, col;
 		m_tileGrid.pointToCell(x, y, row, col);
 		OSUtils::getInstance().debugOutput("tile clicked [row = %d, column = %d]", row, col);
+
+		if(m_staticSprites.count(m_currentTile) > 0)
+		{
+			SpriteParameters& sprite = m_staticSprites[m_currentTile];
+			m_tileGrid.cellCoords(row, col, sprite._left, sprite._top, true);
+			sprite._left-= sprite._width * 0.5;
+			sprite._top-= sprite._height * 0.5;
+		}
 	}	
 }
 
@@ -455,6 +543,23 @@ void EditorLayer::render(IPlatformContext* context)
 	m_tileGrid.debugDraw(m_debugDrawFlags);
 
 	GrafManager::getInstance().drawText(m_status, m_statusTextParams);
+
+	if(m_showSprites)
+	{
+		for(std::map<TILEID, SpriteParameters>::iterator it = m_staticSprites.begin(); it != m_staticSprites.end(); ++it)
+		{
+			if(m_tileGrid.getNumTiles(it->first) > 0)
+			{
+				GrafManager::getInstance().drawSprite(it->second);
+			}
+
+			if(it->first == m_currentTile)
+			{
+				GrafManager::getInstance().drawRectangle(it->second._left, it->second._top, 
+					it->second._width, it->second._height, 0xff00ff00, 0);
+			}
+		}//for(std::map<TILEID, SpriteParameters>::iterator it = m_staticSprites.begin();
+	}//if(m_showSprites)
 }
 
 

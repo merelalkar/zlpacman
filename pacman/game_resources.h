@@ -25,7 +25,8 @@ namespace Pegas
 		k_textureClydeEditorTile,
 		k_textureTunnelEditorTile,
 		k_textureBonusEditorTile,
-		k_textureTunnelStaticSprite
+		k_textureTunnelStaticSprite,
+		k_textureGameObjectEditorTile
 	};
 
 	enum FontResorces

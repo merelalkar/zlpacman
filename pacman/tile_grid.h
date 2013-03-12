@@ -58,14 +58,14 @@ namespace Pegas
 		TILEID getTile(int32 row, int32 col);
 		TILEID getTilePoint(float x, float y);
 
-		int32 getTiles(TILEID tile, std::list<Vector3>& outTiles);
+		int32 getTiles(TILEID tile, std::list<Vector3>& outTiles, bool center = false);
 		int32 getNumTiles(TILEID tile);
 
 		bool isObstaclePoint(float x, float y, int32* collisionGroup = 0);
 		bool isObstacle(int32 row, int32 col, int32* collisionGroup = 0);
 
 		void pointToCell(float x, float y, int32& row, int32& col);
-		void cellCoords(int32 row, int32 col, float& x, float& y);
+		void cellCoords(int32 row, int32 col, float& x, float& y, bool center = false);
 
 		float getLeft() const { return m_left; }
 		float getTop() const { return m_top; }
