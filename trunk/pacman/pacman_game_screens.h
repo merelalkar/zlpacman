@@ -10,7 +10,8 @@ namespace Pegas
 		k_layerOptions,
 		k_layerPause,
 		k_layerFader,
-		k_layerEditor
+		k_layerEditor,
+		k_layerGameWorld
 	};
 
 	enum PacmanGameStates
@@ -19,6 +20,12 @@ namespace Pegas
 		k_stateGame,
 		k_stateEditor		
 	};
+
+	static const CURCOORD k_mazeWidth;
+	static const CURCOORD k_mazeHeight;
+	static const CURCOORD k_topBarHeight;
+	static const CURCOORD k_bottomBarHeight;
+	static const CURCOORD k_sideMargin;
 
 	/*******************************************************************************************************
 		Main Menu

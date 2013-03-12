@@ -94,6 +94,8 @@ namespace Pegas
 		DWORD* getInvertedImageBits() const { return m_pInvertedPixels; };
 		int getImageWidth() const { return m_nImageWidth; };
 		int getImageHeight() const { return m_nImageHeght; };
+		int getInnerImageWidth() const { return m_nInnerImageWidth; };
+		int getInnerImageHeight() const { return m_nInnerImageHeight; };
 
 		GLuint getTexture() const { return m_textureID; };
 		GLuint getInvertedTexture() const { return m_invertedTextureID; };
@@ -119,7 +121,9 @@ namespace Pegas
 		DWORD* m_pInvertedPixels;
 		int m_nImageWidth;
 		int m_nImageHeght;
-
+		int m_nInnerImageWidth;
+		int m_nInnerImageHeight;
+		
 		GLuint m_textureID;
 		GLuint m_invertedTextureID;
 		GLfloat m_fMaxUCoord;

@@ -40,7 +40,8 @@ std::set<int>* TextureResource::s_pTextureValidSizes = 0;
 
 TextureResource::TextureResource()
 	:m_pPixels(0), m_pInvertedPixels(0), m_nImageWidth(0), m_nImageHeght(0),
-	m_textureID(0), m_invertedTextureID(0), m_fMaxUCoord(0.0f), m_fMaxVCoord(0.0f)
+	m_textureID(0), m_invertedTextureID(0), m_fMaxUCoord(0.0f), m_fMaxVCoord(0.0f),
+	m_nInnerImageWidth(0), m_nInnerImageHeight(0)
 {
 	inreaseInstanceCounter();
 }
@@ -72,32 +73,32 @@ void TextureResource::load()
 	LPBYTE pBuffer = new BYTE[pbmInfo->bmiHeader.biSizeImage];
 	GetDIBits(memDC, hBitmap, 0, pbmInfo->bmiHeader.biHeight, pBuffer, pbmInfo, DIB_RGB_COLORS);
 
-	int innerWidth = pbmInfo->bmiHeader.biWidth;
-	int innerHeight = pbmInfo->bmiHeader.biHeight;
-	if(s_pTextureValidSizes->count(innerWidth) == 0)
+	m_nInnerImageWidth = pbmInfo->bmiHeader.biWidth;
+	m_nInnerImageHeight = pbmInfo->bmiHeader.biHeight;
+	if(s_pTextureValidSizes->count(m_nInnerImageWidth) == 0)
 	{
 		std::set<int>::iterator find_it = std::find_if(s_pTextureValidSizes->begin(), 
-			s_pTextureValidSizes->end(), std::bind2nd(std::greater<int>(), innerWidth));
+			s_pTextureValidSizes->end(), std::bind2nd(std::greater<int>(), m_nInnerImageWidth));
 		if(find_it != s_pTextureValidSizes->end())
 			m_nImageWidth = *find_it;
 	}else
 	{
-		m_nImageWidth = innerWidth;
+		m_nImageWidth = m_nInnerImageWidth;
 	}
 
-	if(s_pTextureValidSizes->count(innerHeight) == 0)
+	if(s_pTextureValidSizes->count(m_nInnerImageHeight) == 0)
 	{
 		std::set<int>::iterator find_it = std::find_if(s_pTextureValidSizes->begin(), 
-			s_pTextureValidSizes->end(), std::bind2nd(std::greater<int>(), innerHeight));
+			s_pTextureValidSizes->end(), std::bind2nd(std::greater<int>(), m_nInnerImageHeight));
 		if(find_it != s_pTextureValidSizes->end())
 			m_nImageHeght = *find_it;
 	}else
 	{
-		m_nImageHeght = innerHeight;
+		m_nImageHeght = m_nInnerImageHeight;
 	}	
 
-	m_fMaxUCoord = (innerWidth * 1.0) / m_nImageWidth;
-	m_fMaxVCoord = (innerHeight * 1.0) / m_nImageHeght;
+	m_fMaxUCoord = (m_nInnerImageWidth * 1.0) / m_nImageWidth;
+	m_fMaxVCoord = (m_nInnerImageHeight * 1.0) / m_nImageHeght;
 	m_pPixels = new DWORD[m_nImageWidth * m_nImageHeght];
 	m_pInvertedPixels = new DWORD[m_nImageWidth * m_nImageHeght];
 		
@@ -112,7 +113,7 @@ void TextureResource::load()
 		for(int x = 0; x < m_nImageWidth; x++)
 		{
 			dstColor = invColor = 0;
-			if(x < innerWidth && y < innerHeight)
+			if(x < m_nInnerImageWidth && y < m_nInnerImageHeight)
 			{
 				srcColor = pCurrentBitString[x];
 				if(srcColor != k_colorKey)
@@ -132,7 +133,7 @@ void TextureResource::load()
 			pInvertedPixelsPointer++;
 		}
 
-		if(y < innerHeight)
+		if(y < m_nInnerImageHeight)
 		{
 			pIndexPointer+= nPitch;
 		}

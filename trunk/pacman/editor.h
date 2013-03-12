@@ -5,6 +5,8 @@
 
 namespace Pegas
 {
+	
+
 	/********************************************************************************************************
 		Editor
 	*********************************************************************************************************/
@@ -56,12 +58,7 @@ namespace Pegas
 		CURCOORD m_workZone_fromX;
 		CURCOORD m_workZone_fromY;
 		CURCOORD m_workZone_toX;
-		CURCOORD m_workZone_toY;
-
-		static const CURCOORD k_mazeWidth;
-		static const CURCOORD k_mazeHeight;
-		static const CURCOORD k_topBarHeight;
-		static const CURCOORD k_bottomBarHeight;
+		CURCOORD m_workZone_toY;		
 	};
 
 	class Editor: public DefaultGameState
