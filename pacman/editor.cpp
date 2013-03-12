@@ -13,11 +13,7 @@ using namespace Pegas;
 /*****************************************************************************************************************
 	Editor
 *****************************************************************************************************************/
-const CURCOORD EditorLayer::k_mazeWidth = 470;
-const CURCOORD EditorLayer::k_mazeHeight = 519;
 
-const CURCOORD EditorLayer::k_topBarHeight = 15;
-const CURCOORD EditorLayer::k_bottomBarHeight = 10;
 
 enum EditorButtons
 {

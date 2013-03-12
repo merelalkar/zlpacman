@@ -16,6 +16,14 @@ using namespace Pegas;
 const CURCOORD MainMenuLayer::k_logoWidth = 470;
 const CURCOORD MainMenuLayer::k_logoHeight = 112;
 
+const CURCOORD k_mazeWidth = 470;
+const CURCOORD k_mazeHeight = 519;
+
+const CURCOORD k_topBarHeight = 15;
+const CURCOORD k_bottomBarHeight = 10;
+
+const CURCOORD k_sideMargin = 5;
+
 enum MenuButtons
 {
 	k_menuButtonStart = 1,
