@@ -5,16 +5,17 @@
 
 namespace Pegas
 {
-	class GameWorld public IEventListener
+	class GameWorld: public IEventListener
 	{
 	public:
 		GameWorld();
+
+		virtual void handleEvent(EventPtr evt);
 
 		void create(IPlatformContext* context);
 		void destroy(IPlatformContext* context);
 		void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit);
 		void render(IPlatformContext* context);
-
 	private:
 		IPlatformContext* m_context;
 	};

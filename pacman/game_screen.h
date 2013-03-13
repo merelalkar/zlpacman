@@ -15,16 +15,21 @@ namespace Pegas
 		virtual void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit);
 		virtual void render(IPlatformContext* context);	
 		virtual void onKeyDown(KeyCode key, KeyFlags flags);
+		virtual void onKeyUp(KeyCode key, KeyFlags flags);
 		virtual void handleEvent(EventPtr evt);
 
 	private:
 		GameWorld m_gameWorld;
 
 		SpriteParameters m_maze;
-		SpriteParameters m_scoresText;
+		SpriteParameters m_scoresTextSprite;
 		SpriteParameters m_livesText;
 		SpriteParameters m_liveIcon;
-		TextParameters m_scoresText;
+		TextParameters	 m_scoresTextParams;
+		String			 m_scoresText;
+
 		int32 m_numLives;
+		int32 m_numScore;
+		int32 m_level;
 	};	
 }

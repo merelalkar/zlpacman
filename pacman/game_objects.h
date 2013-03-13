@@ -39,6 +39,15 @@ namespace Pegas
 	class Character: public IEventListener
 	{
 	public:
+		enum eMovingDirections
+		{
+			k_moveLeft = 0,
+			k_moveTop,
+			k_moveRight,
+			k_moveBottom
+		};
+
+	public:
 		Character(TileGrid* tileGrid, int actorId);
 
 		Vector3 getPosition() const { return m_position; }
@@ -53,13 +62,7 @@ namespace Pegas
 		Vector3	  m_position;
 		float	  m_radius;
 
-		enum eMovingDirections
-		{
-			k_moveLeft = 0,
-			k_moveTop,
-			k_moveRight,
-			k_moveBottom
-		};
+		
 
 		Vector3 m_directions[4];
 		int		m_currentDirection;
