@@ -139,6 +139,51 @@ namespace Pegas
 	};
 
 	/***************************************************************************************************
+		HUD events
+	****************************************************************************************************/
+	struct Event_HUD_LevelChanged: public Event
+	{
+	public:
+		Event_HUD_LevelChanged(int32 level): _level(level)  
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_LevelChanged [level = %d]", level);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _level;
+	};
+
+	struct Event_HUD_ScoresChanged: public Event
+	{
+	public:
+		Event_HUD_ScoresChanged(int32 scores): _scores(scores)  
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_ScoresChanged [scores = %d]", scores);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _scores;
+	};
+
+	struct Event_HUD_LivesChanged: public Event
+	{
+	public:
+		Event_HUD_LivesChanged(int32 lives): _lives(lives)  
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_LivesChanged [lives = %d]", lives);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _lives;
+	};
+
+	/***************************************************************************************************
 		GUI events;
 	****************************************************************************************************/
 	class Widget;
@@ -247,6 +292,18 @@ namespace Pegas
 		Event_Game_BackwardToPreviousState() 
 		{
 			OSUtils::getInstance().debugOutput("Event_Game_BackwardToPreviousState");			
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_Game_Pause: public Event
+	{
+	public:
+		Event_Game_Pause()  
+		{
+			OSUtils::getInstance().debugOutput("Event_Game_Pause");
 		}
 
 		virtual EventType getType() const { return k_type; }

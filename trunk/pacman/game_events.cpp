@@ -21,3 +21,9 @@ const EventType Event_GUI_FadeoutComplete::k_type = "Event_GUI_FadeoutComplete";
 const EventType Event_Game_ChangeState::k_type = "Event_Game_ChangeState";
 const EventType Event_Game_ForwardToState::k_type = "Event_Game_ForwardToState";
 const EventType Event_Game_BackwardToPreviousState::k_type = "Event_Game_BackwardToPreviousState";
+
+const EventType Event_HUD_LevelChanged::k_type = "Event_HUD_LevelChanged";
+const EventType Event_HUD_ScoresChanged::k_type = "Event_HUD_ScoresChanged";
+const EventType Event_HUD_LivesChanged::k_type = "Event_HUD_LivesChanged";
+
+const EventType Event_Game_Pause::k_type = "Event_Game_Pause";
