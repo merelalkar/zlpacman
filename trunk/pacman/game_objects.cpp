@@ -10,6 +10,44 @@ using namespace Pegas;
 /*************************************************************************************************************
 	Character
 **************************************************************************************************************/
+Character::Character(int actorId)
+{
+	m_actorId = actorId;
+	m_tileGrid = 0;
+	m_radius = 1.0f;
+
+	m_directions[k_moveLeft] = Vector3(-1.0f, 0.0f, 0.0f);
+	m_directions[k_moveTop] = Vector3(0.0f, -1.0f, 0.0f);
+	m_directions[k_moveRight] = Vector3(1.0f, 0.0f, 0.0f);
+	m_directions[k_moveBottom] = Vector3(0.0f, 1.0f, 0.0f);
+
+	m_currentDirection = k_moveRight;
+	m_velocity = 1.0f;
+	m_turnCommand = -1.0f;
+
+	m_isBlocked = false;
+	m_isMoving = false;	
+}
+
+void Character::create(TileGrid* tileGrid, const Vector3& position)
+{
+	assert(tileGrid && "null pointer: tileGrid");
+
+	m_tileGrid = tileGrid;
+	m_radius = tileGrid->getCellWidth() * 0.5;
+	m_position = position;
+
+	TheEventMgr.addEventListener(this, Event_ChangeDirection::k_type);
+	TheEventMgr.addEventListener(this, Event_CancelChangingDirection::k_type);
+	TheEventMgr.addEventListener(this, Event_EnableCharacterControl::k_type);
+	TheEventMgr.addEventListener(this, Event_DisableCharacterControl::k_type);
+}
+
+void Character::destroy()
+{
+	TheEventMgr.removeEventListener(this);
+}
+
 void Character::handleEvent(EventPtr evt)
 {
 	if(evt->getType() == Event_ChangeDirection::k_type)
@@ -183,6 +221,31 @@ void Character::update(float deltaTime)
 /******************************************************************************************************************************
 	Pacman
 *******************************************************************************************************************************/
+Pacman::Pacman(int actorId, IPlatformContext* platform):
+	Character(actorId)
+{
+	m_platform = platform;
+	m_prevRow = 0;
+	m_prevColumn = 0;
+	m_currentAnimation = 0;
+}
+
+void Pacman::create(TileGrid* tileGrid, const Vector3& position)
+{
+	Character::create(tileGrid, position);
+
+	TheEventMgr.addEventListener(this, Event_CharacterStopped::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterMoveOn::k_type);
+	TheEventMgr.addEventListener(this, Event_PacmanDeath::k_type);
+}
+
+void Pacman::setAnimation(int state, ProcessPtr animation)
+{
+	assert(state >= 0 && state <k_animationTotal && "invalid animation key");
+
+	m_animations[state] = animation;
+}
+
 void Pacman::handleEvent(EventPtr evt)
 {
 	if(evt->getType() == Event_CharacterStopped::k_type)

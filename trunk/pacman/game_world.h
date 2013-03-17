@@ -18,5 +18,8 @@ namespace Pegas
 		void render(IPlatformContext* context);
 	private:
 		IPlatformContext* m_context;
+
+		TileGrid		  m_tileGrid;
+		std::map<TILEID, SpriteParameters> m_sprites;
 	};
 }
