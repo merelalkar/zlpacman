@@ -25,8 +25,11 @@ namespace Pegas
 		SpriteParameters m_scoresTextSprite;
 		SpriteParameters m_livesText;
 		SpriteParameters m_liveIcon;
+		
 		TextParameters	 m_scoresTextParams;
 		String			 m_scoresText;
+		TextParameters	 m_levelTextParams;
+		String			 m_levelText;
 
 		int32 m_numLives;
 		int32 m_numScore;

@@ -48,13 +48,16 @@ namespace Pegas
 		};
 
 	public:
-		Character(TileGrid* tileGrid, int actorId);
+		Character(int actorId);
 
 		Vector3 getPosition() const { return m_position; }
 		float	getRadius() const { return m_radius; }
 
+		virtual void create(TileGrid* tileGrid, const Vector3& position);
+		virtual void destroy();
 		virtual void handleEvent(EventPtr evt);
 		virtual void update(float deltaTime);
+		virtual void draw() {}
 
 	protected:
 		int		  m_actorId;	
@@ -76,20 +79,26 @@ namespace Pegas
 	class Pacman: public Character 
 	{
 	public:
-		virtual void handleEvent(EventPtr evt);
-		virtual void update(float deltaTime);
-		virtual void draw();
-
-	private:
-		int32 m_prevRow;
-		int32 m_prevColumn;
-
 		enum Animation
 		{
 			k_animationRunning = 0,
 			k_animationDeath,
 			k_animationTotal
 		};
+
+	public:
+		Pacman(int actorId, IPlatformContext* platform);
+
+		virtual void create(TileGrid* tileGrid, const Vector3& position);
+		virtual void handleEvent(EventPtr evt);
+		virtual void update(float deltaTime);
+		virtual void draw();
+
+		void setAnimation(int state, ProcessPtr animation);
+
+	private:
+		int32 m_prevRow;
+		int32 m_prevColumn;
 
 		IPlatformContext* m_platform;
 		ProcessPtr	m_animations[k_animationTotal];
