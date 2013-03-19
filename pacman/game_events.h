@@ -120,6 +120,19 @@ namespace Pegas
 		int _pill;
 	};
 
+	struct Event_CharacterKilled: public Event
+	{
+	public:
+		Event_CharacterKilled(int actorId, const Vector3& position): 
+		  _actorId(actorId), _position(position)  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int _actorId;
+		Vector3 _position;
+	};
+
 	struct Event_PacmanDeath: public Event
 	{
 	public:
@@ -133,6 +146,42 @@ namespace Pegas
 	{
 	public:
 		Event_PacmanDeathComplete()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_SuperForceOn: public Event
+	{
+	public:
+		Event_SuperForceOn()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_SuperForceOff: public Event
+	{
+	public:
+		Event_SuperForceOff()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_SuperForcePreOff: public Event
+	{
+	public:
+		Event_SuperForcePreOff()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_ResetActors: public Event
+	{
+	public:
+		Event_ResetActors()  {}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;		
@@ -181,6 +230,51 @@ namespace Pegas
 		static const EventType k_type;
 
 		int32 _lives;
+	};
+
+	struct Event_HUD_Frag: public Event
+	{
+	public:
+		Event_HUD_Frag(int32 scores, const Vector3& position): 
+		  _scores(scores), _position(position)   
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_Frag [scores = %d, x = %.2f, y = %.2f]", 
+				scores, position._x, position._y);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32	_scores;
+		Vector3 _position;
+	};
+
+	struct Event_HUD_GetReady: public Event
+	{
+	public:
+		Event_HUD_GetReady(bool show = true): _show(show)  
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_GetReady [show = %d]", show ? 1 : 0);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		bool _show;
+	};
+
+	struct Event_HUD_GameOver: public Event
+	{
+	public:
+		Event_HUD_GameOver(bool show = true): _show(show)  
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_GameOver [show = %d]", show ? 1 : 0);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		bool _show;
 	};
 
 	/***************************************************************************************************
@@ -304,6 +398,18 @@ namespace Pegas
 		Event_Game_Pause()  
 		{
 			OSUtils::getInstance().debugOutput("Event_Game_Pause");
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_Game_Resume: public Event
+	{
+	public:
+		Event_Game_Resume()  
+		{
+			OSUtils::getInstance().debugOutput("Event_Game_Resume");
 		}
 
 		virtual EventType getType() const { return k_type; }
