@@ -160,6 +160,7 @@ IDB_PINKY_STATIC_SPRITE BITMAP                  "media\\pinky_static_sprite.bmp"
 IDB_INKY_STATIC_SPRITE  BITMAP                  "media\\inky_static_sprite.bmp"
 IDB_CLYDE_STATIC_SPRITE BITMAP                  "media\\clyde_static_sprite.bmp"
 IDB_TUNNEL_STATIC_SPRITE BITMAP                  "media\\tunnel_static_sprite.bmp"
+IDB_CHARACTERS          BITMAP                  "media\\animation_sprite_sheet.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
