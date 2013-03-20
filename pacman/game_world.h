@@ -22,6 +22,11 @@ namespace Pegas
 		typedef GameObjectList::iterator GameObjectListIt;
 		typedef std::map<TILEID, SpriteParameters> SpriteList;
 
+		void loadMap();
+		void createGameObjects();
+		void initializeGame();
+		void checkNewLife();
+
 		IPlatformContext* m_context;
 
 		TileGrid		  m_tileGrid;

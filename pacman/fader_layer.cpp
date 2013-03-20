@@ -17,6 +17,8 @@ void FaderLayer::create(IPlatformContext* context)
 {
 	TheEventMgr.addEventListener(this, Event_GUI_StartFadein::k_type);
 	TheEventMgr.addEventListener(this, Event_GUI_StartFadeout::k_type);
+	TheEventMgr.addEventListener(this, Event_GUI_FadeOn::k_type);
+	TheEventMgr.addEventListener(this, Event_GUI_FadeOff::k_type);
 
 	m_width = GrafManager::getInstance().getCanvasWidth();
 	m_height = GrafManager::getInstance().getCanvasHeight();
@@ -84,5 +86,20 @@ void FaderLayer::handleEvent(EventPtr evt)
 		m_fadein = false;
 
 		setActivity(true);
+	}
+
+	if(evt->getType() == Event_GUI_FadeOn::k_type)
+	{
+		Event_GUI_FadeOn* pEvent = evt->cast<Event_GUI_FadeOn>();
+		assert(pEvent->_fadePercent >= 0 && "Event_GUI_FadeOn invalid argument: percent");
+		assert(pEvent->_fadePercent <= 100 && "Event_GUI_FadeOn invalid argument: percent");
+
+		int32 alpha = (int32)((pEvent->_fadePercent * 255.0f) / 100.0f);
+		m_color = alpha << 24;
+	}
+
+	if(evt->getType() == Event_GUI_FadeOff::k_type)
+	{
+		m_color = 0;
 	}
 }
