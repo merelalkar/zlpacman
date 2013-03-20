@@ -87,6 +87,28 @@ namespace Pegas
 		int _actorId;
 	};
 
+	struct Event_ShowCharacter: public Event
+	{
+	public:
+		Event_HideCharacter(int actorId): _actorId(actorId)  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int _actorId;
+	};
+
+	struct Event_HideCharacter: public Event
+	{
+	public:
+		Event_HideCharacter(int actorId): _actorId(actorId)  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int _actorId;
+	};
+
 	struct Event_EnableCharacterControl: public Event
 	{
 	public:
@@ -187,6 +209,15 @@ namespace Pegas
 		static const EventType k_type;		
 	};
 
+	struct Event_RestartGame: public Event
+	{
+	public:
+		Event_RestartGame()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
 	/***************************************************************************************************
 		HUD events
 	****************************************************************************************************/
@@ -202,6 +233,22 @@ namespace Pegas
 		static const EventType k_type;
 
 		int32 _level;
+	};
+
+	struct Event_HUD_NewLevel: public Event
+	{
+	public:
+		Event_HUD_NewLevel(int32 level, float showTimeSeconds): 
+		  _level(level), _showTimeSeconds(showTimeSeconds)  
+		{
+			OSUtils::getInstance().debugOutput("Event_HUD_NewLevel [level = %d, time = %.2f]", level, showTimeSeconds);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _level;
+		float _showTimeSeconds;
 	};
 
 	struct Event_HUD_ScoresChanged: public Event
@@ -323,6 +370,32 @@ namespace Pegas
 		static const EventType k_type;
 
 		float _lengthInSeconds;
+	};
+
+	struct Event_GUI_FadeOn: public Event
+	{
+	public:
+		Event_GUI_FadeOn(int32 fadePercent): _fadePercent(fadePercent) 
+		{
+			OSUtils::getInstance().debugOutput("Event_GUI_FadeOn [percent = %d]", fadePercent);
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _fadePercent;
+	};
+
+	struct Event_GUI_FadeOff: public Event
+	{
+	public:
+		Event_GUI_FadeOff() 
+		{
+			OSUtils::getInstance().debugOutput("Event_GUI_FadeOff");
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
 	};
 
 	struct Event_GUI_FadeinComplete: public Event
