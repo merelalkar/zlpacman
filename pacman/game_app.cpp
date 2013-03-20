@@ -266,6 +266,11 @@ ProcessHandle GameApplication::attachProcess(ProcessPtr process)
 	return m_processManager.attachProcess(process);
 }
 
+void GameApplication::terminateProcess(const ProcessHandle& handle)
+{
+	m_processManager.terminateProcess(handle);
+}
+
 void GameApplication::addGameState(GameStatePtr state)
 {
 	if(m_statesMap.count(state->getID()) == 0)

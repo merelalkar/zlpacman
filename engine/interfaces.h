@@ -268,6 +268,7 @@ namespace Pegas
 			virtual void removeMouseController(IMouseController* controller) = 0;
 			
 			virtual ProcessHandle attachProcess(ProcessPtr process) = 0;
+			virtual void terminateProcess(const ProcessHandle& handle) = 0;
 			virtual ISerializer* createFile(const String& fileName) = 0;
 			virtual ISerializer* openFile(const String& fileName, uint32 mode) = 0;
 			virtual void closeFile(ISerializer* file) = 0;

@@ -10,10 +10,12 @@ const int32 GameWorld::k_numLives = 4;
 const int32 GameWorld::k_baseScoresForFrag = 200;
 const int32 GameWorld::k_baseScoresToLife = 10000;
 const int32 GameWorld::k_updateScoresToLife = 2000;
+const float GameWorld::k_baseSuperForceTime = 10.0f;
 
 GameWorld::GameWorld()
 {
-
+	m_superForceTimer1 = 0;
+	m_superForceTimer2 = 0;
 }
 
 void GameWorld::create(IPlatformContext* context)
@@ -309,7 +311,25 @@ void GameWorld::handleEvent(EventPtr evt)
 		}
 		if(pEvent->_pill == k_tileSuperPill)
 		{
+			EventPtr evt(new Pegas::Event_SuperForceOn());
+			TheEventMgr.pushEventToQueye(evt);
+
+			float superForceTime = k_baseSuperForceTime - (2.0f * (m_currentLevel - 1));
+			if(superForceTime < 0)
+			{
+				superForceTime = 1.0f;
+			}
+			float superForcePreTime = superForceTime * 0.8;
+
+			m_context->terminateProcess(m_superForceTimer1);
+			m_context->terminateProcess(m_superForceTimer2);
 			
+			ProcessPtr waiting1(new Waiting(superForceTime, EventPtr(new Event_SuperForceOff()) ));
+			m_superForceTimer1 = m_context->attachProcess(waiting1);
+			ProcessPtr waiting2(new Waiting(superForcePreTime, EventPtr(new Event_SuperForcePreOff()) ));
+			m_superForceTimer2 = m_context->attachProcess(waiting2);
+			
+			m_fragScores = k_baseScoresForFrag;
 		}
 		if(pEvent->_pill == k_tileBonus)
 		{
