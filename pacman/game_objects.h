@@ -36,15 +36,7 @@ namespace Pegas
 		k_tileBonus
 	};
 
-	class Waiting: public Process
-	{
-	public:
-		Waiting(float seconds, EventPtr	notifyEvent);
-		virtual void update(MILLISECONDS deltaTime);		
-	private:
-		MILLISECONDS m_remainTime;
-		EventPtr	 m_notifyEvent;
-	};
+	
 
 	class Character: public IEventListener
 	{

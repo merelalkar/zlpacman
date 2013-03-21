@@ -6,30 +6,6 @@
 #include "platform_windows.h"
 
 using namespace Pegas;
-
-/************************************************************************************************************
-	Waiting class
-**************************************************************************************************************/
-Waiting::Waiting(float seconds, EventPtr notifyEvent)
-{
-	assert(seconds > 0.0f && "invalid time fo waiting");
-	m_remainTime = seconds * 1000.0f;
-	m_notifyEvent = notifyEvent;
-}
-
-void Waiting::update(MILLISECONDS deltaTime)
-{
-	m_remainTime-= deltaTime;
-	if(m_remainTime <= 0)
-	{
-		if(m_notifyEvent.IsValid())
-		{
-			TheEventMgr.pushEventToQueye(m_notifyEvent);
-		}
-		terminate();
-	}
-}
-
 /*************************************************************************************************************
 	Character
 **************************************************************************************************************/

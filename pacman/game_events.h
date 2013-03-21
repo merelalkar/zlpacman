@@ -90,7 +90,7 @@ namespace Pegas
 	struct Event_ShowCharacter: public Event
 	{
 	public:
-		Event_HideCharacter(int actorId): _actorId(actorId)  {}
+		Event_ShowCharacter(int actorId): _actorId(actorId)  {}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;
