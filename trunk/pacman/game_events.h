@@ -134,12 +134,15 @@ namespace Pegas
 	struct Event_PacmanSwallowedPill: public Event
 	{
 	public:
-		Event_PacmanSwallowedPill(int pill): _pill(pill)  {}
+		Event_PacmanSwallowedPill(int pill, int row, int column): 
+		  _pill(pill), _row(row), _column(column)  {}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;
 
 		int _pill;
+		int _row;
+		int _column;
 	};
 
 	struct Event_CharacterKilled: public Event
@@ -195,6 +198,27 @@ namespace Pegas
 	{
 	public:
 		Event_SuperForcePreOff()  {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;		
+	};
+
+	struct Event_BonusOn: public Event
+	{
+	public:
+		Event_BonusOn(int32 row, int32 column): _row(row), _column(column) {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _row;
+		int32 _column;
+	};
+
+	struct Event_BonusOff: public Event
+	{
+	public:
+		Event_BonusOff()  {}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;		

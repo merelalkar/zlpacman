@@ -22,6 +22,8 @@ const EventType Event_PacmanDeathComplete::k_type = "Event_PacmanDeathComplete";
 const EventType Event_SuperForceOn::k_type = "Event_SuperForceOn";
 const EventType Event_SuperForceOff::k_type = "Event_SuperForceOff";
 const EventType Event_SuperForcePreOff::k_type = "Event_SuperForcePreOff";
+const EventType Event_BonusOn::k_type = "Event_BonusOn";
+const EventType Event_BonusOff::k_type = "Event_BonusOff";
 
 const EventType Event_ResetActors::k_type = "Event_ResetActors";
 const EventType Event_RestartGame::k_type = "Event_RestartGame";

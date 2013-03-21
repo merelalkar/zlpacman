@@ -292,7 +292,7 @@ void Pacman::update(float deltaTime)
 
 			if(tile == k_tilePill || tile == k_tileSuperPill || tile == k_tileBonus)
 			{
-				EventPtr newEvent(new Event_PacmanSwallowedPill(tile));
+				EventPtr newEvent(new Event_PacmanSwallowedPill(tile, row, column));
 				TheEventMgr.pushEventToQueye(newEvent);
 			}
 		}//if(row != m_prevRow && column != m_prevColumn)
