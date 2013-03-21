@@ -21,11 +21,11 @@ namespace Pegas
 		k_stateEditor		
 	};
 
-	static const CURCOORD k_mazeWidth;
-	static const CURCOORD k_mazeHeight;
-	static const CURCOORD k_topBarHeight;
-	static const CURCOORD k_bottomBarHeight;
-	static const CURCOORD k_sideMargin;
+	const CURCOORD k_mazeWidth = 470.0f;
+	const CURCOORD k_mazeHeight = 519.0f;
+	const CURCOORD k_topBarHeight = 15;
+	const CURCOORD k_bottomBarHeight = 10;
+	const CURCOORD k_sideMargin = 5;
 
 	/*******************************************************************************************************
 		Main Menu

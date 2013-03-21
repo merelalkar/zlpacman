@@ -1,9 +1,77 @@
 #include "stdafx.h"
 #include "game_world.h"
 
+#include "game_resources.h"
+#include "pacman_game_screens.h"
 #include "fader_layer.h"
 
 using namespace Pegas;
+
+/************************************************************************************************************
+	Waiting class
+**************************************************************************************************************/
+Waiting::Waiting(float seconds, bool stopOnPause)
+{
+	assert(seconds > 0.0f && "invalid time fo waiting");
+	m_remainTime = seconds * 1000.0f;
+	m_stopOnPause = stopOnPause;
+}
+
+void Waiting::update(MILLISECONDS deltaTime)
+{
+	m_remainTime-= deltaTime;
+	if(m_remainTime <= 0)
+	{
+		for(std::list<EventPtr>::iterator it = m_events.begin(); it != m_events.end(); ++it)
+		{
+			TheEventMgr.pushEventToQueye(*it);
+		}
+		terminate();
+	}
+}
+
+void Waiting::start(ProcessHandle myHandle, ProcessManagerPtr owner)
+{
+	Process::start(myHandle, owner);
+
+	if(m_stopOnPause)
+	{
+		TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
+		TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
+	}
+}
+
+void Waiting::terminate()
+{
+	Process::terminate();
+
+	TheEventMgr.removeEventListener(this);
+}
+
+void Waiting::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_Game_Pause::k_type)
+	{
+		suspend();
+	}
+
+	if(evt->getType() == Event_Game_Resume::k_type)
+	{
+		resume();
+	}
+}
+
+void Waiting::addFinalEvent(EventPtr evt)
+{
+	m_events.push_back(evt);
+}
+
+	
+		
+
+/**************************************************************************************************************
+	GameWorld class
+***************************************************************************************************************/
 
 const int32 GameWorld::k_scoresForPile = 10;
 const int32 GameWorld::k_numLives = 4;
@@ -103,7 +171,7 @@ void GameWorld::createGameObjects()
 
 	if(tiles.size() > 0 && m_sprites.count(k_tilePacman) > 0)
 	{
-		Pacman* pacman = new Pacman(k_actorPacman, context);
+		Pacman* pacman = new Pacman(k_actorPacman, m_context);
 		pacman->create(&m_tileGrid, tiles.front());
 
 		m_gameObjects.push_back(GameObjectPtr(pacman));
@@ -151,8 +219,9 @@ void GameWorld::initializeGame()
 	EventPtr fadeoutEvent(new Event_GUI_StartFadeout());
 	TheEventMgr.pushEventToQueye(fadeoutEvent);
 	
-	ProcessPtr waiting(new Waiting(3.0f, EventPtr(new Event_RestartGame())));
-	m_context->attachProcess(waiting);
+	Waiting* waiting = new Waiting(3.0f);
+	waiting->addFinalEvent(EventPtr(new Event_RestartGame()));
+	m_context->attachProcess(ProcessPtr(waiting));
 }
 
 void GameWorld::checkNewLife()
@@ -173,20 +242,23 @@ void GameWorld::restartGame()
 	EventPtr evt(new Event_HUD_GetReady(false));
 	TheEventMgr.pushEventToQueye(evt);
 
-	EventPtr evt(new Event_EnableCharacterControl(k_actorPacman));
-	EventPtr evt2(new Event_EnableCharacterControl(k_actorBlinky));
+	EventPtr evt2(new Event_EnableCharacterControl(k_actorPacman));
+	EventPtr evt3(new Event_EnableCharacterControl(k_actorBlinky));
 
-	TheEventMgr.pushEventToQueye(evt);
 	TheEventMgr.pushEventToQueye(evt2);
+	TheEventMgr.pushEventToQueye(evt3);
+	
+	Waiting* waiting = new Waiting(2.0f);
+	waiting->addFinalEvent(EventPtr(new Event_EnableCharacterControl(k_actorPinky)));
+	m_context->attachProcess(ProcessPtr(waiting));
 		
-	ProcessPtr waiting(new Waiting(2.0f, EventPtr(new Event_EnableCharacterControl(k_actorPinky)) ) );
-	m_context->attachProcess(waiting);
+	Waiting* waiting2 = new Waiting(2.0f);
+	waiting2->addFinalEvent(EventPtr(new Event_EnableCharacterControl(k_actorInky)));
+	waiting->attachNext(ProcessPtr(waiting2));
 		
-	ProcessPtr waiting2(new Waiting(2.0f, EventPtr(new Event_EnableCharacterControl(k_actorInky)) ) );
-	waiting->attachNext(waiting2);
-		
-	ProcessPtr waiting3(new Waiting(2.0f, EventPtr(new Event_EnableCharacterControl(k_actorClyde)) ) );
-	waiting2->attachNext(waiting3);
+	Waiting* waiting3 = new Waiting(2.0f);
+	waiting3->addFinalEvent(EventPtr(new Event_EnableCharacterControl(k_actorClyde)));
+	waiting2->attachNext(ProcessPtr(waiting3));
 }
 
 void GameWorld::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit)
@@ -218,9 +290,9 @@ void GameWorld::handleEvent(EventPtr evt)
 			EventPtr evt(new Event_DisableCharacterControl(k_actorAll));
 			TheEventMgr.pushEventToQueye(evt);
 			
-			EventPtr evt2(new Event_PacmanDeath());
-			ProcessPtr waiting(new Waiting(1.0f, evt2));
-			m_context->attachProcess(waiting);
+			Waiting*  waiting = new Waiting(1.0f);
+			waiting->addFinalEvent(EventPtr(new Event_PacmanDeath()));
+			m_context->attachProcess(ProcessPtr(waiting));
 		}else
 		{
 			m_currentScores+= m_fragScores;
@@ -244,7 +316,7 @@ void GameWorld::handleEvent(EventPtr evt)
 			EventPtr evt(new Event_HUD_GameOver());
 			TheEventMgr.pushEventToQueye(evt);
 			
-			ProcessPtr waiting(new Waiting(2.0f, EventPtr());
+			ProcessPtr waiting(new Waiting(2.0f));
 
 			ProcessPtr fadein(new Fadein());
 			waiting->attachNext(fadein);
@@ -261,8 +333,9 @@ void GameWorld::handleEvent(EventPtr evt)
 			EventPtr evt2(new Event_HUD_LivesChanged(m_remainLives));
 			TheEventMgr.pushEventToQueye(evt2);
 
-			ProcessPtr waiting(new Waiting(2.0f, EventPtr(new Event_RestartGame()));
-			m_context->attachProcess(waiting);
+			Waiting* waiting = new Waiting(2.0f);
+			waiting->addFinalEvent(EventPtr(new Event_RestartGame()));
+			m_context->attachProcess(ProcessPtr(waiting));
 		}
 	}
 
@@ -301,12 +374,14 @@ void GameWorld::handleEvent(EventPtr evt)
 				EventPtr newLevel(new Event_HUD_NewLevel(m_currentLevel, 2.0f));
 				TheEventMgr.pushEventToQueye(newLevel);
 
-				ProcessPtr waiting1(new Waiting(2.0f, EventPtr(new Event_GUI_FadeOff()) ) );
-				m_context->attachProcess(waiting1);
-				ProcessPtr waiting2(new Waiting(2.0f, EventPtr(new Event_HUD_GetReady()) ) );
-				m_context->attachProcess(waiting2);
-				ProcessPtr waiting3(new Waiting(1.0f, EventPtr(new Event_RestartGame()) ) );
-				waiting2->attachNext(waiting3);
+				Waiting* waiting1 = new Waiting(2.0f);
+				waiting1->addFinalEvent(EventPtr(new Event_GUI_FadeOff()));
+				waiting1->addFinalEvent(EventPtr(new Event_HUD_GetReady()));
+				m_context->attachProcess(ProcessPtr(waiting1));
+
+				Waiting* waiting2 = new Waiting(1.0f);
+				waiting2->addFinalEvent(EventPtr(new Event_RestartGame()));
+				waiting1->attachNext(ProcessPtr(waiting2));
 			}
 		}
 		if(pEvent->_pill == k_tileSuperPill)
@@ -324,10 +399,13 @@ void GameWorld::handleEvent(EventPtr evt)
 			m_context->terminateProcess(m_superForceTimer1);
 			m_context->terminateProcess(m_superForceTimer2);
 			
-			ProcessPtr waiting1(new Waiting(superForceTime, EventPtr(new Event_SuperForceOff()) ));
-			m_superForceTimer1 = m_context->attachProcess(waiting1);
-			ProcessPtr waiting2(new Waiting(superForcePreTime, EventPtr(new Event_SuperForcePreOff()) ));
-			m_superForceTimer2 = m_context->attachProcess(waiting2);
+			Waiting* waiting1 = new Waiting(superForceTime);
+			waiting1->addFinalEvent(EventPtr(new Event_SuperForceOff()));
+			m_superForceTimer1 = m_context->attachProcess(ProcessPtr(waiting1));
+
+			Waiting* waiting2 = new Waiting(superForcePreTime);
+			waiting2->addFinalEvent(EventPtr(new Event_SuperForcePreOff()));
+			m_superForceTimer2 = m_context->attachProcess(ProcessPtr(waiting2));
 			
 			m_fragScores = k_baseScoresForFrag;
 		}
