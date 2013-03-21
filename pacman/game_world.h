@@ -63,12 +63,18 @@ namespace Pegas
 		int32 m_scoresToLive;
 		int32 m_updateScoresToLive;
 
+		bool  m_bonusActive;
+		int32 m_bonusRow;
+		int32 m_bonusColumn;
+
 		ProcessHandle m_superForceTimer1;
 		ProcessHandle m_superForceTimer2;
 
 		static const int32 k_scoresForPile;
 		static const int32 k_baseScoresForFrag;
 		static const int32 k_baseScoresToLife;
+		static const int32 k_baseScoresForBonus;
+		static const int32 k_baseBonusScoresPerLevel;
 		static const int32 k_updateScoresToLife;
 		static const int32 k_numLives;
 		static const float k_baseSuperForceTime;

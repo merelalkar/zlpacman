@@ -79,11 +79,16 @@ const int32 GameWorld::k_baseScoresForFrag = 200;
 const int32 GameWorld::k_baseScoresToLife = 10000;
 const int32 GameWorld::k_updateScoresToLife = 2000;
 const float GameWorld::k_baseSuperForceTime = 10.0f;
+const int32 GameWorld::k_baseScoresForBonus = 100;
+const int32 GameWorld::k_baseBonusScoresPerLevel = 200;
 
 GameWorld::GameWorld()
 {
 	m_superForceTimer1 = 0;
 	m_superForceTimer2 = 0;
+	m_bonusActive = false;
+	m_bonusRow = 0;
+	m_bonusColumn = 0;
 }
 
 void GameWorld::create(IPlatformContext* context)
@@ -94,8 +99,8 @@ void GameWorld::create(IPlatformContext* context)
 	TheEventMgr.addEventListener(this, Event_PacmanSwallowedPill::k_type);
 	TheEventMgr.addEventListener(this, Event_PacmanDeathComplete::k_type);
 	TheEventMgr.addEventListener(this, Event_RestartGame::k_type);
-	TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
-	TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
+	TheEventMgr.addEventListener(this, Event_BonusOn::k_type);
+	TheEventMgr.addEventListener(this, Event_BonusOff::k_type);
 	
 	loadMap();
 	createGameObjects();
@@ -409,19 +414,37 @@ void GameWorld::handleEvent(EventPtr evt)
 			
 			m_fragScores = k_baseScoresForFrag;
 		}
-		if(pEvent->_pill == k_tileBonus)
+		if(pEvent->_pill == k_tileBonus && m_bonusActive)
 		{
+			if(pEvent->_row == m_bonusRow && pEvent->_column == m_bonusColumn)
+			{
+				int32 bonusScores = k_baseScoresForBonus + (k_baseBonusScoresPerLevel * (m_currentLevel - 1));
+				m_currentScores+= bonusScores;
 
+				EventPtr evt(new Event_HUD_ScoresChanged(m_currentScores));
+				TheEventMgr.pushEventToQueye(evt);
+
+				checkNewLife();
+
+				Vector3 fragPosition;
+				m_tileGrid.cellCoords(pEvent->_row, pEvent->_column, fragPosition._x, fragPosition._y, true);
+
+				EventPtr evt2(new Pegas::Event_HUD_Frag(bonusScores, fragPosition));
+				TheEventMgr.pushEventToQueye(evt2);
+			}
 		}
 	}
 
-	if(evt->getType() == Event_Game_Pause::k_type)
+	if(evt->getType() == Event_BonusOn::k_type)
 	{
-
+		Event_BonusOn* pEvent = evt->cast<Event_BonusOn>();
+		m_bonusActive = true;
+		m_bonusRow = pEvent->_row;
+		m_bonusColumn = pEvent->_column;
 	}
 
-	if(evt->getType() == Event_Game_Resume::k_type)
+	if(evt->getType() == Event_BonusOff::k_type)
 	{
-
-	}
+		m_bonusActive = false;
+	}	
 }
