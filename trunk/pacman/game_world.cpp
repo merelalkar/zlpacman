@@ -205,7 +205,7 @@ void GameWorld::createGameObjects()
 
 void GameWorld::initializeGame()
 {
-	m_currentLevel = 8;
+	m_currentLevel = 1;
 	m_currentScores = 0;
 	m_remainLives = k_numLives;
 	m_scoresToLive = k_baseScoresToLife;

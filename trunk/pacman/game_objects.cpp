@@ -191,6 +191,9 @@ void Character::update(float deltaTime)
 		{
 			m_position = newPos;
 		}
+
+		EventPtr evt(new Event_CharacterMoved(m_actorId, m_position, currentRow, currentColumn));
+		TheEventMgr.pushEventToQueye(evt);
 	}
 
 	//поворот
@@ -379,4 +382,153 @@ void Pacman::draw()
 	};
 
 	GrafManager::getInstance().drawSprite(*sprite);
+}
+
+/****************************************************************************************************************
+	Ghost class implementation
+****************************************************************************************************************/
+Ghost::Ghost(int actorId, IPlatformContext* platform)
+	:Character(actorId), m_platform(platform)
+{
+
+}
+
+void Ghost::create(TileGrid* tileGrid, const Vector3& position)
+{
+	Character::create(tileGrid, position);
+
+	TheEventMgr.addEventListener(this, Event_DirectionChanged::k_type);
+	TheEventMgr.addEventListener(this, Event_SuperForceOn::k_type);
+	TheEventMgr.addEventListener(this, Event_SuperForceOff::k_type);
+	TheEventMgr.addEventListener(this, Event_SuperForcePreOff::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterMoved::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterStateChanged::k_type);
+}
+
+void Ghost::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_DirectionChanged::k_type)
+	{
+		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
+		if(pEvent->_actorId == m_actorId 
+			&& (m_currentState == k_stateChasing || m_currentState == k_statePray))
+		{
+			m_animations[m_currentAnimation]->suspend();
+			m_currentAnimation = pEvent->_newDirection;
+			if(m_currentState == k_statePray)
+			{
+				m_currentAnimation+= k_moveTotalDirections;
+			}
+			assert(m_currentAnimation >= 0 && m_currentAnimation < k_animationTotal && "invalid animation index"); 
+			m_animations[m_currentAnimation]->resume();
+		}//if(pEvent->_actorId == m_actorId)
+	}//if(evt->getType() == Event_DirectionChanged::k_type)
+
+	if(evt->getType() == Event_SuperForceOn::k_type)
+	{
+		if(m_currentState != k_statePray)
+		{
+			m_currentState = k_stateRunaway;
+			m_animations[m_currentAnimation]->suspend();
+			m_currentAnimation = k_animationRunaway;
+			m_animations[m_currentAnimation]->resume();
+		}
+	}
+
+	if(evt->getType() == Event_SuperForceOff::k_type)
+	{
+		if(m_currentState != k_statePray)
+		{
+			m_currentState = k_stateChasing;
+			m_animations[m_currentAnimation]->suspend();
+			m_currentAnimation = m_currentDirection;
+			m_animations[m_currentAnimation]->resume();
+		}
+	}
+
+	if(evt->getType() == Event_SuperForcePreOff::k_type)
+	{
+		if(m_currentState == k_stateRunaway)
+		{
+			m_animations[m_currentAnimation]->suspend();
+			m_currentAnimation = k_animationBlink;
+			m_animations[m_currentAnimation]->resume();
+		}
+	}
+
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanRow = pEvent->_row;
+			m_pacmanColumn = pEvent->_column;
+		}
+	}
+}
+
+void Ghost::update(float deltaTime)
+{
+	Character::update(deltaTime);
+
+	if(m_currentState == k_stateChasing || m_currentState == k_stateRunaway)
+	{
+		int32 currentRow, currentColumn;
+		m_tileGrid->pointToCell(m_position._x, m_position._y, currentRow, currentColumn);
+
+		if(currentRow == m_prevRow && currentColumn == m_prevColumn)
+		{
+			return;
+		}
+		
+		m_prevRow = currentRow;
+		m_prevColumn = currentColumn;
+
+		if(currentRow != m_pacmanRow || currentColumn != m_pacmanColumn)
+		{
+			return;
+		}
+
+		int32 actorID = m_currentState == k_stateChasing ? k_actorPacman : m_actorId;
+		EventPtr evt(new Event_CharacterKilled(actorID, m_position));
+		TheEventMgr.pushEventToQueye(evt);
+
+		if(m_currentState == k_stateRunaway)
+		{
+			m_currentState = k_statePray;
+			m_animations[m_currentAnimation]->suspend();
+			m_currentAnimation = m_currentDirection + k_moveTotalDirections;
+			m_animations[m_currentAnimation]->resume();
+		}	
+	}//if(m_currentState == k_stateChasing || m_currentState == k_stateRunaway)
+}
+
+void Ghost::draw()
+{
+	if(!m_isVisible)
+	{
+		return;
+	}
+
+	if(m_currentAnimation < 0 || m_currentAnimation >= k_animationTotal)
+		return;
+
+	if(m_animations[m_currentAnimation]->getStatus() == k_processStatusKilled)
+		return;
+
+	SpriteAnimation* animation = (SpriteAnimation*)m_animations[m_currentAnimation].get();
+	SpriteParameters* sprite =  animation->getSprite();
+
+	sprite->_left = (CURCOORD)(m_position._x - (sprite->_width * 0.5f));
+	sprite->_top =	(CURCOORD)(m_position._y - (sprite->_height * 0.5f));
+		
+	GrafManager::getInstance().drawSprite(*sprite);
+}
+
+void Ghost::setAnimation(int state, ProcessPtr animation)
+{
+	assert(state >= 0 && state < k_animationTotal && "invalid animation key");
+
+	m_animations[state] = animation;
+	m_animations[state]->suspend();	
 }

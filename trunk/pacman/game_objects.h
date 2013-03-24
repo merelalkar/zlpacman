@@ -46,7 +46,8 @@ namespace Pegas
 			k_moveLeft = 0,
 			k_moveTop,
 			k_moveRight,
-			k_moveBottom
+			k_moveBottom,
+			k_moveTotalDirections
 		};
 
 	public:
@@ -114,7 +115,45 @@ namespace Pegas
 	class Ghost: public Character 
 	{
 	public:
+		enum Animation
+		{
+			k_animationChasingLeft = 0,
+			k_animationChasingTop,
+			k_animationChasingRight,
+			k_animationChasingBottom,
+			k_animationPrayLeft,
+			k_animationPrayTop,
+			k_animationPrayRight,
+			k_animationPrayBottom,
+			k_animationRunaway,
+			k_animationBlink,
+			k_animationTotal
+		};
+
+		enum State
+		{
+			k_stateChasing,
+			k_statePray,
+			k_stateRunaway
+		};
+	public:
+		Ghost(int actorId, IPlatformContext* platform);
+
+		virtual void create(TileGrid* tileGrid, const Vector3& position);
 		virtual void handleEvent(EventPtr evt);
 		virtual void update(float deltaTime);
-	};
+		virtual void draw();
+
+		void setAnimation(int state, ProcessPtr animation);
+	private:
+		int32 m_prevRow;
+		int32 m_prevColumn;
+		int32 m_pacmanRow;
+		int32 m_pacmanColumn;
+		
+		IPlatformContext* m_platform;
+		ProcessPtr	m_animations[k_animationTotal];
+		int32		m_currentAnimation;
+		int32		m_currentState;
+	};	
 }
