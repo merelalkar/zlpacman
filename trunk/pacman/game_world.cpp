@@ -5,6 +5,8 @@
 #include "pacman_game_screens.h"
 #include "fader_layer.h"
 
+#include "platform_windows.h"
+
 using namespace Pegas;
 
 /************************************************************************************************************
@@ -101,6 +103,8 @@ void GameWorld::create(IPlatformContext* context)
 	TheEventMgr.addEventListener(this, Event_RestartGame::k_type);
 	TheEventMgr.addEventListener(this, Event_BonusOn::k_type);
 	TheEventMgr.addEventListener(this, Event_BonusOff::k_type);
+	TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
+	TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
 	
 	loadMap();
 	createGameObjects();
@@ -165,6 +169,8 @@ void GameWorld::loadMap()
 	{
 		OSUtils::getInstance().debugOutput("can not open file");
 	}
+
+	m_remainPiles = m_tileGrid.getNumTiles(k_tilePill);
 }
 
 void GameWorld::createGameObjects()
@@ -199,9 +205,8 @@ void GameWorld::createGameObjects()
 
 void GameWorld::initializeGame()
 {
-	m_currentLevel = 1;
+	m_currentLevel = 8;
 	m_currentScores = 0;
-	m_remainPiles = m_tileGrid.getNumTiles(k_tilePill);
 	m_remainLives = k_numLives;
 	m_scoresToLive = k_baseScoresToLife;
 	m_updateScoresToLive = k_baseScoresToLife + k_updateScoresToLife;
@@ -221,9 +226,6 @@ void GameWorld::initializeGame()
 	EventPtr evtGetReady(new Event_HUD_GetReady());
 	TheEventMgr.pushEventToQueye(evtGetReady);
 		
-	EventPtr fadeoutEvent(new Event_GUI_StartFadeout());
-	TheEventMgr.pushEventToQueye(fadeoutEvent);
-	
 	Waiting* waiting = new Waiting(3.0f);
 	waiting->addFinalEvent(EventPtr(new Event_RestartGame()));
 	m_context->attachProcess(ProcessPtr(waiting));
@@ -338,6 +340,9 @@ void GameWorld::handleEvent(EventPtr evt)
 			EventPtr evt2(new Event_HUD_LivesChanged(m_remainLives));
 			TheEventMgr.pushEventToQueye(evt2);
 
+			EventPtr evt3(new Event_ResetActors());
+			TheEventMgr.pushEventToQueye(evt3);
+
 			Waiting* waiting = new Waiting(2.0f);
 			waiting->addFinalEvent(EventPtr(new Event_RestartGame()));
 			m_context->attachProcess(ProcessPtr(waiting));
@@ -354,6 +359,8 @@ void GameWorld::handleEvent(EventPtr evt)
 		Event_PacmanSwallowedPill* pEvent = evt->cast<Event_PacmanSwallowedPill>();
 		if(pEvent->_pill == k_tilePill)
 		{
+			m_tileGrid.setTile(pEvent->_row, pEvent->_column, TileGrid::k_emptyCellTileId);
+
 			m_currentScores+= k_scoresForPile;
 			EventPtr evt(new Event_HUD_ScoresChanged(m_currentScores));
 			TheEventMgr.pushEventToQueye(evt);
@@ -378,6 +385,8 @@ void GameWorld::handleEvent(EventPtr evt)
 				TheEventMgr.pushEventToQueye(levelChanged);
 				EventPtr newLevel(new Event_HUD_NewLevel(m_currentLevel, 2.0f));
 				TheEventMgr.pushEventToQueye(newLevel);
+				EventPtr resetActors(new Event_ResetActors());
+				TheEventMgr.pushEventToQueye(resetActors);
 
 				Waiting* waiting1 = new Waiting(2.0f);
 				waiting1->addFinalEvent(EventPtr(new Event_GUI_FadeOff()));
@@ -391,11 +400,13 @@ void GameWorld::handleEvent(EventPtr evt)
 		}
 		if(pEvent->_pill == k_tileSuperPill)
 		{
+			m_tileGrid.setTile(pEvent->_row, pEvent->_column, TileGrid::k_emptyCellTileId);
+
 			EventPtr evt(new Pegas::Event_SuperForceOn());
 			TheEventMgr.pushEventToQueye(evt);
 
 			float superForceTime = k_baseSuperForceTime - (2.0f * (m_currentLevel - 1));
-			if(superForceTime < 0)
+			if(superForceTime <= 0.0f)
 			{
 				superForceTime = 1.0f;
 			}
@@ -446,5 +457,17 @@ void GameWorld::handleEvent(EventPtr evt)
 	if(evt->getType() == Event_BonusOff::k_type)
 	{
 		m_bonusActive = false;
+	}
+
+	if(evt->getType() == Event_Game_Pause::k_type)
+	{
+		EventPtr evt(new Event_DisableCharacterControl(k_actorAll));
+		TheEventMgr.pushEventToQueye(evt);
+	}
+
+	if(evt->getType() == Event_Game_Resume::k_type)
+	{
+		EventPtr evt(new Event_EnableCharacterControl(k_actorAll));
+		TheEventMgr.pushEventToQueye(evt);
 	}	
 }

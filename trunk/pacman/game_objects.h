@@ -54,6 +54,7 @@ namespace Pegas
 
 		Vector3 getPosition() const { return m_position; }
 		float	getRadius() const { return m_radius; }
+		bool isBlocked() const { return (m_blockMutex > 0); }
 
 		virtual void create(TileGrid* tileGrid, const Vector3& position);
 		virtual void destroy();
@@ -65,17 +66,20 @@ namespace Pegas
 		int		  m_actorId;	
 		TileGrid* m_tileGrid;
 		Vector3	  m_position;
+		Vector3	  m_initialPosition;
 		float	  m_radius;
 
+		void incrementBlock() { m_blockMutex++; }
+		void decrementBlock() { m_blockMutex--; }
 		
-
 		Vector3 m_directions[4];
 		int		m_currentDirection;
 		float	m_velocity;
 		int		m_turnCommand;
 
-		bool m_isBlocked;
+		int32 m_blockMutex; 
 		bool m_isMoving;
+		bool m_isVisible;
 	};
 
 	class Pacman: public Character 
