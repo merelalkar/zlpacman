@@ -96,10 +96,13 @@ void FaderLayer::handleEvent(EventPtr evt)
 
 		int32 alpha = (int32)((pEvent->_fadePercent * 255.0f) / 100.0f);
 		m_color = alpha << 24;
+
+		setActivity(true);
 	}
 
 	if(evt->getType() == Event_GUI_FadeOff::k_type)
 	{
 		m_color = 0;
+		setActivity(false);
 	}
 }

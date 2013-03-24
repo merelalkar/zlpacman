@@ -139,7 +139,7 @@ void MainMenuLayer::handleEvent(EventPtr evt)
 			m_platform->shutdownGame();
 		}else
 		{
-			m_platform->changeState(k_stateEditor);			
+			m_platform->changeState(k_stateGame);			
 		}
 	}
 }
@@ -165,7 +165,7 @@ void MainMenu::enter(IPlatformContext* context)
 	pushLayer(BaseScreenLayerPtr(new MainMenuLayer()));
 	pushLayer(BaseScreenLayerPtr(new FaderLayer(k_layerFader)));
 
-	EventPtr evt(new Event_GUI_StartFadeout(2));
+	EventPtr evt(new Event_GUI_StartFadeout());
 	TheEventMgr.triggerEvent(evt);
 }
 

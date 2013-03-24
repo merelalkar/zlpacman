@@ -20,12 +20,13 @@ Character::Character(int actorId)
 	m_directions[k_moveRight] = Vector3(1.0f, 0.0f, 0.0f);
 	m_directions[k_moveBottom] = Vector3(0.0f, 1.0f, 0.0f);
 
-	m_currentDirection = k_moveRight;
-	m_velocity = 1.0f;
-	m_turnCommand = -1.0f;
+	m_currentDirection = k_moveLeft;
+	m_velocity = 100.0f;
+	m_turnCommand = -1;
 
-	m_isBlocked = false;
-	m_isMoving = false;	
+	m_blockMutex = 0;
+	m_isMoving = false;
+	m_isVisible = true;
 }
 
 void Character::create(TileGrid* tileGrid, const Vector3& position)
@@ -33,13 +34,16 @@ void Character::create(TileGrid* tileGrid, const Vector3& position)
 	assert(tileGrid && "null pointer: tileGrid");
 
 	m_tileGrid = tileGrid;
-	m_radius = tileGrid->getCellWidth() * 0.5;
-	m_position = position;
+	m_radius = tileGrid->getCellWidth() * 0.5f;
+	m_initialPosition = m_position = position;
 
 	TheEventMgr.addEventListener(this, Event_ChangeDirection::k_type);
 	TheEventMgr.addEventListener(this, Event_CancelChangingDirection::k_type);
 	TheEventMgr.addEventListener(this, Event_EnableCharacterControl::k_type);
 	TheEventMgr.addEventListener(this, Event_DisableCharacterControl::k_type);
+	TheEventMgr.addEventListener(this, Event_ResetActors::k_type);
+	TheEventMgr.addEventListener(this, Event_HideCharacter::k_type);
+	TheEventMgr.addEventListener(this, Event_ShowCharacter::k_type);
 }
 
 void Character::destroy()
@@ -52,7 +56,7 @@ void Character::handleEvent(EventPtr evt)
 	if(evt->getType() == Event_ChangeDirection::k_type)
 	{
 		Event_ChangeDirection* eventObject = evt->cast<Event_ChangeDirection>();
-		if(eventObject->_actorId != m_actorId || m_isBlocked)
+		if(eventObject->_actorId != m_actorId || isBlocked())
 		{
 			//событие предназначено не нам или управление персонажем заблокировано
 			return;
@@ -72,6 +76,14 @@ void Character::handleEvent(EventPtr evt)
 
 			EventPtr newEvent(new Event_DirectionChanged(m_actorId, m_currentDirection));
 			TheEventMgr.pushEventToQueye(newEvent);
+
+			if(!m_isMoving)
+			{
+				m_isMoving = true;
+
+				EventPtr newEvent2(new Event_CharacterMoveOn(m_actorId));
+				TheEventMgr.pushEventToQueye(newEvent2);
+			}
 		}else
 		{
 			m_turnCommand = eventObject->_newDirection;			
@@ -92,33 +104,66 @@ void Character::handleEvent(EventPtr evt)
 	if(evt->getType() == Event_EnableCharacterControl::k_type)
 	{
 		Event_EnableCharacterControl* eventObject = evt->cast<Event_EnableCharacterControl>();
-		if(eventObject->_actorId != m_actorId)
+		if(eventObject->_actorId != m_actorId && eventObject->_actorId != k_actorAll)
 		{
 			//событие предназначено не нам
 			return;
 		}
 
-		m_isBlocked = false;
-		m_isMoving = true;
-
-		EventPtr newEvent(new Event_CharacterMoveOn(m_actorId));
-		TheEventMgr.pushEventToQueye(newEvent);
+		decrementBlock();
+		
+		if(!isBlocked())
+		{
+			m_isMoving = true;
+			
+			EventPtr newEvent(new Event_CharacterMoveOn(m_actorId));
+			TheEventMgr.pushEventToQueye(newEvent);
+		}
 	}
 
 	if(evt->getType() == Event_DisableCharacterControl::k_type)
 	{
 		Event_DisableCharacterControl* eventObject = evt->cast<Event_DisableCharacterControl>();
-		if(eventObject->_actorId != m_actorId)
+		if(eventObject->_actorId != m_actorId && eventObject->_actorId != k_actorAll)
 		{
 			//событие предназначено не нам
 			return;
 		}
 
-		m_isBlocked = true;
-		m_isMoving = false;
+		incrementBlock();
 
-		EventPtr newEvent(new Event_CharacterStopped(m_actorId));
-		TheEventMgr.pushEventToQueye(newEvent);
+		if(isBlocked())
+		{
+			m_isMoving = false;
+
+			EventPtr newEvent(new Event_CharacterStopped(m_actorId));
+			TheEventMgr.pushEventToQueye(newEvent);
+		}
+	}
+
+	if(evt->getType() == Event_ResetActors::k_type)
+	{
+		m_position = m_initialPosition;
+		m_currentDirection = k_moveLeft;
+		m_isVisible = true;
+	}
+
+	if(evt->getType() == Event_HideCharacter::k_type)
+	{
+		Event_HideCharacter* pEvent = evt->cast<Event_HideCharacter>();
+		if(pEvent->_actorId == m_actorId || pEvent->_actorId == k_actorAll)
+		{
+			m_isVisible = false;
+		}
+	}
+
+	if(evt->getType() == Event_ShowCharacter::k_type)
+	{
+		Event_ShowCharacter* pEvent = evt->cast<Event_ShowCharacter>();
+		if(pEvent->_actorId == m_actorId || pEvent->_actorId == k_actorAll)
+		{
+			m_isVisible = true;
+		}
 	}
 }
 
@@ -128,7 +173,7 @@ void Character::update(float deltaTime)
 	
 	if(m_isMoving)
 	{
-		m_tileGrid->pointToCell((CURCOORD)m_position._x, (CURCOORD)m_position._y, currentRow, currentColumn);
+		m_tileGrid->pointToCell(m_position._x, m_position._y, currentRow, currentColumn);
 
 		//перемещение по лабиринту
 		Vector3 newPos = m_position + (m_directions[m_currentDirection] * m_velocity * deltaTime);
@@ -137,12 +182,7 @@ void Character::update(float deltaTime)
 		{
 			//натолкнулись на препятсвие
 			//корркетируем позицию персонажа чтобы он был в середине текущей клетки
-			CURCOORD left, top;
-
-			m_tileGrid->cellCoords(currentRow, currentColumn, left, top);
-			m_position._x = left + (m_tileGrid->getCellWidth() * 1.0 / 2);
-			m_position._y = top + (m_tileGrid->getCellHeight() * 1.0f / 2);
-
+			m_tileGrid->cellCoords(currentRow, currentColumn, m_position._x, m_position._y, true);
 			m_isMoving = false;
 
 			EventPtr newEvent(new Event_CharacterStopped(m_actorId));
@@ -154,11 +194,11 @@ void Character::update(float deltaTime)
 	}
 
 	//поворот
-	if(m_turnCommand != -1 && (!m_isBlocked))
+	if(m_turnCommand != -1 && !isBlocked())
 	{
 		int32 nextRow, nextColumn;
 		
-		m_tileGrid->pointToCell((CURCOORD)m_position._x, (CURCOORD)m_position._y, currentRow, currentColumn);
+		m_tileGrid->pointToCell(m_position._x, m_position._y, currentRow, currentColumn);
 
 		switch(m_turnCommand)
 		{
@@ -176,29 +216,22 @@ void Character::update(float deltaTime)
 			break;
 		case k_moveBottom:
 			nextRow = currentRow + 1;
-			nextColumn = currentColumn ;
+			nextColumn = currentColumn;
 			break;
 		};
 
 		if(!m_tileGrid->isObstacle(nextRow, nextColumn))
 		{
-			bool entirelyInCell = true;
-			int32	 row, col;
+			Vector3 cellPosition;
+			m_tileGrid->cellCoords(currentRow, currentColumn, cellPosition._x, cellPosition._y, true);
+			
+			Vector3 distanceVec = cellPosition - m_position;
+			float distance = distanceVec.length();
+			float epsilon = distance / m_radius; 
 
-			for(int i = 0; i < 4; i++)
+			if(epsilon < 0.75f)
 			{
-				Vector3 borderPoint = m_position + (m_directions[i] * m_radius);
-				m_tileGrid->pointToCell((CURCOORD)borderPoint._x, (CURCOORD)borderPoint._y, row, col);
-
-				if(row != currentRow || col != currentColumn)
-				{
-					entirelyInCell = false;
-					break;
-				}
-			}
-
-			if(entirelyInCell)
-			{
+				m_position = cellPosition;
 				m_currentDirection = m_turnCommand;
 				m_turnCommand = -1;
 
@@ -243,6 +276,12 @@ void Pacman::setAnimation(int state, ProcessPtr animation)
 	assert(state >= 0 && state <k_animationTotal && "invalid animation key");
 
 	m_animations[state] = animation;
+	
+	if(state == k_animationRunning)
+	{
+		m_platform->attachProcess(animation);
+		animation->suspend();
+	}
 }
 
 void Pacman::handleEvent(EventPtr evt)
@@ -272,6 +311,11 @@ void Pacman::handleEvent(EventPtr evt)
 		m_platform->attachProcess(m_animations[k_animationDeath]);
 	}
 
+	if(evt->getType() == Event_ResetActors::k_type)
+	{
+		m_currentAnimation = k_animationRunning;		
+	}
+
 	Character::handleEvent(evt);
 }
 
@@ -282,8 +326,8 @@ void Pacman::update(float deltaTime)
 	if(m_isMoving)
 	{
 		int32 row, column;
-		m_tileGrid->pointToCell((CURCOORD)m_position._x, (CURCOORD)m_position._y, row, column);
-		if(row != m_prevRow && column != m_prevColumn)
+		m_tileGrid->pointToCell(m_position._x, m_position._y, row, column);
+		if(row != m_prevRow || column != m_prevColumn)
 		{
 			m_prevRow = row;
 			m_prevColumn = column;
@@ -301,6 +345,11 @@ void Pacman::update(float deltaTime)
 
 void Pacman::draw()
 {
+	if(!m_isVisible)
+	{
+		return;
+	}
+
 	if(m_currentAnimation < 0 || m_currentAnimation >= k_animationTotal)
 		return;
 
@@ -316,13 +365,13 @@ void Pacman::draw()
 	switch(m_currentDirection)
 	{
 	case k_moveLeft:
-		sprite->_angle = 0.0f;
+		sprite->_angle = 180.0f;
 		break;
 	case k_moveTop:
 		sprite->_angle = -90.0f;
 		break;
 	case k_moveRight:
-		sprite->_angle = 180.0f;
+		sprite->_angle = 0.0f;
 		break;
 	case k_moveBottom:
 		sprite->_angle = 90.0f;

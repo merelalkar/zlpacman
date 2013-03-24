@@ -4,6 +4,7 @@
 #include "game_events.h"
 #include "pacman_game_screens.h"
 #include "editor.h"
+#include "game_screen.h"
 
 #include "resource.h"
 
@@ -42,8 +43,9 @@ void GameApplication::init(HWND hWnd)
 
 	addGameState(GameStatePtr(new MainMenu()));
 	addGameState(GameStatePtr(new Editor()));
-	//changeState(k_stateMainMenu);
-	changeState(k_stateEditor);
+	addGameState(GameStatePtr(new GameScreen()));
+	changeState(k_stateMainMenu);
+	//changeState(k_stateEditor);
 }
 
 bool GameApplication::run()

@@ -12,6 +12,9 @@
 
 using namespace Pegas;
 
+/*************************************************************************************************
+	GameVerticalLayer class implementation
+**************************************************************************************************/
 GameVerticalLayer::GameVerticalLayer():
 	BaseScreenLayer(_text("game screen"), k_layerGameWorld, false), m_numLives(0)
 {
@@ -149,6 +152,13 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		EventPtr evt(new Event_Game_Pause());
 		TheEventMgr.pushEventToQueye(evt);
 	}
+
+	//TODO: временно. Убрать когда будет экран паузы
+	if(key == IKeyboardController::k_keyCodeSPACE)
+	{
+		EventPtr evt(new Event_Game_Resume());
+		TheEventMgr.pushEventToQueye(evt);
+	}
 }
 
 void GameVerticalLayer::onKeyUp(KeyCode key, KeyFlags flags)
@@ -195,5 +205,60 @@ void GameVerticalLayer::handleEvent(EventPtr evt)
 	{
 		Event_HUD_LivesChanged* pEvent = evt->cast<Event_HUD_LivesChanged>();
 		m_numLives = pEvent->_lives;		
+	}
+}
+
+/**************************************************************************************************
+	
+***************************************************************************************************/
+enum GamePauseButtons
+{
+	k_gamePauseExitToMenu = 1,
+	k_gamePauseResumeGame,
+	k_gamePauseOptionsMenu
+};
+
+GameScreen::GameScreen():
+	DefaultGameState(k_stateGame)
+{
+
+}
+
+void GameScreen::enter(IPlatformContext* context)
+{
+	DefaultGameState::enter(context);
+
+	TheEventMgr.addEventListener(this, Event_GUI_ButtonClick::k_type);
+	TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
+	
+	pushLayer(BaseScreenLayerPtr(new GameVerticalLayer()));
+	//TODO: pause layer
+	//TODO: options layer
+	pushLayer(BaseScreenLayerPtr(new FaderLayer(k_layerFader)));
+
+	EventPtr evt(new Event_GUI_StartFadeout());
+	TheEventMgr.triggerEvent(evt);	
+}
+
+void GameScreen::leave(IPlatformContext* context)
+{
+	TheEventMgr.removeEventListener(this);
+
+	DefaultGameState::leave(context);
+}
+
+void GameScreen::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_GUI_ButtonClick::k_type)
+	{
+		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
+		if(pEvent->m_button->getID() == k_gamePauseExitToMenu)
+		{
+			ProcessPtr fadein = new Fadein();
+			m_platform->attachProcess(fadein);
+
+			ProcessPtr toMenu = new ChangeStateTask(m_platform, k_stateMainMenu);
+			fadein->attachNext(toMenu);
+		}
 	}
 }
