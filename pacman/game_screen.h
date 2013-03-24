@@ -34,6 +34,8 @@ namespace Pegas
 		int32 m_numLives;
 		int32 m_numScore;
 		int32 m_level;
+		
+		int32 m_keyDownMutex;
 	};
 
 	class GameScreen: public DefaultGameState, public IEventListener
