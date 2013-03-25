@@ -35,6 +35,7 @@ namespace Pegas
 		int32 m_numScore;
 		int32 m_level;
 		
+		int32 m_controlledActor;
 		int32 m_keyDownMutex;
 	};
 

@@ -105,15 +105,27 @@ namespace Pegas
 	struct Event_CharacterStateChanged: public Event
 	{
 	public:
-		Event_CharacterStateChanged(int32 actorId, int32 newState, int32 prevState): 
-		  _actorId(actorId), _newState(newState), _prevState(prevState) {}
+		Event_CharacterStateChanged(int32 actorId, int32 newState): 
+		  _actorId(actorId), _newState(newState) {}
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;
 
 		int32 _actorId;
-		int32 _newState;
-		int32 _prevState;
+		int32 _newState;		
+	};
+
+	struct Event_CharacterChangeState: public Event
+	{
+	public:
+		Event_CharacterChangeState(int32 actorId, int32 newState): 
+		  _actorId(actorId), _newState(newState) {}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _actorId;
+		int32 _newState;		
 	};
 
 	struct Event_ShowCharacter: public Event

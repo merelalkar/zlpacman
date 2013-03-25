@@ -12,6 +12,7 @@ const EventType Event_CharacterKilled::k_type = "Event_CharacterKilled";
 
 const EventType Event_CharacterMoved::k_type = "Event_CharacterMoved";
 const EventType Event_CharacterStateChanged::k_type = "Event_CharacterStateChanged";
+const EventType Event_CharacterChangeState::k_type = "Event_CharacterChangeState";
 
 const EventType Event_ShowCharacter::k_type = "Event_ShowCharacter";
 const EventType Event_HideCharacter::k_type = "Event_HideCharacter";

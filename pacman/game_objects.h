@@ -150,6 +150,8 @@ namespace Pegas
 		int32 m_prevColumn;
 		int32 m_pacmanRow;
 		int32 m_pacmanColumn;
+
+		void changeAnimation(int32 newState);
 		
 		IPlatformContext* m_platform;
 		ProcessPtr	m_animations[k_animationTotal];

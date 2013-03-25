@@ -18,7 +18,7 @@ using namespace Pegas;
 GameVerticalLayer::GameVerticalLayer():
 	BaseScreenLayer(_text("game screen"), k_layerGameWorld, false), m_numLives(0), m_keyDownMutex(0)
 {
-		
+	m_controlledActor = k_actorBlinky;		
 }
 
 void GameVerticalLayer::create(IPlatformContext* context)
@@ -127,7 +127,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		m_keyDownMutex++;
 
-		EventPtr evt(new Event_ChangeDirection(k_actorPacman, Character::k_moveTop));
+		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveTop));
 		TheEventMgr.pushEventToQueye(evt);
 	}
 
@@ -135,7 +135,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		m_keyDownMutex++;
 
-		EventPtr evt(new Event_ChangeDirection(k_actorPacman, Character::k_moveBottom));
+		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveBottom));
 		TheEventMgr.pushEventToQueye(evt);
 	}
 
@@ -143,7 +143,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		m_keyDownMutex++;
 
-		EventPtr evt(new Event_ChangeDirection(k_actorPacman, Character::k_moveLeft));
+		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveLeft));
 		TheEventMgr.pushEventToQueye(evt);
 	}
 
@@ -151,7 +151,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		m_keyDownMutex++;
 
-		EventPtr evt(new Event_ChangeDirection(k_actorPacman, Character::k_moveRight));
+		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveRight));
 		TheEventMgr.pushEventToQueye(evt);
 	}
 
@@ -179,7 +179,7 @@ void GameVerticalLayer::onKeyUp(KeyCode key, KeyFlags flags)
 		m_keyDownMutex--;
 		if(m_keyDownMutex == 0)
 		{
-			EventPtr evt(new Event_CancelChangingDirection(k_actorPacman));
+			EventPtr evt(new Event_CancelChangingDirection(m_controlledActor));
 			TheEventMgr.pushEventToQueye(evt);
 		}
 	}
