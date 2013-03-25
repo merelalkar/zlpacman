@@ -4,72 +4,11 @@
 #include "game_resources.h"
 #include "pacman_game_screens.h"
 #include "fader_layer.h"
+#include "waiting.h"
 
 #include "platform_windows.h"
 
 using namespace Pegas;
-
-/************************************************************************************************************
-	Waiting class
-**************************************************************************************************************/
-Waiting::Waiting(float seconds, bool stopOnPause)
-{
-	assert(seconds > 0.0f && "invalid time fo waiting");
-	m_remainTime = seconds * 1000.0f;
-	m_stopOnPause = stopOnPause;
-}
-
-void Waiting::update(MILLISECONDS deltaTime)
-{
-	m_remainTime-= deltaTime;
-	if(m_remainTime <= 0)
-	{
-		for(std::list<EventPtr>::iterator it = m_events.begin(); it != m_events.end(); ++it)
-		{
-			TheEventMgr.pushEventToQueye(*it);
-		}
-		terminate();
-	}
-}
-
-void Waiting::start(ProcessHandle myHandle, ProcessManagerPtr owner)
-{
-	Process::start(myHandle, owner);
-
-	if(m_stopOnPause)
-	{
-		TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
-		TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
-	}
-}
-
-void Waiting::terminate()
-{
-	Process::terminate();
-
-	TheEventMgr.removeEventListener(this);
-}
-
-void Waiting::handleEvent(EventPtr evt)
-{
-	if(evt->getType() == Event_Game_Pause::k_type)
-	{
-		suspend();
-	}
-
-	if(evt->getType() == Event_Game_Resume::k_type)
-	{
-		resume();
-	}
-}
-
-void Waiting::addFinalEvent(EventPtr evt)
-{
-	m_events.push_back(evt);
-}
-
-	
-		
 
 /**************************************************************************************************************
 	GameWorld class
@@ -189,6 +128,7 @@ void GameWorld::createGameObjects()
 
 		SpriteAnimation* running = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8);
 		running->setNumFrames(0, 4);
+		running->setFPS(16);
 		running->getSprite()->_width = m_sprites[k_tilePacman]._width;
 		running->getSprite()->_height = m_sprites[k_tilePacman]._height;
 
@@ -196,10 +136,39 @@ void GameWorld::createGameObjects()
 
 		SpriteAnimation* death = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8, 0);
 		death->setNumFrames(8, 8);
+		death->setFPS(8);
 		death->getSprite()->_width = m_sprites[k_tilePacman]._width;
 		death->getSprite()->_height = m_sprites[k_tilePacman]._height;
 
 		pacman->setAnimation(Pacman::k_animationDeath, ProcessPtr(death));
+	}
+
+	tiles.clear();
+	m_tileGrid.getTiles(k_tileBlinky, tiles, true);
+	
+	assert(tiles.size() > 0 && "Blinky position not found");
+	assert(m_sprites.count(k_tileBlinky) > 0 && "Blinky position not found");
+
+	int32 startFrame[] = {28, 24, 30, 26, 62, 60, 63, 61, 56, 56 };
+	int32 numFrames[] = {2, 2, 2, 2, 1, 1, 1, 1, 2, 4 };
+
+	if(tiles.size() > 0 && m_sprites.count(k_tileBlinky) > 0)
+	{
+		Ghost* blinky = new Ghost(k_actorBlinky, m_context); 
+		blinky->create(&m_tileGrid, tiles.front());
+
+		m_gameObjects.push_back(GameObjectPtr(blinky));
+		
+		for(int32 i = 0; i < Ghost::k_animationTotal; i++)
+		{
+			SpriteAnimation* animation = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8);
+			animation->setNumFrames(startFrame[i], numFrames[i]);
+			animation->setFPS(8);
+			animation->getSprite()->_width = m_sprites[k_tileBlinky]._width;
+			animation->getSprite()->_height = m_sprites[k_tileBlinky]._height;
+
+			blinky->setAnimation(i, ProcessPtr(animation));
+		}
 	}
 }
 

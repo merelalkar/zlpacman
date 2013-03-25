@@ -21,7 +21,7 @@ namespace Pegas
 		void Process::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 		{
 			//метод вызываеться один раз для каждого процесса
-			assert(m_currentStatus == k_processStatusNotStarted && "попытка запустить уже запущенный процесс");
+			//assert((m_currentStatus == k_processStatusNotStarted) && "попытка запустить уже запущенный процесс");
 
 			m_handle = myHandle;
 			m_owner = owner;

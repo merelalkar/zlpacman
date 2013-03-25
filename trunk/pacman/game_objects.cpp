@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "game_objects.h"
 #include "game_events.h"
-
+#include "waiting.h"
 //Sprite animation class
 #include "platform_windows.h"
 
@@ -311,7 +311,11 @@ void Pacman::handleEvent(EventPtr evt)
 	if(evt->getType() == Event_PacmanDeath::k_type)
 	{
 		m_currentAnimation = k_animationDeath;
-		m_platform->attachProcess(m_animations[k_animationDeath]);
+		m_platform->attachProcess(m_animations[m_currentAnimation]);
+
+		Waiting* waiting = new Waiting(1.0f);
+		waiting->addFinalEvent(EventPtr(new Event_PacmanDeathComplete()));
+		m_animations[m_currentAnimation]->attachNext(ProcessPtr(waiting));
 	}
 
 	if(evt->getType() == Event_ResetActors::k_type)
@@ -390,7 +394,10 @@ void Pacman::draw()
 Ghost::Ghost(int actorId, IPlatformContext* platform)
 	:Character(actorId), m_platform(platform)
 {
-
+	m_prevRow = -1;
+	m_prevColumn = -1;
+	m_pacmanRow = -1;
+	m_pacmanColumn = -1;
 }
 
 void Ghost::create(TileGrid* tileGrid, const Vector3& position)
@@ -403,6 +410,12 @@ void Ghost::create(TileGrid* tileGrid, const Vector3& position)
 	TheEventMgr.addEventListener(this, Event_SuperForcePreOff::k_type);
 	TheEventMgr.addEventListener(this, Event_CharacterMoved::k_type);
 	TheEventMgr.addEventListener(this, Event_CharacterStateChanged::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterChangeState::k_type);
+	TheEventMgr.addEventListener(this, Event_PacmanDeath::k_type);
+
+	m_currentState = k_stateChasing;
+	EventPtr evt(new Event_CharacterStateChanged(m_actorId, m_currentState));
+	TheEventMgr.pushEventToQueye(evt);
 }
 
 void Ghost::handleEvent(EventPtr evt)
@@ -410,28 +423,20 @@ void Ghost::handleEvent(EventPtr evt)
 	if(evt->getType() == Event_DirectionChanged::k_type)
 	{
 		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
-		if(pEvent->_actorId == m_actorId 
-			&& (m_currentState == k_stateChasing || m_currentState == k_statePray))
+		if(pEvent->_actorId == m_actorId)
 		{
-			m_animations[m_currentAnimation]->suspend();
-			m_currentAnimation = pEvent->_newDirection;
-			if(m_currentState == k_statePray)
-			{
-				m_currentAnimation+= k_moveTotalDirections;
-			}
-			assert(m_currentAnimation >= 0 && m_currentAnimation < k_animationTotal && "invalid animation index"); 
-			m_animations[m_currentAnimation]->resume();
-		}//if(pEvent->_actorId == m_actorId)
-	}//if(evt->getType() == Event_DirectionChanged::k_type)
+			changeAnimation(m_currentState);
+		}
+	}
 
 	if(evt->getType() == Event_SuperForceOn::k_type)
 	{
 		if(m_currentState != k_statePray)
 		{
 			m_currentState = k_stateRunaway;
-			m_animations[m_currentAnimation]->suspend();
-			m_currentAnimation = k_animationRunaway;
-			m_animations[m_currentAnimation]->resume();
+			
+			EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
+			TheEventMgr.pushEventToQueye(evt2);
 		}
 	}
 
@@ -440,9 +445,9 @@ void Ghost::handleEvent(EventPtr evt)
 		if(m_currentState != k_statePray)
 		{
 			m_currentState = k_stateChasing;
-			m_animations[m_currentAnimation]->suspend();
-			m_currentAnimation = m_currentDirection;
-			m_animations[m_currentAnimation]->resume();
+			
+			EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
+			TheEventMgr.pushEventToQueye(evt2);
 		}
 	}
 
@@ -465,6 +470,43 @@ void Ghost::handleEvent(EventPtr evt)
 			m_pacmanColumn = pEvent->_column;
 		}
 	}
+
+	if(evt->getType() == Event_CharacterStateChanged::k_type)
+	{
+		Event_CharacterStateChanged* pEvent = evt->cast<Event_CharacterStateChanged>();
+		if(pEvent->_actorId == m_actorId || pEvent->_actorId == k_actorAll)
+		{
+			changeAnimation(pEvent->_newState);
+		}
+	}
+
+	if(evt->getType() == Event_CharacterChangeState::k_type)
+	{
+		Event_CharacterChangeState* pEvent = evt->cast<Event_CharacterChangeState>();
+		if(pEvent->_actorId == m_actorId || pEvent->_actorId == k_actorAll)
+		{
+			m_currentState = pEvent->_newState;
+
+			EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
+			TheEventMgr.pushEventToQueye(evt2);
+		}
+	}
+
+	if(evt->getType() == Event_ResetActors::k_type)
+	{
+		m_currentState = k_stateChasing;
+		
+		EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
+		TheEventMgr.pushEventToQueye(evt2);		
+	}
+
+	if(evt->getType() == Event_PacmanDeath::k_type)
+	{
+		EventPtr evt2(new Event_HideCharacter(m_actorId));
+		TheEventMgr.pushEventToQueye(evt2);
+	}
+
+	Character::handleEvent(evt);
 }
 
 void Ghost::update(float deltaTime)
@@ -496,9 +538,9 @@ void Ghost::update(float deltaTime)
 		if(m_currentState == k_stateRunaway)
 		{
 			m_currentState = k_statePray;
-			m_animations[m_currentAnimation]->suspend();
-			m_currentAnimation = m_currentDirection + k_moveTotalDirections;
-			m_animations[m_currentAnimation]->resume();
+			
+			EventPtr evt(new Event_CharacterStateChanged(m_actorId, m_currentState));
+			TheEventMgr.pushEventToQueye(evt);
 		}	
 	}//if(m_currentState == k_stateChasing || m_currentState == k_stateRunaway)
 }
@@ -529,6 +571,28 @@ void Ghost::setAnimation(int state, ProcessPtr animation)
 {
 	assert(state >= 0 && state < k_animationTotal && "invalid animation key");
 
+	m_currentAnimation = state;
+	m_platform->attachProcess(animation);
 	m_animations[state] = animation;
 	m_animations[state]->suspend();	
+}
+
+void Ghost::changeAnimation(int32 newState)
+{
+	m_animations[m_currentAnimation]->suspend();
+	
+	switch(newState)
+	{
+	case k_statePray:
+		m_currentAnimation = m_currentDirection + k_moveTotalDirections;
+		break;
+	case k_stateRunaway:
+		m_currentAnimation = k_animationRunaway;
+		break;
+	default:
+		m_currentAnimation = m_currentDirection;
+		break;
+	};
+	assert(m_currentAnimation >= 0 && m_currentAnimation < k_animationTotal && "invalid animation index"); 
+	m_animations[m_currentAnimation]->resume();
 }
