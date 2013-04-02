@@ -18,7 +18,7 @@ using namespace Pegas;
 GameVerticalLayer::GameVerticalLayer():
 	BaseScreenLayer(_text("game screen"), k_layerGameWorld, false), m_numLives(0), m_keyDownMutex(0)
 {
-	m_controlledActor = k_actorBlinky;		
+	m_controlledActor = k_actorPacman;		
 }
 
 void GameVerticalLayer::create(IPlatformContext* context)

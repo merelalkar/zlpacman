@@ -176,15 +176,6 @@ void BlinkyChaseState::handleEvent(EventPtr evt)
 		}
 	}
 
-	if(evt->getType() == Event_DirectionChanged::k_type)
-	{
-		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
-		if(pEvent->_actorId == k_actorPacman)
-		{
-			m_pacmanCurrentDirection = pEvent->_newDirection;
-		}
-	}
-
 	BaseAIState::handleEvent(evt);
 }
 
@@ -197,5 +188,222 @@ float BlinkyChaseState::getGoalHeuristic(int32 row, int32 column)
 	return distance.length();
 }
 
+/**********************************************************************************************************
+	Pinky Chase State
+***********************************************************************************************************/
+PinkyChaseState::PinkyChaseState(TileGrid* tileGrid)
+	:BaseAIState(tileGrid, k_actorPinky, Ghost::k_stateChasing)
+{
 
+}
+
+void PinkyChaseState::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanRow = pEvent->_row;
+			m_pacmanColumn = pEvent->_column;			
+		}
+
+		calculateGoalPosition();
+	}
+
+	if(evt->getType() == Event_DirectionChanged::k_type)
+	{
+		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanDirection = pEvent->_newDirection;
+
+			calculateGoalPosition();
+		}
+	}
+
+	BaseAIState::handleEvent(evt);
+}
+
+float PinkyChaseState::getGoalHeuristic(int32 row, int32 column)
+{
+	Vector3 position, distance;
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = m_goalPosition - position;
+
+	return distance.length();
+}
+
+void PinkyChaseState::calculateGoalPosition()
+{
+	assert(m_pacmanDirection >= 0 && m_pacmanDirection < Character::k_moveTotalDirections && "invalid param: m_pacmanDirection");
+
+	int32 rowOffset[] = { 0, -1, 0, 1};
+	int32 columnOffset[] = { -1, 0, 1, 0 };
+	int32 row = m_pacmanRow + (rowOffset[m_pacmanDirection] * 4);
+	int32 column = m_pacmanColumn + (columnOffset[m_pacmanDirection] * 4);
+
+	m_tileGrid->cellCoords(row, column, m_goalPosition._x, m_goalPosition._y, true);
+}
+
+/*************************************************************************************************
+	
+**************************************************************************************************/
+InkyChaseState::InkyChaseState(TileGrid* tileGrid)
+	:BaseAIState(tileGrid, k_actorInky, Ghost::k_stateChasing)
+{
+
+}
+
+void InkyChaseState::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanRow = pEvent->_row;
+			m_pacmanColumn = pEvent->_column;			
+		}
+
+		if(pEvent->_actorId == k_actorBlinky)
+		{
+			m_blinkyPosition = pEvent->_position;			
+		}
+
+		calculateGoalPosition();
+	}
+
+	if(evt->getType() == Event_DirectionChanged::k_type)
+	{
+		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanDirection = pEvent->_newDirection;
+
+			calculateGoalPosition();
+		}
+	}
+
+	BaseAIState::handleEvent(evt);
+}
+
+float InkyChaseState::getGoalHeuristic(int32 row, int32 column)
+{
+	Vector3 position, distance;
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = m_goalPosition - position;
+
+	return distance.length();
+}
+
+void InkyChaseState::calculateGoalPosition()
+{
+	assert(m_pacmanDirection >= 0 && m_pacmanDirection < Character::k_moveTotalDirections && "invalid param: m_pacmanDirection");
+
+	Vector3 lineCenter, line;
+
+	int32 rowOffset[] = { 0, -1, 0, 1};
+	int32 columnOffset[] = { -1, 0, 1, 0 };
+	int32 row = m_pacmanRow + (rowOffset[m_pacmanDirection] * 2);
+	int32 column = m_pacmanColumn + (columnOffset[m_pacmanDirection] * 2);
+
+	m_tileGrid->cellCoords(row, column, lineCenter._x, lineCenter._y, true);
+	line = lineCenter - m_blinkyPosition;
+	m_goalPosition = m_blinkyPosition + (line * 2);
+}
+
+/*******************************************************************************************************
+	
+*******************************************************************************************************/
+ClydeChaseState::ClydeChaseState(TileGrid* tileGrid, const Vector3 scatterPoint)
+	:BaseAIState(tileGrid, k_actorClyde, Ghost::k_stateChasing)
+{
+	m_scatterPoint = scatterPoint;
+	m_goalPosition = scatterPoint;
+}
+
+void ClydeChaseState::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanRow = pEvent->_row;
+			m_pacmanColumn = pEvent->_column;
+		}
+
+		calculateGoalPosition();
+	}
+
+	BaseAIState::handleEvent(evt);
+}
+
+float ClydeChaseState::getGoalHeuristic(int32 row, int32 column)
+{
+	Vector3 position, distance;
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = m_goalPosition - position;
+
+	return distance.length();
+}
+	
+void ClydeChaseState::calculateGoalPosition()
+{
+	int32 dx = m_pacmanColumn - m_myColumn;
+	int32 dy = m_pacmanRow - m_myRow;
+	int32 distance = dx + dy;
+
+	if(distance > 8)
+	{
+		m_tileGrid->cellCoords(m_pacmanRow, m_pacmanColumn, m_goalPosition._x, m_goalPosition._y); 
+	}else
+	{
+		m_goalPosition = m_scatterPoint;
+	}
+}
+
+/********************************************************************************************************
+
+*********************************************************************************************************/
+GoalDrivenState::GoalDrivenState(TileGrid* tileGrid, int32 controlledActor, int32 stateId):
+	BaseAIState(tileGrid, controlledActor, stateId)
+{
+
+}
+
+void GoalDrivenState::setGoalPoint(const Vector3& point)
+{
+	m_tileGrid->pointToCell(point._x, point._y, m_goalRow, m_goalColumn);  
+}
+
+void GoalDrivenState::setFinalState(int32 stateId)
+{
+	m_finalState = stateId;
+}
+
+void GoalDrivenState::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == m_controlledActor 
+			&& pEvent->_column == m_goalColumn
+			&& pEvent->_row == m_goalRow)
+		{
+			suspend();
+
+			EventPtr evt(new Event_CharacterChangeState(m_controlledActor, m_finalState));
+			TheEventMgr.pushEventToQueye(evt);
+		}
+	}
+
+	BaseAIState::handleEvent(evt);
+}	
+
+float GoalDrivenState::getGoalHeuristic(int32 row, int32 column)
+{
+
+}
 

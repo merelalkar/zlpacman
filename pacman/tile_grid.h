@@ -10,17 +10,20 @@ namespace Pegas
 		TileDesc() {};
 			TileDesc(const RESOURCEID& texture, 
 					 bool isObstacle, 
-					 int32	collisionGroup = 0) 
+					 int32	collisionGroup = 0,
+					 RGBCOLOR debugColor = 0xffff0000) 
 			{
 				_texture = texture;
 				_isObstacle = isObstacle;
 				_collisionGroup = collisionGroup;
+				_debugColor = debugColor;
 			};
 
 			TILEID		_id;
 			RESOURCEID	_texture;
 			bool		_isObstacle;
 			int32		_collisionGroup;
+			RGBCOLOR	_debugColor;
 	};	
 
 	class TileGrid
