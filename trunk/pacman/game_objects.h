@@ -18,7 +18,8 @@ namespace Pegas
 	enum CollisionGroups
 	{
 		k_collisionGroupDefault = 0,
-		k_collisionGroupDoor
+		k_collisionGroupDoor,
+		k_collisionGroupGoalNode
 	};
 
 	enum Tiles
@@ -33,7 +34,12 @@ namespace Pegas
 		k_tilePinky,
 		k_tileInky,
 		k_tileClyde,
-		k_tileBonus
+		k_tileBonus,
+		k_tilePreyGoalNode,
+		k_tileBlinkyGoalNode,
+		k_tilePinkyGoalNode,
+		k_tileInkyGoalNode,
+		k_tileClydeGoalNode
 	};
 
 	
@@ -69,6 +75,9 @@ namespace Pegas
 		Vector3	  m_position;
 		Vector3	  m_initialPosition;
 		float	  m_radius;
+
+		bool isObstacle(const Vector3 position);
+		virtual bool isObstacle(int32 row, int32 column);
 
 		void incrementBlock() { m_blockMutex++; }
 		void decrementBlock() { m_blockMutex--; }
@@ -145,6 +154,10 @@ namespace Pegas
 		virtual void draw();
 
 		void setAnimation(int state, ProcessPtr animation);
+
+	protected:
+		virtual bool isObstacle(int32 row, int32 column);
+
 	private:
 		int32 m_prevRow;
 		int32 m_prevColumn;

@@ -84,6 +84,7 @@ void TileGrid::load(ISerializer& stream)
 			stream >> desc._texture;
 			stream >> desc._isObstacle;
 			stream >> desc._collisionGroup;
+			stream >> desc._debugColor;
 
 			addTileDesc(desc);
 		}
@@ -122,6 +123,7 @@ void TileGrid::save(ISerializer& stream)
 		stream << m_tilesDescs[i]._texture;
 		stream << m_tilesDescs[i]._isObstacle;
 		stream << m_tilesDescs[i]._collisionGroup;
+		stream << m_tilesDescs[i]._debugColor;
 	}
 
 	for(int32 col = 0;  col < m_numCols; col++)
@@ -209,7 +211,7 @@ void TileGrid::debugDraw(int32 flags)
 				extractCoords((*iit), row, col);
 				cellCoords(row, col, x, y);
 			
-				graf.drawRectangle(x, y, m_cellWidth, m_cellHeight, k_debugDrawingObstacleColor, k_debugDrawingObstacleColor); 
+				graf.drawRectangle(x, y, m_cellWidth, m_cellHeight, (*it)._debugColor, (*it)._debugColor); 
 			}
 		}
 	}//if(flags & k_debugDrawObstacles)

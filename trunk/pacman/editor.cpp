@@ -58,19 +58,47 @@ void EditorLayer::create(IPlatformContext* context)
 	m_tileGrid.create(30, 33);
 	m_tileGrid.setArea(m_maze._left, m_maze._top, m_maze._width, m_maze._height);
 
-	m_tileGrid.addTileDesc(TileDesc(k_texturePillTile, false));
-	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDefault));
-	m_tileGrid.addTileDesc(TileDesc(k_textureSuperPillTile, false));
+	/*
+		enum Tiles
+	{
+		k_tilePill = 0,
+		k_tileWall,
+		k_tileSuperPill,
+		k_tilePacman,
+		k_tileDoor,
+		k_tileTunnel,
+		k_tileBlinky,
+		k_tilePinky,
+		k_tileInky,
+		k_tileClyde,
+		k_tileBonus,
+		k_tilePreyGoalNode,
+		k_tileBlinkyGoalNode,
+		k_tilePinkyGoalNode,
+		k_tileInkyGoalNode,
+		k_tileClydeGoalNode
+	};
+	*/
 
-	m_tileGrid.addTileDesc(TileDesc(0, false));
-	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDoor));
-	m_tileGrid.addTileDesc(TileDesc(k_textureTunnelEditorTile, false));
+	m_tileGrid.addTileDesc(TileDesc(k_texturePillTile, false));//k_tilePill
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDefault));//k_tileWall
+	m_tileGrid.addTileDesc(TileDesc(k_textureSuperPillTile, false));//k_tileSuperPill
 
-	m_tileGrid.addTileDesc(TileDesc(0, false));
-	m_tileGrid.addTileDesc(TileDesc(0, false));
-	m_tileGrid.addTileDesc(TileDesc(0, false));
-	m_tileGrid.addTileDesc(TileDesc(0, false));
-	m_tileGrid.addTileDesc(TileDesc(0, false));
+	m_tileGrid.addTileDesc(TileDesc(0, false));//k_tilePacman
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupDoor, 0xffffffff));//k_tileDoor
+	m_tileGrid.addTileDesc(TileDesc(k_textureTunnelEditorTile, false));//k_tileTunnel
+
+	m_tileGrid.addTileDesc(TileDesc(0, false));//k_tileBlinky
+	m_tileGrid.addTileDesc(TileDesc(0, false));//k_tilePinky
+	m_tileGrid.addTileDesc(TileDesc(0, false));//k_tileInky
+	m_tileGrid.addTileDesc(TileDesc(0, false));//k_tileClyde
+	m_tileGrid.addTileDesc(TileDesc(0, false));//k_tileBonus
+
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupGoalNode, 0xff00ff00));//k_tilePreyGoalNode
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupGoalNode, 0xff0000ff));//k_tileBlinkyGoalNode
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupGoalNode, 0xff0000ff));//k_tilePinkyGoalNode
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupGoalNode, 0xff0000ff));//k_tileInkyGoalNode
+	m_tileGrid.addTileDesc(TileDesc(0, true, k_collisionGroupGoalNode, 0xff0000ff));//k_tileClydeGoalNode
 
 	m_showSprites = false;
 
@@ -378,7 +406,7 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 
 	if(key == IKeyboardController::k_keyCode_Q && !(flags & k_keyFlagRepeat))
 	{
-		if(m_debugDrawFlags && TileGrid::k_debugDrawGrid)
+		if(m_debugDrawFlags & TileGrid::k_debugDrawGrid)
 			m_debugDrawFlags &= (~TileGrid::k_debugDrawGrid);
 		else
 			m_debugDrawFlags |= TileGrid::k_debugDrawGrid;
@@ -386,7 +414,7 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 
 	if(key == IKeyboardController::k_keyCode_A && !(flags & k_keyFlagRepeat))
 	{
-		if(m_debugDrawFlags && TileGrid::k_debugDrawObstacles)
+		if(m_debugDrawFlags & TileGrid::k_debugDrawObstacles)
 			m_debugDrawFlags &= (~TileGrid::k_debugDrawObstacles);
 		else
 			m_debugDrawFlags |= TileGrid::k_debugDrawObstacles;
@@ -397,39 +425,84 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_showSprites = !m_showSprites;
 	}
 
-	if(key == IKeyboardController::k_keyCode_1)
+	if(key == IKeyboardController::k_keyCode_1 && !(flags & k_keyFlagRepeat))
 	{
-		m_currentEditorMode = k_editorMode_TilesPlacement;
-		m_currentTile = k_tilePill;
-		m_status = _text("current mode: tiles placement");
+		if(m_currentEditorMode == k_editorMode_None)
+		{
+			m_currentEditorMode = k_editorMode_TilesPlacement;
+			m_currentTile = k_tilePill;
+			m_status = _text("current mode: tiles placement");
+		}
+
+		if(m_currentEditorMode == k_editorMode_GoalNodePlacement)
+		{
+			m_currentTile = k_tilePreyGoalNode;
+			m_status+= _text("[prey goal]");
+		}
 	}
 
-	if(key == IKeyboardController::k_keyCode_2)
+	if(key == IKeyboardController::k_keyCode_2 && !(flags & k_keyFlagRepeat))
 	{
-		m_currentEditorMode = k_editorMode_TilesPlacement;
-		m_currentTile = k_tileWall;
-		m_status = _text("current mode: wall obstacle placement");
+		if(m_currentEditorMode == k_editorMode_None)
+		{
+			m_currentEditorMode = k_editorMode_TilesPlacement;
+			m_currentTile = k_tileWall;
+			m_status = _text("current mode: wall obstacle placement");
+		}
+
+		if(m_currentEditorMode == k_editorMode_GoalNodePlacement)
+		{
+			m_currentTile = k_tileBlinkyGoalNode;
+			m_status+= _text("[blinky goal]");
+		}
 	}
 
-	if(key == IKeyboardController::k_keyCode_3)
+	if(key == IKeyboardController::k_keyCode_3 && !(flags & k_keyFlagRepeat))
 	{
-		m_currentEditorMode = k_editorMode_TilesPlacement;
-		m_currentTile = k_tileSuperPill;
-		m_status = _text("current mode: super pill placement");
+		if(m_currentEditorMode == k_editorMode_None)
+		{
+			m_currentEditorMode = k_editorMode_TilesPlacement;
+			m_currentTile = k_tileSuperPill;
+			m_status = _text("current mode: super pill placement");
+		}
+
+		if(m_currentEditorMode == k_editorMode_GoalNodePlacement)
+		{
+			m_currentTile = k_tilePinkyGoalNode;
+			m_status+= _text("[pinky goal]");
+		}
 	}
 
-	if(key == IKeyboardController::k_keyCode_4)
+	if(key == IKeyboardController::k_keyCode_4 && !(flags & k_keyFlagRepeat))
 	{
-		m_currentEditorMode = k_editorMode_TilesPlacement;
-		m_currentTile = k_tilePacman;
-		m_status = _text("current mode: pacman placement");
+		if(m_currentEditorMode == k_editorMode_None)
+		{
+			m_currentEditorMode = k_editorMode_TilesPlacement;
+			m_currentTile = k_tilePacman;
+			m_status = _text("current mode: pacman placement");
+		}
+
+		if(m_currentEditorMode == k_editorMode_GoalNodePlacement)
+		{
+			m_currentTile = k_tileInkyGoalNode;
+			m_status+= _text("[inky goal]");
+		}
 	}
 
-	if(key == IKeyboardController::k_keyCode_5)
+	if(key == IKeyboardController::k_keyCode_5 && !(flags & k_keyFlagRepeat))
 	{
-		m_currentEditorMode = k_editorMode_TilesPlacement;
-		m_currentTile = k_tileDoor;
-		m_status = _text("current mode: room door placement");
+		if(m_currentEditorMode == k_editorMode_None)
+		{
+			m_currentEditorMode = k_editorMode_TilesPlacement;
+			m_currentTile = k_tileDoor;
+			m_status = _text("current mode: room door placement");
+		}
+
+		if(m_currentEditorMode == k_editorMode_GoalNodePlacement)
+		{
+			m_currentTile = k_tileClydeGoalNode;
+			m_status+= _text("[clyde goal]");
+		}
 	}
 
 	if(key == IKeyboardController::k_keyCode_6)
@@ -472,6 +545,13 @@ void EditorLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_currentEditorMode = k_editorMode_TilesPlacement;
 		m_currentTile = k_tileBonus;
 		m_status = _text("current mode: bonus placement");
+	}
+
+	if(key == IKeyboardController::k_keyCode_W && !(flags & k_keyFlagRepeat))
+	{
+		m_debugDrawFlags |= TileGrid::k_debugDrawObstacles;
+		m_currentEditorMode = k_editorMode_GoalNodePlacement;
+		m_status = _text("current mode: goal node placement ");
 	}
 }
 
@@ -525,7 +605,36 @@ void EditorLayer::onMouseButtonDown(MouseButton button, float x, float y, MouseF
 			sprite._left-= sprite._width * 0.5;
 			sprite._top-= sprite._height * 0.5;
 		}
-	}	
+	}
+
+	if(button == k_mouseButtonLeft 
+		&& m_currentEditorMode == k_editorMode_GoalNodePlacement
+		&& m_currentTile != TileGrid::k_emptyCellTileId)
+	{
+		std::list<Vector3> tileCoords;
+		m_tileGrid.getTiles(m_currentTile, tileCoords);
+		for(std::list<Vector3>::iterator it = tileCoords.begin(); it != tileCoords.end(); ++it)
+		{
+			m_tileGrid.setTilePoint(it->_x, it->_y, TileGrid::k_emptyCellTileId); 
+		}
+		
+
+		TILEID prevID = m_tileGrid.getTilePoint(x, y);
+		prevID = prevID != m_currentTile ? m_currentTile : TileGrid::k_emptyCellTileId;
+		m_tileGrid.setTilePoint(x, y, prevID);
+
+		int32 row, col;
+		m_tileGrid.pointToCell(x, y, row, col);
+		OSUtils::getInstance().debugOutput("tile clicked [row = %d, column = %d]", row, col);
+
+		if(m_staticSprites.count(m_currentTile) > 0)
+		{
+			SpriteParameters& sprite = m_staticSprites[m_currentTile];
+			m_tileGrid.cellCoords(row, col, sprite._left, sprite._top, true);
+			sprite._left-= sprite._width * 0.5;
+			sprite._top-= sprite._height * 0.5;
+		}
+	}
 }
 
 void EditorLayer::render(IPlatformContext* context)

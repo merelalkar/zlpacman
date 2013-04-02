@@ -178,7 +178,7 @@ void Character::update(float deltaTime)
 		//перемещение по лабиринту
 		Vector3 newPos = m_position + (m_directions[m_currentDirection] * m_velocity * deltaTime);
 		Vector3 facingPoint = newPos + m_directions[m_currentDirection] * m_radius;
-		if(m_tileGrid->isObstaclePoint((CURCOORD)facingPoint._x, (CURCOORD)facingPoint._y))
+		if(isObstacle(facingPoint))
 		{
 			//натолкнулись на препятсвие
 			//корркетируем позицию персонажа чтобы он был в середине текущей клетки
@@ -223,7 +223,7 @@ void Character::update(float deltaTime)
 			break;
 		};
 
-		if(!m_tileGrid->isObstacle(nextRow, nextColumn))
+		if(!isObstacle(nextRow, nextColumn))
 		{
 			Vector3 cellPosition;
 			m_tileGrid->cellCoords(currentRow, currentColumn, cellPosition._x, cellPosition._y, true);
@@ -251,6 +251,19 @@ void Character::update(float deltaTime)
 			}
 		}
 	}//if(m_turnCommand != -1)
+}
+
+bool Character::isObstacle(const Vector3 position)
+{
+	int32 row, column;
+	m_tileGrid->pointToCell(position._x, position._y, row, column);
+
+	return isObstacle(row, column);
+}
+
+bool Character::isObstacle(int32 row, int32 column)
+{
+	return m_tileGrid->isObstacle(row, column);
 }
 
 /******************************************************************************************************************************
@@ -595,4 +608,15 @@ void Ghost::changeAnimation(int32 newState)
 	};
 	assert(m_currentAnimation >= 0 && m_currentAnimation < k_animationTotal && "invalid animation index"); 
 	m_animations[m_currentAnimation]->resume();
+}
+
+bool Ghost::isObstacle(int32 row, int32 column)
+{
+	int32 collisionGroup;
+	if(m_tileGrid->isObstacle(row, column, &collisionGroup))
+	{
+		return collisionGroup == k_collisionGroupDefault;
+	}
+
+	return false;
 }

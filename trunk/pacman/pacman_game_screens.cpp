@@ -20,6 +20,7 @@ enum MenuButtons
 {
 	k_menuButtonStart = 1,
 	k_menuButtonOptions,
+	k_menuButtonEditor,
 	k_menuButtonExit	
 };
 
@@ -86,6 +87,18 @@ void MainMenuLayer::create(IPlatformContext* context)
 
 	top+= (buttonHeight + 20);
 
+	ButtonWidget* editorButton = new ButtonWidget(k_menuButtonEditor);
+	editorButton->setPosition(left, top);
+	editorButton->setSize(buttonWidth, buttonHeight);
+	editorButton->setButtonStyle(k_buttonStateNormal, k_fontMenuButton, textColor, borderColor);
+	editorButton->setButtonStyle(k_buttonStatePressed, k_fontMenuButton, textColor, borderColor);
+	editorButton->setButtonStyle(k_buttonStateActive, k_fontMenuButton, activeTextColor, borderColor);
+	editorButton->setCaption(_text("editor"));
+
+	addWidget(WidgetPtr(editorButton));
+
+	top+= (buttonHeight + 20);
+
 	ButtonWidget* exitButton = new ButtonWidget(k_menuButtonExit);
 	exitButton->setPosition(left, top);
 	exitButton->setSize(buttonWidth, buttonHeight);
@@ -129,6 +142,14 @@ void MainMenuLayer::handleEvent(EventPtr evt)
 			TheEventMgr.pushEventToQueye(startFadein);
 
 			m_aboutToExit = (pEvent->m_button->getID() == k_menuButtonExit);
+		}
+
+		if(pEvent->m_button->getID() == k_menuButtonEditor)
+		{
+			ProcessPtr fadein = new Fadein();
+			m_platform->attachProcess(fadein);
+			ProcessPtr toEditor = new ChangeStateTask(m_platform, k_stateEditor);
+			fadein->attachNext(toEditor);
 		}
 	}
 

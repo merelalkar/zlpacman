@@ -31,7 +31,8 @@ namespace Pegas
 			k_editorMode_GridPan, //перемещение сетки по экрану (SPACE + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_GridCellSizing, //изменение размера €чейки сетки (C + UP/DOWN/LEFT/RIGHT)
 			k_editorMode_GridCellsTweak, //изменение количества €чеек по горизонтали и вертикали (CTRL + UP/DOWN/LEFT/RIGHT)
-			k_editorMode_TilesPlacement//расстановка тайлов на сетке (<Num> + кликнуть мышью в €чейку сетки)			
+			k_editorMode_TilesPlacement,//расстановка тайлов на сетке (<Num> + кликнуть мышью в €чейку сетки)
+			k_editorMode_GoalNodePlacement
 		};
 
 		EditorMode m_currentEditorMode;
