@@ -404,6 +404,11 @@ void GoalDrivenState::handleEvent(EventPtr evt)
 
 float GoalDrivenState::getGoalHeuristic(int32 row, int32 column)
 {
+	Vector3 position, goalPosition, distance;
+	m_tileGrid->cellCoords(m_goalRow, m_goalColumn, goalPosition._x, goalPosition._y, true);
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = goalPosition - position;
 
+	return distance.length();
 }
 
