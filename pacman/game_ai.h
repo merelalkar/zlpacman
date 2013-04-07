@@ -32,7 +32,7 @@ namespace Pegas
 		int32 m_myCurrentDirection;
 
 		int32 m_blockMutex;
-		bool  m_characterMoved;
+		bool  m_characterMoved;		
 	};
 
 	class BlinkyChaseState: public BaseAIState
