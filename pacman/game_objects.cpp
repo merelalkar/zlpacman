@@ -427,6 +427,7 @@ void Ghost::create(TileGrid* tileGrid, const Vector3& position)
 	TheEventMgr.addEventListener(this, Event_PacmanDeath::k_type);
 
 	m_currentState = k_stateChasing;
+	m_velocity*= 0.75;
 	EventPtr evt(new Event_CharacterStateChanged(m_actorId, m_currentState));
 	TheEventMgr.pushEventToQueye(evt);
 }

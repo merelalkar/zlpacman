@@ -39,7 +39,7 @@ namespace Pegas
 		k_tileBlinkyGoalNode,
 		k_tilePinkyGoalNode,
 		k_tileInkyGoalNode,
-		k_tileClydeGoalNode
+		k_tileClydeGoalNode		
 	};
 
 	
@@ -142,8 +142,8 @@ namespace Pegas
 		enum State
 		{
 			k_stateChasing,
-			k_statePray,
-			k_stateRunaway
+			k_stateRunaway,
+			k_statePray			
 		};
 	public:
 		Ghost(int actorId, IPlatformContext* platform);
