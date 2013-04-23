@@ -73,7 +73,6 @@ int32 BaseAIState::chooseDirection()
 	float minHeuristic = MAX_REAL32;
 	for(int32 i = 0; i < Character::k_moveTotalDirections; i++)
 	{
-		if(i == m_myCurrentDirection) continue;
 		if(i == backwardDirection) continue;
 
 		int32 row = m_myRow + rowOffset[i];
@@ -104,9 +103,12 @@ void BaseAIState::handleEvent(EventPtr evt)
 		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
 		if(pEvent->_actorId == m_controlledActor || pEvent->_actorId == k_actorAll)
 		{
-			m_myRow = pEvent->_row;
-			m_myColumn = pEvent->_column;
-			m_characterMoved = true;
+			if(m_myRow != pEvent->_row || m_myColumn != pEvent->_column)
+			{
+				m_myRow = pEvent->_row;
+				m_myColumn = pEvent->_column;
+				m_characterMoved = true;
+			}
 		}
 	}
 
@@ -471,7 +473,6 @@ int32 RunawayState::chooseDirection()
 	std::vector<int32> directions;	
 	for(int32 i = 0; i < Character::k_moveTotalDirections; i++)
 	{
-		if(i == m_myCurrentDirection) continue;
 		if(i == backwardDirection) continue;
 
 		int32 row = m_myRow + rowOffset[i];
