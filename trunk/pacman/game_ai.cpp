@@ -49,7 +49,6 @@ void BaseAIState::update(MILLISECONDS deltaTime)
 
 	m_characterMoved = false;
 
-	
 	int32 choosenDirection = chooseDirection();
 	if(choosenDirection != -1 && choosenDirection != m_myCurrentDirection)
 	{
@@ -62,18 +61,25 @@ int32 BaseAIState::chooseDirection()
 {
 	int32 rowOffset[] = { 0, -1, 0, 1};
 	int32 columnOffset[] = { -1, 0, 1, 0 };
-	int32 backwardDirection = (m_myCurrentDirection + 2) % Character::k_moveTotalDirections;
+	
+	int32 backwardDirection = m_myCurrentDirection + 2;
+	if(backwardDirection >= Character::k_moveTotalDirections)
+	{
+		backwardDirection -= Character::k_moveTotalDirections;
+	}
+
 
 	int32 choosenDirection = -1;
 	float minHeuristic = MAX_REAL32;
 	for(int32 i = 0; i < Character::k_moveTotalDirections; i++)
 	{
+		if(i == m_myCurrentDirection) continue;
 		if(i == backwardDirection) continue;
 
 		int32 row = m_myRow + rowOffset[i];
 		int32 column = m_myColumn + columnOffset[i];
 		
-		if(m_tileGrid->isObstacle(row, column)) continue;
+		if(isObstacle(row, column)) continue;
 
 		float heuristic = getGoalHeuristic(row, column);
 		if(heuristic < minHeuristic)
@@ -84,6 +90,11 @@ int32 BaseAIState::chooseDirection()
 	}
 
 	return choosenDirection;
+}
+
+bool BaseAIState::isObstacle(int32 row, int32 column)
+{
+	return m_tileGrid->isObstacle(row, column);
 }
 
 void BaseAIState::handleEvent(EventPtr evt)
@@ -149,10 +160,12 @@ void BaseAIState::suspend()
 
 void BaseAIState::resume()
 {
-	m_blockMutex--;
+	if(m_blockMutex > 0)
+		m_blockMutex--;
+
 	if(m_blockMutex == 0)
 	{
-		Process::resume();
+		Process::resume();		
 	}
 }
 
@@ -173,7 +186,7 @@ void BlinkyChaseState::handleEvent(EventPtr evt)
 		if(pEvent->_actorId == k_actorPacman)
 		{
 			m_pacmanPosition = pEvent->_position;
-		}
+		}		
 	}
 
 	BaseAIState::handleEvent(evt);
@@ -378,11 +391,6 @@ void GoalDrivenState::setGoalPoint(const Vector3& point)
 	m_tileGrid->pointToCell(point._x, point._y, m_goalRow, m_goalColumn);  
 }
 
-void GoalDrivenState::setFinalState(int32 stateId)
-{
-	m_finalState = stateId;
-}
-
 void GoalDrivenState::handleEvent(EventPtr evt)
 {
 	if(evt->getType() == Event_CharacterMoved::k_type)
@@ -394,8 +402,7 @@ void GoalDrivenState::handleEvent(EventPtr evt)
 		{
 			suspend();
 
-			EventPtr evt(new Event_CharacterChangeState(m_controlledActor, m_finalState));
-			TheEventMgr.pushEventToQueye(evt);
+			onGoalAchieved();
 		}
 	}
 
@@ -411,4 +418,108 @@ float GoalDrivenState::getGoalHeuristic(int32 row, int32 column)
 
 	return distance.length();
 }
+
+void GoalDrivenState::onGoalAchieved()
+{
+
+}
+
+/************************************************************************
+	Runaway State
+************************************************************************/
+RunawayState::RunawayState(TileGrid* tileGrid, int32 controlledActor)
+	:BaseAIState(tileGrid, controlledActor, Ghost::k_stateRunaway)
+{
+
+}
+
+void RunawayState::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanPosition = pEvent->_position;
+		}		
+	}
+
+	BaseAIState::handleEvent(evt);
+}
+
+float RunawayState::getGoalHeuristic(int32 row, int32 column)
+{
+	Vector3 position, distance;
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = m_pacmanPosition - position;
+
+	return distance.length();
+}
+
+int32 RunawayState::chooseDirection()
+{
+	int32 rowOffset[] = { 0, -1, 0, 1};
+	int32 columnOffset[] = { -1, 0, 1, 0 };
+	
+	int32 backwardDirection = m_myCurrentDirection + 2;
+	if(backwardDirection >= Character::k_moveTotalDirections)
+	{
+		backwardDirection -= Character::k_moveTotalDirections;
+	}
+
+	int32 choosenDirection = -1;
+	std::vector<int32> directions;	
+	for(int32 i = 0; i < Character::k_moveTotalDirections; i++)
+	{
+		if(i == m_myCurrentDirection) continue;
+		if(i == backwardDirection) continue;
+
+		int32 row = m_myRow + rowOffset[i];
+		int32 column = m_myColumn + columnOffset[i];
+		
+		if(isObstacle(row, column)) continue;
+
+		directions.push_back(i);
+	}
+
+	if(directions.size() > 0)
+	{
+		std::random_shuffle(directions.begin(), directions.end());
+		choosenDirection = directions.front();
+	}
+
+	return choosenDirection;
+}
+
+/**************************************************************************************************
+**************************************************************************************************/
+PrayState::PrayState(TileGrid* tileGrid, int32 controlledActor)
+	:GoalDrivenState(tileGrid, controlledActor, Ghost::k_statePray)
+{
+	std::list<Vector3> nodes;
+	tileGrid->getTiles(k_tilePreyGoalNode, nodes, true);
+	assert(nodes.size() > 0 && "PrayState goal node not found");
+	
+	setGoalPoint(nodes.front());
+}
+	
+void PrayState::onGoalAchieved()
+{
+	EventPtr evt = new Event_CharacterChangeState(m_controlledActor, Ghost::k_stateChasing);
+	TheEventMgr.pushEventToQueye(evt);
+}
+
+bool PrayState::isObstacle(int32 row, int32 column)
+{
+	int32 collisionGroup;
+	if(m_tileGrid->isObstacle(row, column, &collisionGroup))
+	{
+		return collisionGroup == k_collisionGroupDefault;
+	}
+
+	return false;
+}
+	
+
+
 

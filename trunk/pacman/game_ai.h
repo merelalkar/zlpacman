@@ -14,11 +14,12 @@ namespace Pegas
 		virtual void resume();
 		virtual void terminate();
 		virtual void update(MILLISECONDS deltaTime);
-		virtual void handleEvent(EventPtr evt);
+		virtual void handleEvent(EventPtr evt);		
 
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
 
+		virtual bool isObstacle(int32 row, int32 column);
 		virtual int32 chooseDirection();
 		virtual float getGoalHeuristic(int32 row, int32 column) = 0;
 
@@ -109,15 +110,37 @@ namespace Pegas
 		GoalDrivenState(TileGrid* tileGrid, int32 controlledActor, int32 stateId);
 
 		void setGoalPoint(const Vector3& point);
-		void setFinalState(int32 stateId);
-
 		virtual void handleEvent(EventPtr evt);
 
 	protected:
 		virtual float getGoalHeuristic(int32 row, int32 column);
+		virtual void onGoalAchieved();	
 
 		int32	m_goalRow;
 		int32	m_goalColumn;
 		int32	m_finalState;
+	};
+
+	class RunawayState: public BaseAIState
+	{
+	public:
+		RunawayState(TileGrid* tileGrid, int32 controlledActor);
+		virtual void handleEvent(EventPtr evt);
+
+	protected:
+		virtual int32 chooseDirection();
+		virtual float getGoalHeuristic(int32 row, int32 column);
+
+		Vector3 m_pacmanPosition;
+	};
+
+	class PrayState: public GoalDrivenState
+	{
+	public:
+		PrayState(TileGrid* tileGrid, int32 controlledActor);
+
+	protected:
+		virtual void onGoalAchieved();
+		virtual bool isObstacle(int32 row, int32 column);
 	};
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "game_world.h"
+#include "game_ai.h"
 
 #include "game_resources.h"
 #include "pacman_game_screens.h"
@@ -149,7 +150,7 @@ void GameWorld::createGameObjects()
 	assert(tiles.size() > 0 && "Blinky position not found");
 	assert(m_sprites.count(k_tileBlinky) > 0 && "Blinky position not found");
 
-	int32 startFrame[] = {28, 24, 30, 26, 62, 60, 63, 61, 56, 56 };
+	int32 startFrame[] = {28, 24, 30, 26, 62, 60, 62, 61, 56, 56 };
 	int32 numFrames[] = {2, 2, 2, 2, 1, 1, 1, 1, 2, 4 };
 
 	if(tiles.size() > 0 && m_sprites.count(k_tileBlinky) > 0)
@@ -169,6 +170,15 @@ void GameWorld::createGameObjects()
 
 			blinky->setAnimation(i, ProcessPtr(animation));
 		}
+
+		ProcessPtr chaseState = new BlinkyChaseState(&m_tileGrid);
+		m_context->attachProcess(chaseState);
+
+		ProcessPtr runAwayState = new RunawayState(&m_tileGrid, k_actorBlinky);
+		m_context->attachProcess(runAwayState);
+
+		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorBlinky);
+		m_context->attachProcess(prayState);
 	}
 }
 
