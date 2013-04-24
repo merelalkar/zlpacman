@@ -93,7 +93,7 @@ namespace Pegas
 	class ClydeChaseState: public BaseAIState
 	{
 	public:
-		ClydeChaseState(TileGrid* tileGrid, const Vector3 scatterPoint);
+		ClydeChaseState(TileGrid* tileGrid);
 		virtual void handleEvent(EventPtr evt);
 
 	protected:

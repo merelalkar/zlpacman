@@ -120,6 +120,9 @@ void GameWorld::createGameObjects()
 	assert(tiles.size() > 0 && "pacman position not found");
 	assert(m_sprites.count(k_tilePacman) > 0 && "pacman position not found");
 
+	/****************************************************************
+		Pacman
+	*****************************************************************/
 	if(tiles.size() > 0 && m_sprites.count(k_tilePacman) > 0)
 	{
 		Pacman* pacman = new Pacman(k_actorPacman, m_context);
@@ -144,14 +147,27 @@ void GameWorld::createGameObjects()
 		pacman->setAnimation(Pacman::k_animationDeath, ProcessPtr(death));
 	}
 
+	
+
+	int32 blinkyStartFrame[] = {28, 24, 30, 26, 62, 60, 62, 61, 56, 56 };
+	
+	int32 pinkyStartFrame[] = {36, 32, 38, 34, 62, 60, 62, 61, 56, 56 };
+	
+	int32 inkyStartFrame[] = {44, 40, 46, 42, 62, 60, 62, 61, 56, 56 };
+	
+	int32 clydeStartFrame[] = {52, 48, 54, 50, 62, 60, 62, 61, 56, 56 };
+
+	int32 numFrames[] = {2, 2, 2, 2, 1, 1, 1, 1, 2, 4 };
+
+	/******************************************************************
+		Blinky
+	*******************************************************************/
+	/*
 	tiles.clear();
 	m_tileGrid.getTiles(k_tileBlinky, tiles, true);
 	
 	assert(tiles.size() > 0 && "Blinky position not found");
 	assert(m_sprites.count(k_tileBlinky) > 0 && "Blinky position not found");
-
-	int32 startFrame[] = {28, 24, 30, 26, 62, 60, 62, 61, 56, 56 };
-	int32 numFrames[] = {2, 2, 2, 2, 1, 1, 1, 1, 2, 4 };
 
 	if(tiles.size() > 0 && m_sprites.count(k_tileBlinky) > 0)
 	{
@@ -163,7 +179,7 @@ void GameWorld::createGameObjects()
 		for(int32 i = 0; i < Ghost::k_animationTotal; i++)
 		{
 			SpriteAnimation* animation = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8);
-			animation->setNumFrames(startFrame[i], numFrames[i]);
+			animation->setNumFrames(blinkyStartFrame[i], numFrames[i]);
 			animation->setFPS(8);
 			animation->getSprite()->_width = m_sprites[k_tileBlinky]._width;
 			animation->getSprite()->_height = m_sprites[k_tileBlinky]._height;
@@ -178,6 +194,117 @@ void GameWorld::createGameObjects()
 		m_context->attachProcess(runAwayState);
 
 		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorBlinky);
+		m_context->attachProcess(prayState);
+	}*/
+
+	/******************************************************************
+		Pinky
+	*******************************************************************/
+	/*tiles.clear();
+	m_tileGrid.getTiles(k_tilePinky, tiles, true);
+	
+	assert(tiles.size() > 0 && "Pinky position not found");
+	assert(m_sprites.count(k_tilePinky) > 0 && "Pinky position not found");
+
+	if(tiles.size() > 0 && m_sprites.count(k_tilePinky) > 0)
+	{
+		Ghost* pinky = new Ghost(k_actorPinky, m_context); 
+		pinky->create(&m_tileGrid, tiles.front());
+
+		m_gameObjects.push_back(GameObjectPtr(pinky));
+		
+		for(int32 i = 0; i < Ghost::k_animationTotal; i++)
+		{
+			SpriteAnimation* animation = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8);
+			animation->setNumFrames(pinkyStartFrame[i], numFrames[i]);
+			animation->setFPS(8);
+			animation->getSprite()->_width = m_sprites[k_tilePinky]._width;
+			animation->getSprite()->_height = m_sprites[k_tilePinky]._height;
+
+			pinky->setAnimation(i, ProcessPtr(animation));
+		}
+
+		ProcessPtr chaseState = new PinkyChaseState(&m_tileGrid);
+		m_context->attachProcess(chaseState);
+
+		ProcessPtr runAwayState = new RunawayState(&m_tileGrid, k_actorPinky);
+		m_context->attachProcess(runAwayState);
+
+		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorPinky);
+		m_context->attachProcess(prayState);
+	}*/
+
+	/******************************************************************
+		Inky
+	*******************************************************************/
+	/*tiles.clear();
+	m_tileGrid.getTiles(k_tileInky, tiles, true);
+	
+	assert(tiles.size() > 0 && "Inky position not found");
+	assert(m_sprites.count(k_tileInky) > 0 && "Inky position not found");
+
+	if(tiles.size() > 0 && m_sprites.count(k_tileInky) > 0)
+	{
+		Ghost* Inky = new Ghost(k_actorInky, m_context); 
+		Inky->create(&m_tileGrid, tiles.front());
+
+		m_gameObjects.push_back(GameObjectPtr(Inky));
+		
+		for(int32 i = 0; i < Ghost::k_animationTotal; i++)
+		{
+			SpriteAnimation* animation = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8);
+			animation->setNumFrames(inkyStartFrame[i], numFrames[i]);
+			animation->setFPS(8);
+			animation->getSprite()->_width = m_sprites[k_tileInky]._width;
+			animation->getSprite()->_height = m_sprites[k_tileInky]._height;
+
+			Inky->setAnimation(i, ProcessPtr(animation));
+		}
+
+		ProcessPtr chaseState = new InkyChaseState(&m_tileGrid);
+		m_context->attachProcess(chaseState);
+
+		ProcessPtr runAwayState = new RunawayState(&m_tileGrid, k_actorInky);
+		m_context->attachProcess(runAwayState);
+
+		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorInky);
+		m_context->attachProcess(prayState);
+	}*/
+
+	/******************************************************************
+		Clyde
+	*******************************************************************/
+	tiles.clear();
+	m_tileGrid.getTiles(k_tileClyde, tiles, true);
+	
+	assert(tiles.size() > 0 && "Inky position not found");
+	assert(m_sprites.count(k_tileClyde) > 0 && "Inky position not found");
+
+	if(tiles.size() > 0 && m_sprites.count(k_tileClyde) > 0)
+	{
+		Ghost* Clyde = new Ghost(k_actorClyde, m_context); 
+		Clyde->create(&m_tileGrid, tiles.front());
+
+		m_gameObjects.push_back(GameObjectPtr(Clyde));
+		
+		for(int32 i = 0; i < Ghost::k_animationTotal; i++)
+		{
+			SpriteAnimation* animation = new SpriteAnimation(k_textureCharactersSpriteSheet, 8, 8);
+			animation->setNumFrames(clydeStartFrame[i], numFrames[i]);
+			animation->setFPS(8);
+			animation->getSprite()->_width = m_sprites[k_tileClyde]._width;
+			animation->getSprite()->_height = m_sprites[k_tileClyde]._height;
+
+			Clyde->setAnimation(i, ProcessPtr(animation));
+		}
+
+		ProcessPtr chaseState = new ClydeChaseState(&m_tileGrid);
+		m_context->attachProcess(chaseState);
+
+		ProcessPtr runAwayState = new RunawayState(&m_tileGrid, k_tileClyde);
+		m_context->attachProcess(runAwayState);
+
+		ProcessPtr prayState = new PrayState(&m_tileGrid, k_tileClyde);
 		m_context->attachProcess(prayState);
 	}
 }
