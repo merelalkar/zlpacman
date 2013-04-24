@@ -27,6 +27,9 @@ Character::Character(int actorId)
 	m_blockMutex = 0;
 	m_isMoving = false;
 	m_isVisible = true;
+
+	m_prevRow = 0;
+	m_prevColumn = 0;
 }
 
 void Character::create(TileGrid* tileGrid, const Vector3& position)
@@ -192,8 +195,14 @@ void Character::update(float deltaTime)
 			m_position = newPos;
 		}
 
-		EventPtr evt(new Event_CharacterMoved(m_actorId, m_position, currentRow, currentColumn));
-		TheEventMgr.pushEventToQueye(evt);
+		if(currentRow != m_prevRow || currentColumn != m_prevColumn)
+		{
+			m_prevRow = currentRow;
+			m_prevColumn = currentColumn;
+
+			EventPtr evt(new Event_CharacterMoved(m_actorId, m_position, currentRow, currentColumn));
+			TheEventMgr.pushEventToQueye(evt);
+		}
 	}
 
 	//поворот
@@ -273,8 +282,6 @@ Pacman::Pacman(int actorId, IPlatformContext* platform):
 	Character(actorId)
 {
 	m_platform = platform;
-	m_prevRow = 0;
-	m_prevColumn = 0;
 	m_currentAnimation = 0;
 }
 
@@ -349,9 +356,6 @@ void Pacman::update(float deltaTime)
 		m_tileGrid->pointToCell(m_position._x, m_position._y, row, column);
 		if(row != m_prevRow || column != m_prevColumn)
 		{
-			m_prevRow = row;
-			m_prevColumn = column;
-
 			TILEID tile = m_tileGrid->getTile(row, column);
 
 			if(tile == k_tilePill || tile == k_tileSuperPill || tile == k_tileBonus)

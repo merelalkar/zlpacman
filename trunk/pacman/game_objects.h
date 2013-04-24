@@ -90,6 +90,9 @@ namespace Pegas
 		int32 m_blockMutex; 
 		bool m_isMoving;
 		bool m_isVisible;
+
+		int32 m_prevRow;
+		int32 m_prevColumn;
 	};
 
 	class Pacman: public Character 
@@ -113,9 +116,6 @@ namespace Pegas
 		void setAnimation(int state, ProcessPtr animation);
 
 	private:
-		int32 m_prevRow;
-		int32 m_prevColumn;
-
 		IPlatformContext* m_platform;
 		ProcessPtr	m_animations[k_animationTotal];
 		int32		m_currentAnimation;
