@@ -268,7 +268,9 @@ float BlinkyChaseState::getGoalHeuristic(int32 row, int32 column)
 PinkyChaseState::PinkyChaseState(TileGrid* tileGrid)
 	:BaseAIState(tileGrid, k_actorPinky, Ghost::k_stateChasing)
 {
-
+	m_pacmanDirection = 0;
+	m_pacmanRow = -1;
+	m_pacmanColumn = -1;
 }
 
 void PinkyChaseState::handleEvent(EventPtr evt)
@@ -331,7 +333,9 @@ void PinkyChaseState::calculateGoalPosition()
 InkyChaseState::InkyChaseState(TileGrid* tileGrid)
 	:BaseAIState(tileGrid, k_actorInky, Ghost::k_stateChasing)
 {
-
+	m_pacmanDirection = 0;
+	m_pacmanRow = -1;
+	m_pacmanColumn = -1;
 }
 
 void InkyChaseState::handleEvent(EventPtr evt)
@@ -400,11 +404,15 @@ void InkyChaseState::calculateGoalPosition()
 /*******************************************************************************************************
 	
 *******************************************************************************************************/
-ClydeChaseState::ClydeChaseState(TileGrid* tileGrid, const Vector3 scatterPoint)
+ClydeChaseState::ClydeChaseState(TileGrid* tileGrid)
 	:BaseAIState(tileGrid, k_actorClyde, Ghost::k_stateChasing)
 {
-	m_scatterPoint = scatterPoint;
-	m_goalPosition = scatterPoint;
+	std::list<Vector3> nodes;
+	tileGrid->getTiles(k_tileClydeGoalNode, nodes, true);
+	assert(nodes.size() > 0 && "goal node not found");
+
+	m_scatterPoint = nodes.front();
+	m_goalPosition = nodes.front();
 }
 
 void ClydeChaseState::handleEvent(EventPtr evt)
