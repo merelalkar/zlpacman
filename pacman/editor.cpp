@@ -611,13 +611,15 @@ void EditorLayer::onMouseButtonDown(MouseButton button, float x, float y, MouseF
 		&& m_currentEditorMode == k_editorMode_GoalNodePlacement
 		&& m_currentTile != TileGrid::k_emptyCellTileId)
 	{
-		std::list<Vector3> tileCoords;
-		m_tileGrid.getTiles(m_currentTile, tileCoords);
-		for(std::list<Vector3>::iterator it = tileCoords.begin(); it != tileCoords.end(); ++it)
+		if(m_currentTile != k_tilePreyGoalNode)
 		{
-			m_tileGrid.setTilePoint(it->_x, it->_y, TileGrid::k_emptyCellTileId); 
-		}
-		
+			std::list<Vector3> tileCoords;
+			m_tileGrid.getTiles(m_currentTile, tileCoords);
+			for(std::list<Vector3>::iterator it = tileCoords.begin(); it != tileCoords.end(); ++it)
+			{
+				m_tileGrid.setTilePoint(it->_x, it->_y, TileGrid::k_emptyCellTileId); 
+			}
+		}		
 
 		TILEID prevID = m_tileGrid.getTilePoint(x, y);
 		prevID = prevID != m_currentTile ? m_currentTile : TileGrid::k_emptyCellTileId;

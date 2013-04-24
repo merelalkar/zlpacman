@@ -3,6 +3,7 @@
 
 #include "game_events.h"
 #include "game_objects.h"
+//#include "game_resources.h"
 
 using namespace Pegas;
 
@@ -21,6 +22,27 @@ BaseAIState::BaseAIState(TileGrid* tileGrid, int32 controlledActor, int32 stateI
 	m_myCurrentDirection = -1;
 	m_characterMoved = false;
 	m_blockMutex = 0;
+
+	m_inRoom = false;
+	int32 m_outRoomRow = -1;
+	int32 m_outRoomColumn = -1;
+
+	std::list<Vector3> nodes;
+	tileGrid->getTiles(k_tileBlinky, nodes, true);
+	assert(nodes.size() > 0 && "goal node not found");
+	
+	Vector3 point = nodes.front();
+	tileGrid->pointToCell(point._x, point._y, m_outRoomRow, m_outRoomColumn);	
+}
+
+float BaseAIState::getGoalHeuristic(int32 row, int32 column)
+{
+	Vector3 position, goalPosition, distance;
+	m_tileGrid->cellCoords(m_outRoomRow, m_outRoomColumn, goalPosition._x, goalPosition._y, true);
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = goalPosition - position;
+
+	return distance.length();
 }
 
 void BaseAIState::start(ProcessHandle myHandle, ProcessManagerPtr owner)
@@ -69,8 +91,9 @@ int32 BaseAIState::chooseDirection()
 	}
 
 
-	int32 choosenDirection = -1;
 	float minHeuristic = MAX_REAL32;
+	int32 choosenDirection = -1;
+	int32 numObstacles = 0;
 	for(int32 i = 0; i < Character::k_moveTotalDirections; i++)
 	{
 		if(i == backwardDirection) continue;
@@ -78,7 +101,11 @@ int32 BaseAIState::chooseDirection()
 		int32 row = m_myRow + rowOffset[i];
 		int32 column = m_myColumn + columnOffset[i];
 		
-		if(isObstacle(row, column)) continue;
+		if(isObstacle(row, column))
+		{
+			numObstacles++;
+			continue;
+		}
 
 		float heuristic = getGoalHeuristic(row, column);
 		if(heuristic < minHeuristic)
@@ -88,11 +115,27 @@ int32 BaseAIState::chooseDirection()
 		}
 	}
 
+	if(numObstacles >= 3)
+	{
+		choosenDirection = backwardDirection;
+	}
+
 	return choosenDirection;
 }
 
 bool BaseAIState::isObstacle(int32 row, int32 column)
 {
+	if(m_inRoom)
+	{
+		int32 collisionGroup;
+		if(m_tileGrid->isObstacle(row, column, &collisionGroup))
+		{
+			return collisionGroup == k_collisionGroupDefault;
+		}
+
+		return false;
+	}
+
 	return m_tileGrid->isObstacle(row, column);
 }
 
@@ -101,13 +144,24 @@ void BaseAIState::handleEvent(EventPtr evt)
 	if(evt->getType() == Event_CharacterMoved::k_type)
 	{
 		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
-		if(pEvent->_actorId == m_controlledActor || pEvent->_actorId == k_actorAll)
+		if(pEvent->_actorId == m_controlledActor)
 		{
 			if(m_myRow != pEvent->_row || m_myColumn != pEvent->_column)
 			{
 				m_myRow = pEvent->_row;
 				m_myColumn = pEvent->_column;
 				m_characterMoved = true;
+			}
+
+			TILEID tile = m_tileGrid->getTile(pEvent->_row, pEvent->_column);
+			if(tile == k_tilePreyGoalNode)
+			{
+				m_inRoom = true;
+			}
+
+			if(tile == k_tileDoor)
+			{
+				m_inRoom = false;
 			}
 		}
 	}
@@ -196,6 +250,11 @@ void BlinkyChaseState::handleEvent(EventPtr evt)
 
 float BlinkyChaseState::getGoalHeuristic(int32 row, int32 column)
 {
+	if(m_inRoom)
+	{
+		return BaseAIState::getGoalHeuristic(row, column);
+	}
+
 	Vector3 position, distance;
 	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
 	distance = m_pacmanPosition - position;
@@ -242,6 +301,11 @@ void PinkyChaseState::handleEvent(EventPtr evt)
 
 float PinkyChaseState::getGoalHeuristic(int32 row, int32 column)
 {
+	if(m_inRoom)
+	{
+		return BaseAIState::getGoalHeuristic(row, column);
+	}
+
 	Vector3 position, distance;
 	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
 	distance = m_goalPosition - position;
@@ -305,6 +369,11 @@ void InkyChaseState::handleEvent(EventPtr evt)
 
 float InkyChaseState::getGoalHeuristic(int32 row, int32 column)
 {
+	if(m_inRoom)
+	{
+		return BaseAIState::getGoalHeuristic(row, column);
+	}
+
 	Vector3 position, distance;
 	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
 	distance = m_goalPosition - position;
@@ -357,6 +426,11 @@ void ClydeChaseState::handleEvent(EventPtr evt)
 
 float ClydeChaseState::getGoalHeuristic(int32 row, int32 column)
 {
+	if(m_inRoom)
+	{
+		return BaseAIState::getGoalHeuristic(row, column);
+	}
+
 	Vector3 position, distance;
 	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
 	distance = m_goalPosition - position;
@@ -377,53 +451,6 @@ void ClydeChaseState::calculateGoalPosition()
 	{
 		m_goalPosition = m_scatterPoint;
 	}
-}
-
-/********************************************************************************************************
-
-*********************************************************************************************************/
-GoalDrivenState::GoalDrivenState(TileGrid* tileGrid, int32 controlledActor, int32 stateId):
-	BaseAIState(tileGrid, controlledActor, stateId)
-{
-
-}
-
-void GoalDrivenState::setGoalPoint(const Vector3& point)
-{
-	m_tileGrid->pointToCell(point._x, point._y, m_goalRow, m_goalColumn);  
-}
-
-void GoalDrivenState::handleEvent(EventPtr evt)
-{
-	if(evt->getType() == Event_CharacterMoved::k_type)
-	{
-		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
-		if(pEvent->_actorId == m_controlledActor 
-			&& pEvent->_column == m_goalColumn
-			&& pEvent->_row == m_goalRow)
-		{
-			suspend();
-
-			onGoalAchieved();
-		}
-	}
-
-	BaseAIState::handleEvent(evt);
-}	
-
-float GoalDrivenState::getGoalHeuristic(int32 row, int32 column)
-{
-	Vector3 position, goalPosition, distance;
-	m_tileGrid->cellCoords(m_goalRow, m_goalColumn, goalPosition._x, goalPosition._y, true);
-	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
-	distance = goalPosition - position;
-
-	return distance.length();
-}
-
-void GoalDrivenState::onGoalAchieved()
-{
-
 }
 
 /************************************************************************
@@ -449,17 +476,13 @@ void RunawayState::handleEvent(EventPtr evt)
 	BaseAIState::handleEvent(evt);
 }
 
-float RunawayState::getGoalHeuristic(int32 row, int32 column)
-{
-	Vector3 position, distance;
-	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
-	distance = m_pacmanPosition - position;
-
-	return distance.length();
-}
-
 int32 RunawayState::chooseDirection()
 {
+	if(m_inRoom)
+	{
+		return BaseAIState::chooseDirection();
+	}
+
 	int32 rowOffset[] = { 0, -1, 0, 1};
 	int32 columnOffset[] = { -1, 0, 1, 0 };
 	
@@ -470,6 +493,7 @@ int32 RunawayState::chooseDirection()
 	}
 
 	int32 choosenDirection = -1;
+	int32 numObstacles = 0;
 	std::vector<int32> directions;	
 	for(int32 i = 0; i < Character::k_moveTotalDirections; i++)
 	{
@@ -478,7 +502,11 @@ int32 RunawayState::chooseDirection()
 		int32 row = m_myRow + rowOffset[i];
 		int32 column = m_myColumn + columnOffset[i];
 		
-		if(isObstacle(row, column)) continue;
+		if(isObstacle(row, column))
+		{
+			numObstacles++;
+			continue;
+		}
 
 		directions.push_back(i);
 	}
@@ -489,8 +517,61 @@ int32 RunawayState::chooseDirection()
 		choosenDirection = directions.front();
 	}
 
+	if(numObstacles >= 3)
+	{
+		choosenDirection = backwardDirection;
+	}
+
 	return choosenDirection;
 }
+
+/********************************************************************************************************
+
+*********************************************************************************************************/
+GoalDrivenState::GoalDrivenState(TileGrid* tileGrid, int32 controlledActor, int32 stateId):
+	BaseAIState(tileGrid, controlledActor, stateId)
+{
+
+}
+
+void GoalDrivenState::setGoalPoint(const Vector3& point)
+{
+	m_tileGrid->pointToCell(point._x, point._y, m_goalRow, m_goalColumn);  
+}
+
+void GoalDrivenState::update(MILLISECONDS deltaTime)
+{
+	if(m_characterMoved)
+	{
+		//OSUtils::getInstance().debugOutput("row = %d, column = %d, goal[row = %d, col = %d]", m_myRow, m_myColumn, m_goalRow, m_goalColumn); 
+
+		if(m_myRow == m_goalRow && m_myColumn == m_goalColumn)
+		{
+			m_characterMoved = false;
+			onGoalAchieved();
+			return;
+		}
+	}
+
+	BaseAIState::update(deltaTime);
+}
+
+float GoalDrivenState::getGoalHeuristic(int32 row, int32 column)
+{
+	Vector3 position, goalPosition, distance;
+	m_tileGrid->cellCoords(m_goalRow, m_goalColumn, goalPosition._x, goalPosition._y, true);
+	m_tileGrid->cellCoords(row, column, position._x, position._y, true);
+	distance = goalPosition - position;
+
+	return distance.length();
+}
+
+void GoalDrivenState::onGoalAchieved() 
+{
+	suspend();
+}
+
+
 
 /**************************************************************************************************
 **************************************************************************************************/
@@ -506,6 +587,8 @@ PrayState::PrayState(TileGrid* tileGrid, int32 controlledActor)
 	
 void PrayState::onGoalAchieved()
 {
+	GoalDrivenState::onGoalAchieved();
+
 	EventPtr evt = new Event_CharacterChangeState(m_controlledActor, Ghost::k_stateChasing);
 	TheEventMgr.pushEventToQueye(evt);
 }
@@ -520,6 +603,88 @@ bool PrayState::isObstacle(int32 row, int32 column)
 
 	return false;
 }
+
+/*
+RoomOutState::RoomOutState(TileGrid* tileGrid, int32 controlledActor)
+	:GoalDrivenState(tileGrid, controlledActor, 0), m_bActive(false), m_bWaitFor(false)
+{
+	std::list<Vector3> nodes;
+	tileGrid->getTiles(k_tileBlinky, nodes, true);
+	assert(nodes.size() > 0 && "goal node not found");
+	
+	setGoalPoint(nodes.front());
+}
+
+void RoomOutState::addOuterState(ProcessPtr state)
+{
+	m_outerStates.push_back(state);
+}
+
+void RoomOutState::start(ProcessHandle myHandle, ProcessManagerPtr owner)
+{
+	GoalDrivenState::start(myHandle, owner);
+
+	suspend();
+}
+
+void RoomOutState::activate()
+{
+	m_bActive = true;
+	resume();
+	for(std::vector<ProcessPtr>::iterator it = m_outerStates.begin(); it != m_outerStates.end(); it++)
+	{
+		(*it)->suspend();
+	}
+}
+
+void RoomOutState::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_CharacterStateChanged::k_type)
+	{
+		return;
+	}
+
+	if(evt->getType() == Event_CharacterMoved::k_type && !m_bWaitFor)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == m_controlledActor)
+		{
+			TILEID tile = m_tileGrid->getTile(pEvent->_row, pEvent->_column);
+			if(tile == k_tilePreyGoalNode)
+			{
+				activate();
+			}
+		}//if(pEvent->_actorId == m_controlledActor)
+	}//if(evt->getType() == Event_CharacterMoved::k_type && !m_bActive)
+
+	GoalDrivenState::handleEvent(evt);
+}
+
+void RoomOutState::onGoalAchieved()
+{
+	if(m_bActive)
+	{
+		m_bActive = false;
+		suspend();
+		for(std::vector<ProcessPtr>::iterator it = m_outerStates.begin(); it != m_outerStates.end(); it++)
+		{
+			(*it)->resume();
+		}
+	}
+}
+
+bool RoomOutState::isObstacle(int32 row, int32 column)
+{
+	int32 collisionGroup;
+	if(m_tileGrid->isObstacle(row, column, &collisionGroup))
+	{
+		return collisionGroup == k_collisionGroupDefault;
+	}
+
+	return false;
+}*/
+
+
 	
 
 
