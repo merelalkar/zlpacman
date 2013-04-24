@@ -537,13 +537,13 @@ void Ghost::update(float deltaTime)
 			return;
 		}
 		
-		m_prevRow = currentRow;
-		m_prevColumn = currentColumn;
-
 		if(currentRow != m_pacmanRow || currentColumn != m_pacmanColumn)
 		{
 			return;
 		}
+
+		m_prevRow = currentRow;
+		m_prevColumn = currentColumn;
 
 		int32 actorID = m_currentState == k_stateChasing ? k_actorPacman : m_actorId;
 		EventPtr evt(new Event_CharacterKilled(actorID, m_position));

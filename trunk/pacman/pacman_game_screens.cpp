@@ -138,10 +138,17 @@ void MainMenuLayer::handleEvent(EventPtr evt)
 		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
 		if(pEvent->m_button->getID() == k_menuButtonStart || pEvent->m_button->getID() == k_menuButtonExit)
 		{
-			EventPtr startFadein(new Event_GUI_StartFadein());
-			TheEventMgr.pushEventToQueye(startFadein);
-
-			m_aboutToExit = (pEvent->m_button->getID() == k_menuButtonExit);
+			ProcessPtr fadein = new Fadein();
+			m_platform->attachProcess(fadein);
+			
+			if(pEvent->m_button->getID() == k_menuButtonStart)
+			{
+				ProcessPtr toGame = new ChangeStateTask(m_platform, k_stateGame);
+				fadein->attachNext(toGame);
+			}else
+			{
+				m_aboutToExit = true;
+			}
 		}
 
 		if(pEvent->m_button->getID() == k_menuButtonEditor)
@@ -158,9 +165,6 @@ void MainMenuLayer::handleEvent(EventPtr evt)
 		if(m_aboutToExit)
 		{
 			m_platform->shutdownGame();
-		}else
-		{
-			m_platform->changeState(k_stateGame);			
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Pegas
 
 		virtual bool isObstacle(int32 row, int32 column);
 		virtual int32 chooseDirection();
-		virtual float getGoalHeuristic(int32 row, int32 column) = 0;
+		virtual float getGoalHeuristic(int32 row, int32 column);
 
 		TileGrid* m_tileGrid;
 		
@@ -33,7 +33,11 @@ namespace Pegas
 		int32 m_myCurrentDirection;
 
 		int32 m_blockMutex;
-		bool  m_characterMoved;		
+		bool  m_characterMoved;
+
+		bool  m_inRoom;
+		int32 m_outRoomRow;
+		int32 m_outRoomColumn;
 	};
 
 	class BlinkyChaseState: public BaseAIState
@@ -110,15 +114,14 @@ namespace Pegas
 		GoalDrivenState(TileGrid* tileGrid, int32 controlledActor, int32 stateId);
 
 		void setGoalPoint(const Vector3& point);
-		virtual void handleEvent(EventPtr evt);
+		virtual void update(MILLISECONDS deltaTime);
 
 	protected:
 		virtual float getGoalHeuristic(int32 row, int32 column);
 		virtual void onGoalAchieved();	
 
 		int32	m_goalRow;
-		int32	m_goalColumn;
-		int32	m_finalState;
+		int32	m_goalColumn;		
 	};
 
 	class RunawayState: public BaseAIState
@@ -129,8 +132,6 @@ namespace Pegas
 
 	protected:
 		virtual int32 chooseDirection();
-		virtual float getGoalHeuristic(int32 row, int32 column);
-
 		Vector3 m_pacmanPosition;
 	};
 
@@ -143,4 +144,24 @@ namespace Pegas
 		virtual void onGoalAchieved();
 		virtual bool isObstacle(int32 row, int32 column);
 	};
+/*
+	class RoomOutState: public GoalDrivenState
+	{
+	public:
+		RoomOutState(TileGrid* tileGrid, int32 controlledActor);
+		virtual void handleEvent(EventPtr evt);
+
+		void addOuterState(ProcessPtr state);
+
+	protected:
+		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+		virtual void onGoalAchieved();
+		virtual bool isObstacle(int32 row, int32 column);
+
+		void activate();
+
+		bool m_bActive;
+		bool m_bWaitFor;
+		std::vector<ProcessPtr> m_outerStates;
+	};*/
 }

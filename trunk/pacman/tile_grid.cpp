@@ -315,8 +315,13 @@ TILEID TileGrid::setTilePoint(CURCOORD x, CURCOORD y, TILEID tile)
 TILEID TileGrid::getTile(int32 row, int32 col)
 {
 	assert(m_cells != 0);
-	assert(col >= 0 && col < m_numCols);
-	assert(row >= 0 && row < m_numRows);
+	/*assert(col >= 0 && col < m_numCols);
+	assert(row >= 0 && row < m_numRows);*/
+
+	if(col < 0 || col >= m_numCols || row < 0 || row >= m_numRows)
+	{
+		return k_emptyCellTileId;
+	}
 
 	return	m_cells[col][row]; 
 }
