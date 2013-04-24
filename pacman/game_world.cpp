@@ -162,7 +162,7 @@ void GameWorld::createGameObjects()
 	/******************************************************************
 		Blinky
 	*******************************************************************/
-	/*
+	
 	tiles.clear();
 	m_tileGrid.getTiles(k_tileBlinky, tiles, true);
 	
@@ -195,12 +195,12 @@ void GameWorld::createGameObjects()
 
 		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorBlinky);
 		m_context->attachProcess(prayState);
-	}*/
+	}
 
 	/******************************************************************
 		Pinky
 	*******************************************************************/
-	/*tiles.clear();
+	tiles.clear();
 	m_tileGrid.getTiles(k_tilePinky, tiles, true);
 	
 	assert(tiles.size() > 0 && "Pinky position not found");
@@ -232,12 +232,12 @@ void GameWorld::createGameObjects()
 
 		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorPinky);
 		m_context->attachProcess(prayState);
-	}*/
+	}
 
 	/******************************************************************
 		Inky
 	*******************************************************************/
-	/*tiles.clear();
+	tiles.clear();
 	m_tileGrid.getTiles(k_tileInky, tiles, true);
 	
 	assert(tiles.size() > 0 && "Inky position not found");
@@ -269,7 +269,7 @@ void GameWorld::createGameObjects()
 
 		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorInky);
 		m_context->attachProcess(prayState);
-	}*/
+	}
 
 	/******************************************************************
 		Clyde
