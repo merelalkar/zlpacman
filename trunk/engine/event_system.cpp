@@ -82,6 +82,7 @@ namespace Pegas
 			MILLISECONDS lastTime = OSUtils::getInstance().getCurrentTime();
 
 			EventQueue& currentQueue = m_eventQueues[m_currentEventQueue];
+			int32 processed = 0;
 			while(!currentQueue.empty())
 			{
 				EventPtr evt = currentQueue.front();
@@ -98,18 +99,29 @@ namespace Pegas
 					OSUtils::getInstance().debugOutput("process pushed event [event = %s, listener = 0x%x]", evt->getType().data(), (*it));
 					(*it)->handleEvent(evt);
 				}
+
+				processed++;
 				
 				if(timeLimit != kNoTimeLimit)
 				{
 					MILLISECONDS ellapsedTime = OSUtils::getInstance().getCurrentTime() - lastTime;
 					if(ellapsedTime >= timeLimit)
+					{
+						OSUtils::getInstance().debugOutput("**** Time limit had been exceeded, time: %d", ellapsedTime);
 						break;
+					}
 				}
 			}//while(!currentQueue.empty())
 						
 			if(currentQueue.empty())
 			{
+				m_stage = 0;
 				m_currentEventQueue = 1 - m_currentEventQueue;
+				OSUtils::getInstance().debugOutput("**** All Events processed (%d processed)", processed);
+			}else
+			{
+				m_stage++;
+				OSUtils::getInstance().debugOutput("**** Events processed: %d, remained: %d, stage: %d", processed, currentQueue.size(), m_stage);	
 			}
 		}
 	
