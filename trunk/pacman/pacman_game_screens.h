@@ -11,7 +11,8 @@ namespace Pegas
 		k_layerPause,
 		k_layerFader,
 		k_layerEditor,
-		k_layerGameWorld
+		k_layerGameWorld,
+		k_layerDebug
 	};
 
 	enum PacmanGameStates

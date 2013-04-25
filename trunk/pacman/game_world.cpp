@@ -196,10 +196,11 @@ void GameWorld::createGameObjects()
 		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorBlinky);
 		m_context->attachProcess(prayState);
 	}
-
+	
 	/******************************************************************
 		Pinky
 	*******************************************************************/
+	
 	tiles.clear();
 	m_tileGrid.getTiles(k_tilePinky, tiles, true);
 	
@@ -233,10 +234,11 @@ void GameWorld::createGameObjects()
 		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorPinky);
 		m_context->attachProcess(prayState);
 	}
-
+	
 	/******************************************************************
 		Inky
 	*******************************************************************/
+	
 	tiles.clear();
 	m_tileGrid.getTiles(k_tileInky, tiles, true);
 	
@@ -301,10 +303,10 @@ void GameWorld::createGameObjects()
 		ProcessPtr chaseState = new ClydeChaseState(&m_tileGrid);
 		m_context->attachProcess(chaseState);
 
-		ProcessPtr runAwayState = new RunawayState(&m_tileGrid, k_tileClyde);
+		ProcessPtr runAwayState = new RunawayState(&m_tileGrid, k_actorClyde);
 		m_context->attachProcess(runAwayState);
 
-		ProcessPtr prayState = new PrayState(&m_tileGrid, k_tileClyde);
+		ProcessPtr prayState = new PrayState(&m_tileGrid, k_actorClyde);
 		m_context->attachProcess(prayState);
 	}
 }

@@ -220,6 +220,52 @@ void GameVerticalLayer::handleEvent(EventPtr evt)
 	}
 }
 
+/*************************************************************************************************
+	Debug Layer
+***************************************************************************************************/
+DebugLayer::DebugLayer()
+	:BaseScreenLayer(_text("debug console"), k_layerDebug, false)
+{
+	
+}
+
+void DebugLayer::create(IPlatformContext* context)
+{
+	m_ellapsedTime = 0;
+	m_frames = 0;
+	
+	m_params._font = k_fontMain;
+	m_params._color = 0xffffffff;
+	m_params._left = 10;
+	m_params._top = 20;
+}
+
+void DebugLayer::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit)
+{
+	m_ellapsedTime+= deltaTime;
+	m_frames++;
+
+	if(m_ellapsedTime >= 1000)
+	{
+		int32 FPS = (int32)(m_frames / (m_ellapsedTime * 0.001));
+		m_frames = m_ellapsedTime = 0;
+
+		tchar text[50];
+#ifndef _UNICODE
+		sprintf(text, _text("FPS = %d"), FPS);
+#else
+		wsprintf(text, _text("FPS = %d"), FPS);
+#endif
+		m_fpsText = text;
+	}
+}
+
+void DebugLayer::render(IPlatformContext* context)
+{
+	GrafManager& graf = GrafManager::getInstance();
+	graf.drawText(m_fpsText, m_params);
+}
+
 /**************************************************************************************************
 	
 ***************************************************************************************************/
@@ -247,6 +293,7 @@ void GameScreen::enter(IPlatformContext* context)
 	//TODO: pause layer
 	//TODO: options layer
 	pushLayer(BaseScreenLayerPtr(new FaderLayer(k_layerFader)));
+	pushLayer(BaseScreenLayerPtr(new DebugLayer()));
 
 	EventPtr evt(new Event_GUI_StartFadeout());
 	TheEventMgr.triggerEvent(evt);	
