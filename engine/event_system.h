@@ -12,7 +12,7 @@ namespace Pegas
 		public:
             static const MILLISECONDS kNoTimeLimit = -1;
 
-			EventManager():Singleton(*this), m_currentEventQueue(0) {};
+			EventManager():Singleton(*this), m_currentEventQueue(0), m_stage(0) {};
 			virtual ~EventManager() {};
 
 			
@@ -34,6 +34,7 @@ namespace Pegas
 
 			EventQueue m_eventQueues[2];
 			int m_currentEventQueue;
+			int m_stage;
 			
 			EventListenerMap m_listeners;			
 
