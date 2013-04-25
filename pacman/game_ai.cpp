@@ -22,6 +22,7 @@ BaseAIState::BaseAIState(TileGrid* tileGrid, int32 controlledActor, int32 stateI
 	m_myCurrentDirection = -1;
 	m_characterMoved = false;
 	m_blockMutex = 0;
+	m_bTerminate = false;
 
 	m_inRoom = false;
 	int32 m_outRoomRow = -1;
@@ -33,6 +34,11 @@ BaseAIState::BaseAIState(TileGrid* tileGrid, int32 controlledActor, int32 stateI
 	
 	Vector3 point = nodes.front();
 	tileGrid->pointToCell(point._x, point._y, m_outRoomRow, m_outRoomColumn);	
+}
+
+BaseAIState::~BaseAIState()
+{
+	TheEventMgr.removeEventListener(this);
 }
 
 float BaseAIState::getGoalHeuristic(int32 row, int32 column)
@@ -50,18 +56,12 @@ void BaseAIState::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 	Process::start(myHandle, owner);
 
 	TheEventMgr.addEventListener(this, Event_CharacterMoved::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterStopped::k_type);
 	TheEventMgr.addEventListener(this, Event_DirectionChanged::k_type);
 	TheEventMgr.addEventListener(this, Event_CharacterStateChanged::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_ChangeState::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
-}
-
-void BaseAIState::terminate()
-{
-	TheEventMgr.removeEventListener(this);
-
-	Process::terminate();
 }
 
 void BaseAIState::update(MILLISECONDS deltaTime)
@@ -166,10 +166,21 @@ void BaseAIState::handleEvent(EventPtr evt)
 		}
 	}
 
+	if(evt->getType() == Event_CharacterStopped::k_type)
+	{
+		Event_CharacterStopped* pEvent = evt->cast<Event_CharacterStopped>();
+		if(pEvent->_actorId == m_controlledActor)
+		{
+			int32 direction = (m_myCurrentDirection + 2) % Character::k_moveTotalDirections;
+			EventPtr evt2(new Pegas::Event_ChangeDirection(m_controlledActor, direction));
+			TheEventMgr.pushEventToQueye(evt2);
+		}
+	}
+
 	if(evt->getType() == Event_DirectionChanged::k_type)
 	{
 		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
-		if(pEvent->_actorId == m_controlledActor || pEvent->_actorId == k_actorAll)
+		if(pEvent->_actorId == m_controlledActor)
 		{
 			m_myCurrentDirection = pEvent->_newDirection;
 		}
@@ -194,7 +205,7 @@ void BaseAIState::handleEvent(EventPtr evt)
 
 	if(evt->getType() == Event_Game_ChangeState::k_type)
 	{
-		terminate();
+		terminate();		
 	}
 
 	if(evt->getType() == Event_Game_Pause::k_type)
@@ -448,9 +459,9 @@ float ClydeChaseState::getGoalHeuristic(int32 row, int32 column)
 	
 void ClydeChaseState::calculateGoalPosition()
 {
-	int32 dx = m_pacmanColumn - m_myColumn;
-	int32 dy = m_pacmanRow - m_myRow;
-	int32 distance = dx + dy;
+	int32 dx = abs(m_pacmanColumn - m_myColumn);
+	int32 dy = abs(m_pacmanRow - m_myRow);
+	int32 distance = (int32)sqrt((float)(dx * dx) + (float)(dy * dy));
 
 	if(distance > 8)
 	{

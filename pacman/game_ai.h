@@ -9,10 +9,10 @@ namespace Pegas
 	{
 	public:
 		BaseAIState(TileGrid* tileGrid, int32 controlledActor, int32 stateId);
+		virtual ~BaseAIState();
 
 		virtual void suspend();
 		virtual void resume();
-		virtual void terminate();
 		virtual void update(MILLISECONDS deltaTime);
 		virtual void handleEvent(EventPtr evt);		
 
@@ -38,6 +38,8 @@ namespace Pegas
 		bool  m_inRoom;
 		int32 m_outRoomRow;
 		int32 m_outRoomColumn;
+
+		bool m_bTerminate;
 	};
 
 	class BlinkyChaseState: public BaseAIState

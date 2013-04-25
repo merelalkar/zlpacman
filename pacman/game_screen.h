@@ -39,6 +39,21 @@ namespace Pegas
 		int32 m_keyDownMutex;
 	};
 
+	class DebugLayer: public BaseScreenLayer
+	{
+	public:
+		DebugLayer();
+		virtual void create(IPlatformContext* context);
+		virtual void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit);
+		virtual void render(IPlatformContext* context);
+
+	private:
+		MILLISECONDS	m_ellapsedTime;
+		int32			m_frames;
+		String			m_fpsText;
+		TextParameters	m_params;
+	};
+
 	class GameScreen: public DefaultGameState, public IEventListener
 	{
 	public:

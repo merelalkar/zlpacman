@@ -44,8 +44,7 @@ void GameApplication::init(HWND hWnd)
 	addGameState(GameStatePtr(new MainMenu()));
 	addGameState(GameStatePtr(new Editor()));
 	addGameState(GameStatePtr(new GameScreen()));
-	changeState(k_stateMainMenu);
-	//changeState(k_stateEditor);
+	changeState(k_stateMainMenu);	
 }
 
 bool GameApplication::run()
@@ -59,7 +58,11 @@ bool GameApplication::run()
 	if(deltaTime > 0)
 	{
 		m_lastTime = m_utils.getCurrentTime();
-	}
+	}/*else
+	{
+		Sleep(1);
+		return false;
+	}*/
 
 	m_eventManager.processEvents();
 	m_processManager.updateProcesses(deltaTime);
