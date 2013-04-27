@@ -186,6 +186,36 @@ namespace Pegas
 		int _column;
 	};
 
+	struct Event_CharacterTonnelIn: public Event
+	{
+	public:
+		Event_CharacterTonnelIn(int32 actorId, int32 row, int32 column):
+		  _actorId(actorId), _row(row), _column(column) {}
+			
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _actorId;
+		int32 _row;
+		int32 _column;
+	};
+
+	struct Event_CharacterTonnelOut: public Event
+	{
+	public:
+		Event_CharacterTonnelOut(int32 actorId, int32 row, int32 column):
+		  _actorId(actorId), _row(row), _column(column) {}
+			
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _actorId;
+		int32 _row;
+		int32 _column;
+	};
+
 	struct Event_CharacterKilled: public Event
 	{
 	public:

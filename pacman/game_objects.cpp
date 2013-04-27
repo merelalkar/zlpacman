@@ -47,6 +47,7 @@ void Character::create(TileGrid* tileGrid, const Vector3& position)
 	TheEventMgr.addEventListener(this, Event_ResetActors::k_type);
 	TheEventMgr.addEventListener(this, Event_HideCharacter::k_type);
 	TheEventMgr.addEventListener(this, Event_ShowCharacter::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterTonnelOut::k_type);
 }
 
 void Character::destroy()
@@ -91,6 +92,8 @@ void Character::handleEvent(EventPtr evt)
 		{
 			m_turnCommand = eventObject->_newDirection;			
 		}
+
+		return;
 	}
 
 	if(evt->getType() == Event_CancelChangingDirection::k_type)
@@ -102,6 +105,7 @@ void Character::handleEvent(EventPtr evt)
 			return;
 		}
 		m_turnCommand = -1;
+		return;
 	}
 
 	if(evt->getType() == Event_EnableCharacterControl::k_type)
@@ -122,6 +126,22 @@ void Character::handleEvent(EventPtr evt)
 			EventPtr newEvent(new Event_CharacterMoveOn(m_actorId));
 			TheEventMgr.pushEventToQueye(newEvent);
 		}
+		return;
+	}
+
+	if(evt->getType() == Event_CharacterTonnelOut::k_type)
+	{
+		Event_CharacterTonnelOut* pEvent = evt->cast<Event_CharacterTonnelOut>();
+		if(pEvent->_actorId == m_actorId)
+		{
+			m_prevRow = pEvent->_row;
+			m_prevColumn = pEvent->_column;
+			m_tileGrid->cellCoords(pEvent->_row, pEvent->_column, m_position._x, m_position._y, true);
+			
+			EventPtr evt2(new Event_CharacterMoved(this->m_actorId, this->m_position, pEvent->_row, pEvent->_column));
+			TheEventMgr.pushEventToQueye(evt2);
+		}
+		return;
 	}
 
 	if(evt->getType() == Event_DisableCharacterControl::k_type)
@@ -142,6 +162,7 @@ void Character::handleEvent(EventPtr evt)
 			EventPtr newEvent(new Event_CharacterStopped(m_actorId));
 			TheEventMgr.pushEventToQueye(newEvent);
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_ResetActors::k_type)
@@ -149,6 +170,7 @@ void Character::handleEvent(EventPtr evt)
 		m_position = m_initialPosition;
 		m_currentDirection = k_moveLeft;
 		m_isVisible = true;
+		return;
 	}
 
 	if(evt->getType() == Event_HideCharacter::k_type)
@@ -158,6 +180,7 @@ void Character::handleEvent(EventPtr evt)
 		{
 			m_isVisible = false;
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_ShowCharacter::k_type)
@@ -167,6 +190,7 @@ void Character::handleEvent(EventPtr evt)
 		{
 			m_isVisible = true;
 		}
+		return;
 	}
 }
 
@@ -202,6 +226,13 @@ void Character::update(float deltaTime)
 
 			EventPtr evt(new Event_CharacterMoved(m_actorId, m_position, currentRow, currentColumn));
 			TheEventMgr.pushEventToQueye(evt);
+
+			TILEID tile = m_tileGrid->getTile(currentRow, currentColumn);
+			if(tile == k_tileTunnel)
+			{
+				EventPtr evt2(new Event_CharacterTonnelIn(m_actorId, currentRow, currentColumn));
+				TheEventMgr.pushEventToQueye(evt2);
+			}
 		}
 	}
 
@@ -316,6 +347,7 @@ void Pacman::handleEvent(EventPtr evt)
 		{
 			m_animations[k_animationRunning]->suspend();
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_CharacterMoveOn::k_type)
@@ -326,6 +358,7 @@ void Pacman::handleEvent(EventPtr evt)
 			m_currentAnimation = k_animationRunning;
 			m_animations[k_animationRunning]->resume();
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_PacmanDeath::k_type)
@@ -336,6 +369,7 @@ void Pacman::handleEvent(EventPtr evt)
 		Waiting* waiting = new Waiting(1.0f);
 		waiting->addFinalEvent(EventPtr(new Event_PacmanDeathComplete()));
 		m_animations[m_currentAnimation]->attachNext(ProcessPtr(waiting));
+		return;
 	}
 
 	if(evt->getType() == Event_ResetActors::k_type)
@@ -430,14 +464,30 @@ void Ghost::create(TileGrid* tileGrid, const Vector3& position)
 	TheEventMgr.addEventListener(this, Event_CharacterChangeState::k_type);
 	TheEventMgr.addEventListener(this, Event_PacmanDeath::k_type);
 
+	m_stateVelocity[k_stateChasing] = m_velocity;
+	m_stateVelocity[k_stateRunaway] = m_velocity * 0.5;
+	m_stateVelocity[k_statePray] = m_velocity;
+
 	m_currentState = k_stateChasing;
-	m_velocity*= 0.75;
+	m_velocity = m_stateVelocity[k_stateChasing];
+
 	EventPtr evt(new Event_CharacterStateChanged(m_actorId, m_currentState));
 	TheEventMgr.pushEventToQueye(evt);
 }
 
 void Ghost::handleEvent(EventPtr evt)
 {
+	if(evt->getType() == Event_CharacterMoved::k_type)
+	{
+		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			m_pacmanRow = pEvent->_row;
+			m_pacmanColumn = pEvent->_column;
+		}
+		return;
+	}
+
 	if(evt->getType() == Event_DirectionChanged::k_type)
 	{
 		Event_DirectionChanged* pEvent = evt->cast<Event_DirectionChanged>();
@@ -445,6 +495,7 @@ void Ghost::handleEvent(EventPtr evt)
 		{
 			changeAnimation(m_currentState);
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_SuperForceOn::k_type)
@@ -456,6 +507,7 @@ void Ghost::handleEvent(EventPtr evt)
 			EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
 			TheEventMgr.pushEventToQueye(evt2);
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_SuperForceOff::k_type)
@@ -467,6 +519,7 @@ void Ghost::handleEvent(EventPtr evt)
 			EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
 			TheEventMgr.pushEventToQueye(evt2);
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_SuperForcePreOff::k_type)
@@ -477,17 +530,8 @@ void Ghost::handleEvent(EventPtr evt)
 			m_currentAnimation = k_animationBlink;
 			m_animations[m_currentAnimation]->resume();
 		}
-	}
-
-	if(evt->getType() == Event_CharacterMoved::k_type)
-	{
-		Event_CharacterMoved* pEvent = evt->cast<Event_CharacterMoved>();
-		if(pEvent->_actorId == k_actorPacman)
-		{
-			m_pacmanRow = pEvent->_row;
-			m_pacmanColumn = pEvent->_column;
-		}
-	}
+		return;
+	}	
 
 	if(evt->getType() == Event_CharacterStateChanged::k_type)
 	{
@@ -495,7 +539,9 @@ void Ghost::handleEvent(EventPtr evt)
 		if(pEvent->_actorId == m_actorId || pEvent->_actorId == k_actorAll)
 		{
 			changeAnimation(pEvent->_newState);
+			m_velocity = m_stateVelocity[pEvent->_newState];
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_CharacterChangeState::k_type)
@@ -508,6 +554,7 @@ void Ghost::handleEvent(EventPtr evt)
 			EventPtr evt2(new Event_CharacterStateChanged(m_actorId, m_currentState));
 			TheEventMgr.pushEventToQueye(evt2);
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_ResetActors::k_type)
@@ -522,6 +569,7 @@ void Ghost::handleEvent(EventPtr evt)
 	{
 		EventPtr evt2(new Event_HideCharacter(m_actorId));
 		TheEventMgr.pushEventToQueye(evt2);
+		return;
 	}
 
 	Character::handleEvent(evt);

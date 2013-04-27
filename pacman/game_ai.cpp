@@ -75,7 +75,7 @@ void BaseAIState::update(MILLISECONDS deltaTime)
 	if(choosenDirection != -1 && choosenDirection != m_myCurrentDirection)
 	{
 		EventPtr evt(new Event_ChangeDirection(m_controlledActor, choosenDirection));
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 }
 
@@ -164,17 +164,7 @@ void BaseAIState::handleEvent(EventPtr evt)
 				m_inRoom = false;
 			}
 		}
-	}
-
-	if(evt->getType() == Event_CharacterStopped::k_type)
-	{
-		Event_CharacterStopped* pEvent = evt->cast<Event_CharacterStopped>();
-		if(pEvent->_actorId == m_controlledActor)
-		{
-			int32 direction = (m_myCurrentDirection + 2) % Character::k_moveTotalDirections;
-			EventPtr evt2(new Pegas::Event_ChangeDirection(m_controlledActor, direction));
-			TheEventMgr.pushEventToQueye(evt2);
-		}
+		return;
 	}
 
 	if(evt->getType() == Event_DirectionChanged::k_type)
@@ -184,7 +174,21 @@ void BaseAIState::handleEvent(EventPtr evt)
 		{
 			m_myCurrentDirection = pEvent->_newDirection;
 		}
+		return;
 	}
+
+	if(evt->getType() == Event_CharacterStopped::k_type)
+	{
+		Event_CharacterStopped* pEvent = evt->cast<Event_CharacterStopped>();
+		if(pEvent->_actorId == m_controlledActor)
+		{
+			int32 direction = (m_myCurrentDirection + 2) % Character::k_moveTotalDirections;
+			EventPtr evt2(new Pegas::Event_ChangeDirection(m_controlledActor, direction));
+			//TheEventMgr.pushEventToQueye(evt2);
+			TheEventMgr.triggerEvent(evt2);
+		}
+		return;
+	}	
 
 	if(evt->getType() == Event_CharacterStateChanged::k_type)
 	{
@@ -201,21 +205,25 @@ void BaseAIState::handleEvent(EventPtr evt)
 				suspend();
 			}
 		}
+		return;
 	}
 
 	if(evt->getType() == Event_Game_ChangeState::k_type)
 	{
-		terminate();		
+		terminate();
+		return;
 	}
 
 	if(evt->getType() == Event_Game_Pause::k_type)
 	{
 		suspend();
+		return;
 	}
 
 	if(evt->getType() == Event_Game_Resume::k_type)
 	{
 		resume();
+		return;
 	}
 }
 
@@ -335,7 +343,12 @@ void PinkyChaseState::calculateGoalPosition()
 	int32 row = m_pacmanRow + (rowOffset[m_pacmanDirection] * 4);
 	int32 column = m_pacmanColumn + (columnOffset[m_pacmanDirection] * 4);
 
-	m_tileGrid->cellCoords(row, column, m_goalPosition._x, m_goalPosition._y, true);
+	if(m_pacmanDirection == Character::k_moveTop)
+	{
+		column-= 4;
+	}
+
+	m_tileGrid->cellCoords(row, column, m_goalPosition._x, m_goalPosition._y, true);	
 }
 
 /*************************************************************************************************

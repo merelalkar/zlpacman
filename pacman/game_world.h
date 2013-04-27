@@ -22,6 +22,17 @@ namespace Pegas
 		typedef GameObjectList::iterator GameObjectListIt;
 		typedef std::map<TILEID, SpriteParameters> SpriteList;
 
+		struct Tunnel
+		{
+			int32 _row;
+			int32 _column;
+			CURCOORD _left;
+			CURCOORD _top;
+			CURCOORD _width;
+			CURCOORD _height;
+		};
+		std::vector<Tunnel> m_tunnels;
+
 		void loadMap();
 		void createGameObjects();
 		void initializeGame();
