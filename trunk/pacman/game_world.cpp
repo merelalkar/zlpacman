@@ -45,6 +45,7 @@ void GameWorld::create(IPlatformContext* context)
 	TheEventMgr.addEventListener(this, Event_BonusOff::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
+	TheEventMgr.addEventListener(this, Event_CharacterTonnelIn::k_type);
 	
 	loadMap();
 	createGameObjects();
@@ -111,6 +112,24 @@ void GameWorld::loadMap()
 	}
 
 	m_remainPiles = m_tileGrid.getNumTiles(k_tilePill);
+
+	std::list<Vector3> tunnels;
+	m_tileGrid.getTiles(k_tileTunnel, tunnels, true);
+	assert(tunnels.size() >= 2 && "tunnels not found");
+
+	CURCOORD spriteWidth = m_tileGrid.getCellWidth() * 3;
+	CURCOORD spriteHeight = m_tileGrid.getCellWidth() * 4;
+	for(std::list<Vector3>::iterator it = tunnels.begin(); it != tunnels.end(); ++it)
+	{
+		Tunnel tunnel;
+		m_tileGrid.pointToCell((*it)._x, (*it)._y, tunnel._row, tunnel._column);
+		tunnel._width = spriteWidth;
+		tunnel._height = spriteHeight;
+		tunnel._left = (*it)._x - (tunnel._width * 0.5);
+		tunnel._top = (*it)._y - (tunnel._height * 0.5);
+
+		m_tunnels.push_back(tunnel);
+	}
 }
 
 void GameWorld::createGameObjects()
@@ -393,75 +412,16 @@ void GameWorld::render(IPlatformContext* context)
 	{
 		(*it)->draw();
 	}
+
+	GrafManager& graf = GrafManager::getInstance();
+	for(std::vector<Tunnel>::iterator it = m_tunnels.begin(); it != m_tunnels.end(); ++it)
+	{
+		graf.drawRectangle((*it)._left, (*it)._top, (*it)._width, (*it)._height, 0xff000000, 0xff000000);
+	}
 }
 
 void GameWorld::handleEvent(EventPtr evt)
 {
-	if(evt->getType() == Event_CharacterKilled::k_type)
-	{
-		Event_CharacterKilled* pEvent = evt->cast<Event_CharacterKilled>();
-		if(pEvent->_actorId == k_actorPacman)
-		{
-			EventPtr evt(new Event_DisableCharacterControl(k_actorAll));
-			TheEventMgr.pushEventToQueye(evt);
-			
-			Waiting*  waiting = new Waiting(1.0f);
-			waiting->addFinalEvent(EventPtr(new Event_PacmanDeath()));
-			m_context->attachProcess(ProcessPtr(waiting));
-		}else
-		{
-			m_currentScores+= m_fragScores;
-			
-			EventPtr evt(new Event_HUD_ScoresChanged(m_currentScores));
-			TheEventMgr.pushEventToQueye(evt);
-			EventPtr evt2(new Event_HUD_Frag(m_fragScores, pEvent->_position));
-			TheEventMgr.pushEventToQueye(evt2);
-
-			m_fragScores*= 2;
-
-			checkNewLife();
-		}
-	}
-
-	if(evt->getType() == Event_PacmanDeathComplete::k_type)
-	{
-		m_remainLives--;
-		if(m_remainLives < 0)
-		{
-			EventPtr evt(new Event_HUD_GameOver());
-			TheEventMgr.pushEventToQueye(evt);
-			
-			ProcessPtr waiting(new Waiting(2.0f));
-
-			ProcessPtr fadein(new Fadein());
-			waiting->attachNext(fadein);
-
-			ProcessPtr toMainMenu(new ChangeStateTask(m_context, k_stateMainMenu));
-			fadein->attachNext(toMainMenu);
-
-			m_context->attachProcess(waiting);
-		}else
-		{
-			EventPtr evt(new Event_HUD_GetReady());
-			TheEventMgr.pushEventToQueye(evt);
-
-			EventPtr evt2(new Event_HUD_LivesChanged(m_remainLives));
-			TheEventMgr.pushEventToQueye(evt2);
-
-			EventPtr evt3(new Event_ResetActors());
-			TheEventMgr.pushEventToQueye(evt3);
-
-			Waiting* waiting = new Waiting(2.0f);
-			waiting->addFinalEvent(EventPtr(new Event_RestartGame()));
-			m_context->attachProcess(ProcessPtr(waiting));
-		}
-	}
-
-	if(evt->getType() == Event_RestartGame::k_type)
-	{
-		restartGame();
-	}
-
 	if(evt->getType() == Event_PacmanSwallowedPill::k_type)
 	{
 		Event_PacmanSwallowedPill* pEvent = evt->cast<Event_PacmanSwallowedPill>();
@@ -548,10 +508,114 @@ void GameWorld::handleEvent(EventPtr evt)
 				Vector3 fragPosition;
 				m_tileGrid.cellCoords(pEvent->_row, pEvent->_column, fragPosition._x, fragPosition._y, true);
 
-				EventPtr evt2(new Pegas::Event_HUD_Frag(bonusScores, fragPosition));
+				EventPtr evt2(new Event_HUD_Frag(bonusScores, fragPosition));
 				TheEventMgr.pushEventToQueye(evt2);
 			}
 		}
+
+		return;
+	}
+
+	if(evt->getType() == Event_CharacterTonnelIn::k_type)
+	{
+		Event_CharacterTonnelIn* pEvent = evt->cast<Event_CharacterTonnelIn>();
+		
+		for(int32 i = 0; i < m_tunnels.size(); i++)
+		{
+			if(m_tunnels[i]._row == pEvent->_row && m_tunnels[i]._column == pEvent->_column)
+			{
+				int32 outTunnel = (i + 1) % m_tunnels.size();
+				
+				EventPtr evt2(new Event_CharacterTonnelOut(pEvent->_actorId, 
+					m_tunnels[outTunnel]._row, m_tunnels[outTunnel]._column));
+				TheEventMgr.pushEventToQueye(evt2);
+
+				break;
+			}
+		}
+		return; 
+	}
+
+	if(evt->getType() == Event_CharacterKilled::k_type)
+	{
+		Event_CharacterKilled* pEvent = evt->cast<Event_CharacterKilled>();
+		if(pEvent->_actorId == k_actorPacman)
+		{
+			EventPtr evt(new Event_DisableCharacterControl(k_actorAll));
+			TheEventMgr.pushEventToQueye(evt);
+			
+			Waiting*  waiting = new Waiting(1.0f);
+			waiting->addFinalEvent(EventPtr(new Event_PacmanDeath()));
+			m_context->attachProcess(ProcessPtr(waiting));
+		}else
+		{
+			m_currentScores+= m_fragScores;
+			
+			EventPtr evt(new Event_HUD_ScoresChanged(m_currentScores));
+			TheEventMgr.pushEventToQueye(evt);
+			EventPtr evt2(new Event_HUD_Frag(m_fragScores, pEvent->_position));
+			TheEventMgr.pushEventToQueye(evt2);
+
+			m_fragScores*= 2;
+
+			checkNewLife();
+		}
+		return;
+	}
+
+	if(evt->getType() == Event_PacmanDeathComplete::k_type)
+	{
+		m_remainLives--;
+		if(m_remainLives < 0)
+		{
+			EventPtr evt(new Event_HUD_GameOver());
+			TheEventMgr.pushEventToQueye(evt);
+			
+			ProcessPtr waiting(new Waiting(2.0f));
+
+			ProcessPtr fadein(new Fadein());
+			waiting->attachNext(fadein);
+
+			ProcessPtr toMainMenu(new ChangeStateTask(m_context, k_stateMainMenu));
+			fadein->attachNext(toMainMenu);
+
+			m_context->attachProcess(waiting);
+		}else
+		{
+			EventPtr evt(new Event_HUD_GetReady());
+			TheEventMgr.pushEventToQueye(evt);
+
+			EventPtr evt2(new Event_HUD_LivesChanged(m_remainLives));
+			TheEventMgr.pushEventToQueye(evt2);
+
+			EventPtr evt3(new Event_ResetActors());
+			TheEventMgr.pushEventToQueye(evt3);
+
+			Waiting* waiting = new Waiting(2.0f);
+			waiting->addFinalEvent(EventPtr(new Event_RestartGame()));
+			m_context->attachProcess(ProcessPtr(waiting));
+		}
+		return;
+	}
+
+	if(evt->getType() == Event_RestartGame::k_type)
+	{
+		restartGame();
+		return;
+	}
+
+	if(evt->getType() == Event_Game_Pause::k_type)
+	{
+		EventPtr evt(new Event_DisableCharacterControl(k_actorAll));
+		TheEventMgr.pushEventToQueye(evt);
+		return;
+	}
+
+	if(evt->getType() == Event_Game_Resume::k_type)
+	{
+		EventPtr evt(new Event_EnableCharacterControl(k_actorAll));
+		TheEventMgr.pushEventToQueye(evt);
+		return;
 	}
 
 	if(evt->getType() == Event_BonusOn::k_type)
@@ -560,22 +624,14 @@ void GameWorld::handleEvent(EventPtr evt)
 		m_bonusActive = true;
 		m_bonusRow = pEvent->_row;
 		m_bonusColumn = pEvent->_column;
+		return;
 	}
 
 	if(evt->getType() == Event_BonusOff::k_type)
 	{
 		m_bonusActive = false;
+		return;
 	}
 
-	if(evt->getType() == Event_Game_Pause::k_type)
-	{
-		EventPtr evt(new Event_DisableCharacterControl(k_actorAll));
-		TheEventMgr.pushEventToQueye(evt);
-	}
-
-	if(evt->getType() == Event_Game_Resume::k_type)
-	{
-		EventPtr evt(new Event_EnableCharacterControl(k_actorAll));
-		TheEventMgr.pushEventToQueye(evt);
-	}	
+		
 }

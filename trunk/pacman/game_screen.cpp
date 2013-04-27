@@ -128,7 +128,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_keyDownMutex++;
 
 		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveTop));
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 
 	if(key == IKeyboardController::k_keyCodeDOWN &&  !(flags & k_keyFlagRepeat))
@@ -136,7 +136,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_keyDownMutex++;
 
 		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveBottom));
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 
 	if(key == IKeyboardController::k_keyCodeLEFT &&  !(flags & k_keyFlagRepeat))
@@ -144,7 +144,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_keyDownMutex++;
 
 		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveLeft));
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 
 	if(key == IKeyboardController::k_keyCodeRIGHT &&  !(flags & k_keyFlagRepeat))
@@ -152,20 +152,20 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 		m_keyDownMutex++;
 
 		EventPtr evt(new Event_ChangeDirection(m_controlledActor, Character::k_moveRight));
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 
 	if(key == IKeyboardController::k_keyCodeESCAPE)
 	{
 		EventPtr evt(new Event_Game_Pause());
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 
 	//TODO: временно. Убрать когда будет экран паузы
 	if(key == IKeyboardController::k_keyCodeSPACE)
 	{
 		EventPtr evt(new Event_Game_Resume());
-		TheEventMgr.pushEventToQueye(evt);
+		TheEventMgr.triggerEvent(evt);
 	}
 }
 
@@ -180,7 +180,7 @@ void GameVerticalLayer::onKeyUp(KeyCode key, KeyFlags flags)
 		if(m_keyDownMutex == 0)
 		{
 			EventPtr evt(new Event_CancelChangingDirection(m_controlledActor));
-			TheEventMgr.pushEventToQueye(evt);
+			TheEventMgr.triggerEvent(evt);
 		}
 	}
 }

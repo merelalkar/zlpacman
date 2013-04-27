@@ -143,7 +143,8 @@ namespace Pegas
 		{
 			k_stateChasing,
 			k_stateRunaway,
-			k_statePray			
+			k_statePray,
+			k_stateTotal			
 		};
 	public:
 		Ghost(int actorId, IPlatformContext* platform);
@@ -163,6 +164,7 @@ namespace Pegas
 		int32 m_prevColumn;
 		int32 m_pacmanRow;
 		int32 m_pacmanColumn;
+		float m_stateVelocity[k_stateTotal];
 
 		void changeAnimation(int32 newState);
 		

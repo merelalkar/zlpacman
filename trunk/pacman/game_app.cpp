@@ -55,7 +55,7 @@ bool GameApplication::run()
 	}
 
 	MILLISECONDS deltaTime = m_utils.getCurrentTime() - m_lastTime;
-	if(deltaTime >= 10)
+	if(deltaTime >= 16)
 	{
 		m_lastTime = m_utils.getCurrentTime();
 	}else
@@ -64,8 +64,8 @@ bool GameApplication::run()
 		return false;
 	}
 
-	m_eventManager.processEvents(5);
-	m_processManager.updateProcesses(deltaTime);
+	m_eventManager.processEvents(8);
+	m_processManager.updateProcesses(deltaTime, 8);
 
 	if(!m_statesStack.empty())
 	{
