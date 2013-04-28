@@ -55,17 +55,17 @@ bool GameApplication::run()
 	}
 
 	MILLISECONDS deltaTime = m_utils.getCurrentTime() - m_lastTime;
-	if(deltaTime >= 16)
+	if(deltaTime > 0)
 	{
 		m_lastTime = m_utils.getCurrentTime();
-	}else
+	}/*else
 	{
 		Sleep(1);
 		return false;
-	}
+	}*/
 
-	m_eventManager.processEvents(8);
-	m_processManager.updateProcesses(deltaTime, 8);
+	m_eventManager.processEvents(0);
+	m_processManager.updateProcesses(deltaTime);
 
 	if(!m_statesStack.empty())
 	{
@@ -125,6 +125,8 @@ void GameApplication::registerResources()
 		
 	m_fontManager.registerResource(k_fontMain, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 12));
 	m_fontManager.registerResource(k_fontMenuButton, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 36));
+	m_fontManager.registerResource(k_fontHUD_Frag, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 10));
+	
 
 	/*m_soundManager.registerResource(k_soundPassNewSeries, MAKE_INT_RESOURCE_CODE(m_hInstance, IDR_WAVE1));
 	m_soundManager.registerResource(k_soundReleaseCard, MAKE_INT_RESOURCE_CODE(m_hInstance, IDR_WAVE2));

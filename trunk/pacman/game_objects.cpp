@@ -464,9 +464,9 @@ void Ghost::create(TileGrid* tileGrid, const Vector3& position)
 	TheEventMgr.addEventListener(this, Event_CharacterChangeState::k_type);
 	TheEventMgr.addEventListener(this, Event_PacmanDeath::k_type);
 
-	m_stateVelocity[k_stateChasing] = m_velocity;
+	m_stateVelocity[k_stateChasing] = m_velocity * 0.8;
 	m_stateVelocity[k_stateRunaway] = m_velocity * 0.5;
-	m_stateVelocity[k_statePray] = m_velocity;
+	m_stateVelocity[k_statePray] = m_velocity * 1.1;
 
 	m_currentState = k_stateChasing;
 	m_velocity = m_stateVelocity[k_stateChasing];
