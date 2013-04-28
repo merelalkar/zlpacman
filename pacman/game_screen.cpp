@@ -23,9 +23,12 @@ GameVerticalLayer::GameVerticalLayer():
 
 void GameVerticalLayer::create(IPlatformContext* context)
 {
+	m_context = context;
+
 	TheEventMgr.addEventListener(this, Event_HUD_LevelChanged::k_type);
 	TheEventMgr.addEventListener(this, Event_HUD_ScoresChanged::k_type);
 	TheEventMgr.addEventListener(this, Event_HUD_LivesChanged::k_type);
+	TheEventMgr.addEventListener(this, Event_HUD_Frag::k_type);
 
 	m_gameWorld.create(context);
 
@@ -100,6 +103,16 @@ void GameVerticalLayer::destroy(IPlatformContext* context)
 void GameVerticalLayer::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit)
 {
 	m_gameWorld.update(context, deltaTime, timeLimit);
+
+	std::list<ProcessPtr> liveFrags;
+	for(std::list<ProcessPtr>::iterator it = m_frags.begin(); it != m_frags.end(); ++it)
+	{
+		if((*it)->getStatus() == k_processStatusRunning)
+		{
+			liveFrags.push_back(*it);
+		}
+	}
+	m_frags = liveFrags;
 }
 
 void GameVerticalLayer::render(IPlatformContext* context)
@@ -118,6 +131,12 @@ void GameVerticalLayer::render(IPlatformContext* context)
 	{
 		GrafManager::getInstance().drawSprite(m_liveIcon);
 		m_liveIcon._left+= m_liveIcon._width + 5;
+	}
+
+	for(std::list<ProcessPtr>::iterator it = m_frags.begin(); it != m_frags.end(); ++it)
+	{
+		Frag* frag = (Frag*)(*it);
+		frag->draw();
 	}
 }
 
@@ -187,19 +206,6 @@ void GameVerticalLayer::onKeyUp(KeyCode key, KeyFlags flags)
 
 void GameVerticalLayer::handleEvent(EventPtr evt)
 {
-	if(evt->getType() == Event_HUD_LevelChanged::k_type)
-	{
-		Event_HUD_LevelChanged* pEvent = evt->cast<Event_HUD_LevelChanged>();
-		m_level = pEvent->_level;
-		
-		tchar buffer[10];
-#ifdef _UNICODE
-		m_levelText = _itow(m_level, buffer, 10);
-#else
-		m_levelText = _itoa(m_level, buffer, 10);
-#endif	
-	}
-
 	if(evt->getType() == Event_HUD_ScoresChanged::k_type)
 	{
 		Event_HUD_ScoresChanged* pEvent = evt->cast<Event_HUD_ScoresChanged>();
@@ -211,13 +217,40 @@ void GameVerticalLayer::handleEvent(EventPtr evt)
 #else
 		m_scoresText = _itoa(m_numScore, buffer, 10);
 #endif	
+		return;
+	}
+
+	if(evt->getType() == Event_HUD_Frag::k_type)
+	{
+		Event_HUD_Frag* pEvent = evt->cast<Event_HUD_Frag>();
+		ProcessPtr frag(new Frag(pEvent->_scores, pEvent->_position, 3.0f));
+		
+		m_context->attachProcess(frag);
+		m_frags.push_back(frag);
+
+		return;
 	}
 
 	if(evt->getType() == Event_HUD_LivesChanged::k_type)
 	{
 		Event_HUD_LivesChanged* pEvent = evt->cast<Event_HUD_LivesChanged>();
-		m_numLives = pEvent->_lives;		
+		m_numLives = pEvent->_lives;
+		return;
 	}
+
+	if(evt->getType() == Event_HUD_LevelChanged::k_type)
+	{
+		Event_HUD_LevelChanged* pEvent = evt->cast<Event_HUD_LevelChanged>();
+		m_level = pEvent->_level;
+		
+		tchar buffer[10];
+#ifdef _UNICODE
+		m_levelText = _itow(m_level, buffer, 10);
+#else
+		m_levelText = _itoa(m_level, buffer, 10);
+#endif	
+		return;
+	}	
 }
 
 /*************************************************************************************************
@@ -321,3 +354,52 @@ void GameScreen::handleEvent(EventPtr evt)
 		}
 	}
 }
+
+/**********************************************************************************************************************
+	Frag
+***********************************************************************************************************************/
+Frag::Frag(int32 scores, const Vector3& position, float lifeTime)
+{
+	m_initialLifeTime = lifeTime;
+	m_lifeTime = lifeTime;
+
+	tchar text[10];
+#ifndef _UNICODE
+		sprintf(text, _text("%d"), scores);
+#else
+		wsprintf(text, _text("%d"), scores);
+#endif
+	
+	m_fragText = text;
+
+	CURCOORD width, height;
+	GrafManager& graf = GrafManager::getInstance();
+	graf.getTextExtent(m_fragText, k_fontHUD_Frag, width, height);  
+
+	m_textParams._color = 0xffffffff;
+	m_textParams._font = k_fontHUD_Frag;
+	m_textParams._left = position._x - (width * 0.5);
+	m_textParams._top = position._y + (height * 0.5);
+}	
+
+void Frag::update(MILLISECONDS deltaTime)
+{
+	m_lifeTime-= (deltaTime * 0.001);
+	if(m_lifeTime <= 0)
+	{
+		terminate();
+		return;
+	}
+
+	int32 alpha = (int32)(255.0f * (m_lifeTime / m_initialLifeTime));
+	m_textParams._color = (alpha << 24) | (m_textParams._color & 0x00ffffff);
+}
+
+void Frag::draw()
+{
+	GrafManager& graf = GrafManager::getInstance();
+	graf.drawText(m_fragText, m_textParams);
+}
+	
+		
+	

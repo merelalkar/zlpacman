@@ -33,7 +33,9 @@ namespace Pegas
 	enum FontResorces
 	{
 		k_fontMain = 1,
-		k_fontMenuButton
+		k_fontMenuButton,
+		//k_fontHUD_Panel,
+		k_fontHUD_Frag
 	};
 
 	enum SoundResources

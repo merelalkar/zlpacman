@@ -5,6 +5,20 @@
 
 namespace Pegas
 {
+	class Frag: public Process
+	{
+	public:
+		Frag(int32 scores, const Vector3& position, float lifeTime);
+
+		virtual void update(MILLISECONDS deltaTime);
+		void draw();
+	private:
+		String m_fragText;
+		TextParameters m_textParams;
+		float m_initialLifeTime;
+		float m_lifeTime;
+	};
+
 	class GameVerticalLayer: public BaseScreenLayer, public IEventListener
 	{
 	public:
@@ -20,6 +34,7 @@ namespace Pegas
 
 	private:
 		GameWorld m_gameWorld;
+		IPlatformContext* m_context;
 
 		SpriteParameters m_maze;
 		SpriteParameters m_scoresTextSprite;
@@ -37,6 +52,8 @@ namespace Pegas
 		
 		int32 m_controlledActor;
 		int32 m_keyDownMutex;
+
+		std::list<ProcessPtr> m_frags;
 	};
 
 	class DebugLayer: public BaseScreenLayer
