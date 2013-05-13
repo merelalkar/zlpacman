@@ -59,6 +59,7 @@ namespace Pegas
 
 	public:
 		void pushLayer(BaseScreenLayerPtr layer);
+		BaseScreenLayerPtr getLayer(const LayerId& id);
 
 	protected:
 		std::list<BaseScreenLayerPtr> m_layers;

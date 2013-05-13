@@ -194,3 +194,113 @@ void MainMenu::enter(IPlatformContext* context)
 	TheEventMgr.triggerEvent(evt);
 }
 
+/**********************************************************************************************************
+	GlobalPause
+***********************************************************************************************************/
+enum GlobalPauseButtons
+{
+	k_pauseButtonsResume = 1,
+	k_pauseButtonsOptions,
+	k_pauseButtonsMenu
+};
+
+GlobalPause::GlobalPause()
+	:GUILayer(k_layerPause, true)
+{
+	
+}
+
+void GlobalPause::create(IPlatformContext* context)
+{
+	GUILayer::create(context);
+
+	m_platform = context;
+
+	TheEventMgr.addEventListener(this, Event_GUI_ButtonClick::k_type);
+
+	m_canvasWidth = GrafManager::getInstance().getCanvasWidth();
+	m_canvasHeight = GrafManager::getInstance().getCanvasHeight();
+
+	CURCOORD buttonWidth, buttonHeight;
+	GrafManager::getInstance().getTextExtent(_text("options"), k_fontMenuButton, buttonWidth, buttonHeight);
+
+	float left = (m_canvasWidth - buttonWidth) * 0.5;
+	float top = (m_canvasHeight - (buttonHeight * 3) - 40) * 0.5;
+	RGBCOLOR borderColor = 0;
+	RGBCOLOR textColor = 0xffffffff;
+	RGBCOLOR activeTextColor = 0xffffff33;
+
+	/* resume */
+	ButtonWidget* button = new ButtonWidget(k_pauseButtonsResume);
+	button->setPosition(left, top);
+	button->setSize(buttonWidth, buttonHeight);
+	button->setButtonStyle(k_buttonStateNormal, k_fontMenuButton, textColor, borderColor);
+	button->setButtonStyle(k_buttonStatePressed, k_fontMenuButton, textColor, borderColor);
+	button->setButtonStyle(k_buttonStateActive, k_fontMenuButton, activeTextColor, borderColor);
+	button->setCaption(_text("resume"));
+
+	addWidget(WidgetPtr(button));
+
+	top+= (buttonHeight + 20);
+
+	/* options */
+	button = new ButtonWidget(k_pauseButtonsOptions);
+	button->setPosition(left, top);
+	button->setSize(buttonWidth, buttonHeight);
+	button->setButtonStyle(k_buttonStateNormal, k_fontMenuButton, textColor, borderColor);
+	button->setButtonStyle(k_buttonStatePressed, k_fontMenuButton, textColor, borderColor);
+	button->setButtonStyle(k_buttonStateActive, k_fontMenuButton, activeTextColor, borderColor);
+	button->setCaption(_text("options"));
+
+	addWidget(WidgetPtr(button));
+
+	top+= (buttonHeight + 20);
+
+	/* menu */
+	button = new ButtonWidget(k_pauseButtonsMenu);
+	button->setPosition(left, top);
+	button->setSize(buttonWidth, buttonHeight);
+	button->setButtonStyle(k_buttonStateNormal, k_fontMenuButton, textColor, borderColor);
+	button->setButtonStyle(k_buttonStatePressed, k_fontMenuButton, textColor, borderColor);
+	button->setButtonStyle(k_buttonStateActive, k_fontMenuButton, activeTextColor, borderColor);
+	button->setCaption(_text("quit"));
+
+	addWidget(WidgetPtr(button));	
+}
+
+void GlobalPause::destroy(IPlatformContext* context)
+{
+	GUILayer::destroy(context);
+
+	TheEventMgr.removeEventListener(this);
+}
+
+void GlobalPause::render(IPlatformContext* context)
+{
+	GrafManager::getInstance().drawRectangle(0, 0, m_canvasWidth, m_canvasHeight, 0x99000000, 0x99000000);
+
+	GUILayer::render(context);
+}
+
+void GlobalPause::handleEvent(EventPtr evt)
+{
+	if(evt->getType() == Event_GUI_ButtonClick::k_type)
+	{
+		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
+		if(pEvent->m_button->getID() == k_pauseButtonsResume)
+		{
+			TheEventMgr.pushEventToQueye(EventPtr(new Event_Game_Resume()));
+		}
+
+		if(pEvent->m_button->getID() == k_pauseButtonsMenu)
+		{
+			setActivity(false);
+
+			ProcessPtr fadein = new Fadein();
+			m_platform->attachProcess(fadein);
+			ProcessPtr toMenu = new ChangeStateTask(m_platform, k_stateMainMenu);
+			fadein->attachNext(toMenu);
+		}
+	}
+}
+
