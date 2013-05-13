@@ -97,6 +97,19 @@ void DefaultGameState::pushLayer(BaseScreenLayerPtr layer)
 	layer->create(m_platform);
 }
 
+BaseScreenLayerPtr DefaultGameState::getLayer(const LayerId& id)
+{
+	for(std::list<BaseScreenLayerPtr>::iterator it = m_layers.begin(); it != m_layers.end(); ++it)
+	{
+		if((*it)->getID() == id)
+		{
+			return (*it);
+		}
+	}
+
+	return BaseScreenLayerPtr();
+}
+
 void DefaultGameState::enter(IPlatformContext* context)
 {
 	m_platform = context;

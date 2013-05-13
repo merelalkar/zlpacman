@@ -59,5 +59,20 @@ namespace Pegas
 
 	class Options: public GUILayer {};
 
-	class GlobalPause: public GUILayer {};	
+	class GlobalPause: public GUILayer, public IEventListener 
+	{
+	public:
+		GlobalPause();
+
+		virtual void create(IPlatformContext* context);
+		virtual void destroy(IPlatformContext* context);
+		virtual void render(IPlatformContext* context);
+		virtual void handleEvent(EventPtr evt);
+
+	private:
+		IPlatformContext* m_platform;
+
+		CURCOORD m_canvasWidth;
+		CURCOORD m_canvasHeight;
+	};	
 }
