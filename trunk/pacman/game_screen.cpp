@@ -51,7 +51,7 @@ void GameVerticalLayer::create(IPlatformContext* context)
 		m_scoresText = _itoa(MAX_INT32, buffer, 50);
 #endif	
 	CURCOORD bottomBarHeight, scoresBarWidth;
-	GrafManager::getInstance().getTextExtent(buffer, k_fontMenuButton, scoresBarWidth, bottomBarHeight); 
+	GrafManager::getInstance().getTextExtent(buffer, k_fontHUD_Panel, scoresBarWidth, bottomBarHeight); 
 
 	//scores text sprite
 	TextureResource* scoresTextTexture = Pegas::TextureResourceManager::getInstance().getResource(k_textureScoresText);
@@ -60,7 +60,7 @@ void GameVerticalLayer::create(IPlatformContext* context)
 	m_scoresTextSprite._texture = k_textureScoresText;
 	m_scoresTextSprite._left = k_sideMargin;
 	m_scoresTextSprite._top = k_topBarHeight + m_maze._height + k_sideMargin;
-	m_scoresTextSprite._height = k_bottomBarHeight;
+	m_scoresTextSprite._height = bottomBarHeight;
 	m_scoresTextSprite._width = (scoresTextTexture->getInnerImageWidth() * m_scoresTextSprite._height) / scoresTextTexture->getInnerImageHeight(); 
 	
 	//lives text sprite
@@ -68,9 +68,9 @@ void GameVerticalLayer::create(IPlatformContext* context)
 	assert(livesTextTexture && "k_textureLivesText not found");
 
 	m_livesText._texture = k_textureLivesText;
-	m_livesText._left = canvasWidth * 0.5;
+	m_livesText._left = canvasWidth * 0.4;
 	m_livesText._top = k_topBarHeight + m_maze._height + k_sideMargin;
-	m_livesText._height = k_bottomBarHeight;
+	m_livesText._height = bottomBarHeight;
 	m_livesText._width = (livesTextTexture->getInnerImageWidth() * m_livesText._height) / livesTextTexture->getInnerImageHeight();
 
 	//live icon sprite
@@ -79,18 +79,18 @@ void GameVerticalLayer::create(IPlatformContext* context)
 
 	m_liveIcon._texture = k_texturePacmanStaticSprite;
 	m_liveIcon._top = k_topBarHeight + m_maze._height + k_sideMargin;
-	m_liveIcon._height = k_bottomBarHeight;
+	m_liveIcon._height = bottomBarHeight * 0.8;
 	m_liveIcon._width = (livesIconTexture->getInnerImageWidth() * m_liveIcon._height) / livesIconTexture->getInnerImageHeight();
 
-	m_scoresTextParams._font = k_fontMenuButton;
+	m_scoresTextParams._font = k_fontHUD_Panel;
 	m_scoresTextParams._color = 0xffffff33;
-	m_scoresTextParams._top = m_scoresTextSprite._top + m_scoresTextSprite._height;
+	m_scoresTextParams._top = m_scoresTextSprite._top + m_scoresTextSprite._height - 5;
 	m_scoresTextParams._left = m_scoresTextSprite._left + m_scoresTextSprite._width + k_sideMargin;
 
-	m_levelTextParams._font = k_fontMenuButton;
+	m_levelTextParams._font = k_fontHUD_Panel;
 	m_levelTextParams._color = 0xffffff33;
-	m_levelTextParams._top = m_scoresTextSprite._top + m_scoresTextSprite._height;
-	m_levelTextParams._left = canvasWidth - k_sideMargin - k_bottomBarHeight;	
+	m_levelTextParams._top = m_scoresTextSprite._top + m_scoresTextSprite._height - 5;
+	m_levelTextParams._left = canvasWidth - k_sideMargin - scoresBarWidth;	
 }
 
 void GameVerticalLayer::destroy(IPlatformContext* context)
@@ -178,14 +178,7 @@ void GameVerticalLayer::onKeyDown(KeyCode key, KeyFlags flags)
 	{
 		EventPtr evt(new Event_Game_Pause());
 		TheEventMgr.triggerEvent(evt);
-	}
-
-	//TODO: временно. Убрать когда будет экран паузы
-	if(key == IKeyboardController::k_keyCodeSPACE)
-	{
-		EventPtr evt(new Event_Game_Resume());
-		TheEventMgr.triggerEvent(evt);
-	}
+	}	
 }
 
 void GameVerticalLayer::onKeyUp(KeyCode key, KeyFlags flags)
@@ -343,6 +336,7 @@ void GameScreen::leave(IPlatformContext* context)
 
 void GameScreen::handleEvent(EventPtr evt)
 {
+	/*
 	if(evt->getType() == Event_GUI_ButtonClick::k_type)
 	{
 		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
@@ -354,7 +348,7 @@ void GameScreen::handleEvent(EventPtr evt)
 			ProcessPtr toMenu = new ChangeStateTask(m_platform, k_stateMainMenu);
 			fadein->attachNext(toMenu);
 		}
-	}
+	}*/
 
 	if(evt->getType() == Event_Game_Pause::k_type)
 	{

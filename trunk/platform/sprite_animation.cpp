@@ -89,6 +89,8 @@ void SpriteAnimation::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 {
 	Process::start(myHandle, owner);
 
+	m_frames.clear();
+
 	TextureResource* pTexture = TextureResourceManager::getInstance().getResource(m_sprite->_texture);
 
 	float _pitchU = pTexture->getMaxUCoord() / m_textureSheetWidth;

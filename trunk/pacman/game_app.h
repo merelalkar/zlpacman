@@ -20,6 +20,7 @@ namespace Pegas
 		void processInput(UINT message, WPARAM wParam, LPARAM lParam);
 
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "GameApplication"; }
 
 	public:
 

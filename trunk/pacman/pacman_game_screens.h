@@ -41,6 +41,8 @@ namespace Pegas
 		virtual void onKeyDown(KeyCode key, KeyFlags flags);
 		virtual void handleEvent(EventPtr evt);
 		virtual void render(IPlatformContext* context);
+
+		virtual ListenerType getListenerName() { return "MainMenuLayer"; }
 	private:
 		bool m_aboutToExit;
 		IPlatformContext* m_platform;
@@ -68,11 +70,17 @@ namespace Pegas
 		virtual void destroy(IPlatformContext* context);
 		virtual void render(IPlatformContext* context);
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "GlobalPause"; }
+
+		virtual void onKeyDown(KeyCode key, KeyFlags flags);
+		virtual void onKeyUp(KeyCode key, KeyFlags flags);
+		virtual void onActivate(bool isActive);
 
 	private:
 		IPlatformContext* m_platform;
 
 		CURCOORD m_canvasWidth;
 		CURCOORD m_canvasHeight;
+		bool m_notClose;
 	};	
 }

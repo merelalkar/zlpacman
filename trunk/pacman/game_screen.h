@@ -31,6 +31,7 @@ namespace Pegas
 		virtual void onKeyDown(KeyCode key, KeyFlags flags);
 		virtual void onKeyUp(KeyCode key, KeyFlags flags);
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "GameVerticalLayer"; }
 
 	private:
 		GameWorld m_gameWorld;
@@ -78,5 +79,6 @@ namespace Pegas
 		virtual void enter(IPlatformContext* context);
 		virtual void leave(IPlatformContext* context);
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "GameScreen"; }
 	};
 }

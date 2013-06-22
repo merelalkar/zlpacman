@@ -126,6 +126,7 @@ void GameApplication::registerResources()
 	m_fontManager.registerResource(k_fontMain, MAKE_FONT_RESOURCE_CODE(_T("Verdana"), 12));
 	m_fontManager.registerResource(k_fontMenuButton, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 36));
 	m_fontManager.registerResource(k_fontHUD_Frag, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 10));
+	m_fontManager.registerResource(k_fontHUD_Panel, MAKE_FONT_RESOURCE_CODE(_T("Snap ITC"), 18));
 	
 
 	/*m_soundManager.registerResource(k_soundPassNewSeries, MAKE_INT_RESOURCE_CODE(m_hInstance, IDR_WAVE1));

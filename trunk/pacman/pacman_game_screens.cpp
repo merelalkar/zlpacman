@@ -205,7 +205,7 @@ enum GlobalPauseButtons
 };
 
 GlobalPause::GlobalPause()
-	:GUILayer(k_layerPause, true)
+	:GUILayer(k_layerPause, true), m_notClose(false)
 {
 	
 }
@@ -289,7 +289,7 @@ void GlobalPause::handleEvent(EventPtr evt)
 		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
 		if(pEvent->m_button->getID() == k_pauseButtonsResume)
 		{
-			TheEventMgr.pushEventToQueye(EventPtr(new Event_Game_Resume()));
+			
 		}
 
 		if(pEvent->m_button->getID() == k_pauseButtonsMenu)
@@ -302,5 +302,37 @@ void GlobalPause::handleEvent(EventPtr evt)
 			fadein->attachNext(toMenu);
 		}
 	}
+}
+
+void GlobalPause::onKeyDown(KeyCode key, KeyFlags flags)
+{
+	GUILayer::onKeyDown(key, flags);
+
+	if(key == IKeyboardController::k_keyCodeTAB || key == IKeyboardController::k_keyCodeDOWN)
+	{
+		changeFocusNext();
+
+	}else if(key == IKeyboardController::k_keyCodeUP)
+	{
+		changeFocusPrev();
+	}
+
+	if(key == IKeyboardController::k_keyCodeESCAPE && !m_notClose)
+	{
+		TheEventMgr.pushEventToQueye(EventPtr(new Event_Game_Resume()));
+	}
+}
+
+void GlobalPause::onKeyUp(KeyCode key, KeyFlags flags)
+{
+	if(key == IKeyboardController::k_keyCodeESCAPE)
+	{
+		 m_notClose = false;
+	}
+}
+
+void GlobalPause::onActivate(bool isActive)
+{
+	m_notClose = true;
 }
 

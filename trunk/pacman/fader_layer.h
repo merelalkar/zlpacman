@@ -14,6 +14,7 @@ namespace Pegas
 		virtual void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit);
 		virtual void render(IPlatformContext* context);
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "FadeLayer"; }
 
 	private:
 		RGBCOLOR		m_color;
@@ -46,6 +47,8 @@ namespace Pegas
 				terminate();
 			}
 		}
+
+		virtual ListenerType getListenerName() { return "FaderProcess"; }
 
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner)
 		{

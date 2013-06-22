@@ -12,6 +12,7 @@ namespace Pegas
 		virtual void terminate();
 
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "Waiting"; }
 
 		void addFinalEvent(EventPtr evt);
 

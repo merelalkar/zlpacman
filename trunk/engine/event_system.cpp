@@ -18,7 +18,8 @@ namespace Pegas
 			if(found_it->second->count(listener) == 0)
 			{
 				found_it->second->insert(listener);
-				OSUtils::getInstance().debugOutput("add event listener [listener = 0x%x, event = %s]", listener, eventType.data());
+				OSUtils::getInstance().debugOutput("add event listener [listener = 0x%x, type = %s, event = %s]", 
+					listener, listener->getListenerName().data(), eventType.data());
 			}
 		}
 
@@ -32,7 +33,8 @@ namespace Pegas
 				if(found_it->second->count(listener) > 0)
 				{
 					found_it->second->erase(listener);
-					OSUtils::getInstance().debugOutput("remove event listener [listener = 0x%x, event = %s]", listener, eventType.data());
+					OSUtils::getInstance().debugOutput("remove event listener [listener = 0x%x, type = %s, event = %s]", 
+						listener, listener->getListenerName().data(), eventType.data());
 				}
 			}//if(found_it != m_listeners.end())			
 		}
@@ -45,7 +47,8 @@ namespace Pegas
 				if(it->second->count(listener) > 0)
 				{
 					it->second->erase(listener);
-					OSUtils::getInstance().debugOutput("remove event listener [listener = 0x%x, event = %s]", listener, it->first.data());
+					OSUtils::getInstance().debugOutput("remove event listener [listener = 0x%x, type = %s, event = %s]", 
+						listener, listener->getListenerName().data(), it->first.data());
 				}
 			}//for(EventListenerMap::iterator it = m_listeners.begin();
 		}
@@ -72,7 +75,8 @@ namespace Pegas
 			for(EventListenerSet::iterator it = listenersSet->begin();
 					it != listenersSet->end(); ++it)
 			{
-				OSUtils::getInstance().debugOutput("process triggered event [event = %s, listener = 0x%x]", evt->getType().data(), (*it));
+				OSUtils::getInstance().debugOutput("process triggered event [event = %s, listener = 0x%x, type = %s]", 
+					evt->getType().data(), (*it), (*it)->getListenerName().data());
 				(*it)->handleEvent(evt);
 			}
 		}
@@ -96,7 +100,8 @@ namespace Pegas
 				for(EventListenerSet::iterator it = listenersSet->begin();
 					it != listenersSet->end(); ++it)
 				{
-					OSUtils::getInstance().debugOutput("process pushed event [event = %s, listener = 0x%x]", evt->getType().data(), (*it));
+					OSUtils::getInstance().debugOutput("process pushed event [event = %s, listener = 0x%x, type = %s]", 
+						evt->getType().data(), (*it), (*it)->getListenerName().data());
 					(*it)->handleEvent(evt);
 				}
 
@@ -107,7 +112,7 @@ namespace Pegas
 					MILLISECONDS ellapsedTime = OSUtils::getInstance().getCurrentTime() - lastTime;
 					if(ellapsedTime >= timeLimit)
 					{
-						OSUtils::getInstance().debugOutput("**** Time limit had been exceeded, time: %d", ellapsedTime);
+						//OSUtils::getInstance().debugOutput("**** Time limit had been exceeded, time: %d", ellapsedTime);
 						break;
 					}
 				}
@@ -117,11 +122,11 @@ namespace Pegas
 			{
 				m_stage = 0;
 				m_currentEventQueue = 1 - m_currentEventQueue;
-				OSUtils::getInstance().debugOutput("**** All Events processed (%d processed)", processed);
+				//OSUtils::getInstance().debugOutput("**** All Events processed (%d processed)", processed);
 			}else
 			{
 				m_stage++;
-				OSUtils::getInstance().debugOutput("**** Events processed: %d, remained: %d, stage: %d", processed, currentQueue.size(), m_stage);	
+				//OSUtils::getInstance().debugOutput("**** Events processed: %d, remained: %d, stage: %d", processed, currentQueue.size(), m_stage);	
 			}
 		}
 	

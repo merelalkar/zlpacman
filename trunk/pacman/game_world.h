@@ -11,6 +11,7 @@ namespace Pegas
 		GameWorld();
 
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "GameWorld"; }
 
 		void create(IPlatformContext* context);
 		void destroy(IPlatformContext* context);
