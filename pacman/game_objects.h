@@ -66,6 +66,7 @@ namespace Pegas
 		virtual void create(TileGrid* tileGrid, const Vector3& position);
 		virtual void destroy();
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "Character"; }
 		virtual void update(float deltaTime);
 		virtual void draw() {}
 

@@ -363,6 +363,7 @@ void Pacman::handleEvent(EventPtr evt)
 
 	if(evt->getType() == Event_PacmanDeath::k_type)
 	{
+		m_currentDirection = k_moveLeft;  
 		m_currentAnimation = k_animationDeath;
 		m_platform->attachProcess(m_animations[m_currentAnimation]);
 

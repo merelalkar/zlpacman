@@ -23,6 +23,7 @@ namespace Pegas
 
 		virtual void destroy(IPlatformContext* context);
 		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "EditorLayer"; }
 	private:
 		//режимы редактора
 		enum EditorMode

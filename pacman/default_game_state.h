@@ -16,7 +16,12 @@ namespace Pegas
 		//IScreenLayer default implementation
 		virtual void update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit) {};
 		virtual void render(IPlatformContext* context) {};
-		virtual void create(IPlatformContext* context) {};
+		
+		virtual void create(IPlatformContext* context) 
+		{
+			//setActivity(true);
+		}
+
 		virtual void destroy(IPlatformContext* context) {};
 
 		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);

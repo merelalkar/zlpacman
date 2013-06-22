@@ -25,12 +25,13 @@ namespace Pegas
 		};
 
 		
-
+		typedef std::string ListenerType;
 		class IEventListener
 		{
 		public:
 			virtual ~IEventListener() {}
 			virtual void handleEvent(EventPtr evt) = 0;
+			virtual ListenerType getListenerName() = 0;
 		};
 
 		typedef IEventListener* EventListenerPtr;
@@ -325,8 +326,14 @@ namespace Pegas
 			virtual void render(IPlatformContext* context) = 0;
 			virtual void create(IPlatformContext* context) = 0;
 			virtual void destroy(IPlatformContext* context) = 0;
+			virtual void onActivate(bool isActive) {}
 			
-			void setActivity(bool active) { m_isActive = active; }
+			void setActivity(bool active) 
+			{ 
+				m_isActive = active;
+				onActivate(m_isActive);
+			}
+
 			bool isActive() const { return m_isActive; }
 
 			void setSuccessor(IScreenLayer* successor) { m_successor = successor; };

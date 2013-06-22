@@ -34,7 +34,7 @@ namespace Pegas
 	{
 		k_fontMain = 1,
 		k_fontMenuButton,
-		//k_fontHUD_Panel,
+		k_fontHUD_Panel,
 		k_fontHUD_Frag
 	};
 

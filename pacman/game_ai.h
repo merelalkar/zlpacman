@@ -14,7 +14,8 @@ namespace Pegas
 		virtual void suspend();
 		virtual void resume();
 		virtual void update(MILLISECONDS deltaTime);
-		virtual void handleEvent(EventPtr evt);		
+		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "BaseAIState"; }
 
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
