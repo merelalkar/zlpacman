@@ -51,6 +51,7 @@ namespace Pegas
 		virtual void render(IPlatformContext* context);
 		virtual void setFocus();
 		virtual void killFocus();
+		virtual void onKeyDown(KeyCode key, KeyFlags flags);
 		virtual void onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags);
 		virtual void onMouseButtonUp(MouseButton button, float x, float y, MouseFlags flags);
 		virtual void onMouseMove(float x, float y, MouseFlags flags);

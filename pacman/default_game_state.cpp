@@ -127,6 +127,7 @@ void DefaultGameState::leave(IPlatformContext* context)
 	{
 		(*it)->destroy(context);
 	}
+	m_layers.clear();
 }
 
 void DefaultGameState::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLISECONDS timeLimit)
