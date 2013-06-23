@@ -312,14 +312,15 @@ void GameScreen::enter(IPlatformContext* context)
 {
 	DefaultGameState::enter(context);
 
-	TheEventMgr.addEventListener(this, Event_GUI_ButtonClick::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_Pause::k_type);
 	TheEventMgr.addEventListener(this, Event_Game_Resume::k_type);
 	
 	pushLayer(BaseScreenLayerPtr(new GameVerticalLayer()));
 	pushLayer(BaseScreenLayerPtr(new GlobalPause()));
 	pushLayer(BaseScreenLayerPtr(new FaderLayer(k_layerFader)));
+#ifdef _DEBUG
 	pushLayer(BaseScreenLayerPtr(new DebugLayer()));
+#endif
 
 	getLayer(k_layerPause)->setActivity(false);
 
@@ -336,20 +337,6 @@ void GameScreen::leave(IPlatformContext* context)
 
 void GameScreen::handleEvent(EventPtr evt)
 {
-	/*
-	if(evt->getType() == Event_GUI_ButtonClick::k_type)
-	{
-		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
-		if(pEvent->m_button->getID() == k_gamePauseExitToMenu)
-		{
-			ProcessPtr fadein = new Fadein();
-			m_platform->attachProcess(fadein);
-
-			ProcessPtr toMenu = new ChangeStateTask(m_platform, k_stateMainMenu);
-			fadein->attachNext(toMenu);
-		}
-	}*/
-
 	if(evt->getType() == Event_Game_Pause::k_type)
 	{
 		getLayer(k_layerPause)->setActivity(true);

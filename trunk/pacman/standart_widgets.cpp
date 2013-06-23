@@ -124,6 +124,17 @@ void ButtonWidget::killFocus()
 	m_currentState = k_buttonStateNormal;
 }
 
+void ButtonWidget::onKeyDown(KeyCode key, KeyFlags flags)
+{
+	if(key == IKeyboardController::k_keyCodeENTER)
+	{
+		m_currentState = k_buttonStatePressed;
+
+		EventPtr evt(new Event_GUI_ButtonClick(this));
+		TheEventMgr.triggerEvent(evt);
+	}
+}
+
 void ButtonWidget::onMouseButtonDown(MouseButton button, float x, float y, MouseFlags flags)
 {
 	if(button == k_mouseButtonLeft)

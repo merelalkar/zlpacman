@@ -57,8 +57,8 @@ void MainMenuLayer::create(IPlatformContext* context)
 	buttonWidth+= 8;
 	buttonHeight+= 8;
 
-	float left = (canvasWidth - buttonWidth) * 0.5;
-	float top = (canvasHeight - logoScaledHeight - (buttonHeight * 3) - 50) * 0.5;
+	float left = (canvasWidth - buttonWidth) * 0.5f;
+	float top = (canvasHeight - logoScaledHeight - (buttonHeight * 3.0f) - 50.0f) * 0.5f;
 	RGBCOLOR borderColor = 0;
 	RGBCOLOR textColor = 0xffffffff;
 	RGBCOLOR activeTextColor = 0xffffff33;
@@ -224,8 +224,8 @@ void GlobalPause::create(IPlatformContext* context)
 	CURCOORD buttonWidth, buttonHeight;
 	GrafManager::getInstance().getTextExtent(_text("options"), k_fontMenuButton, buttonWidth, buttonHeight);
 
-	float left = (m_canvasWidth - buttonWidth) * 0.5;
-	float top = (m_canvasHeight - (buttonHeight * 3) - 40) * 0.5;
+	float left = (m_canvasWidth - buttonWidth) * 0.5f;
+	float top = (m_canvasHeight - (buttonHeight * 3.0f) - 40.0f) * 0.5f;
 	RGBCOLOR borderColor = 0;
 	RGBCOLOR textColor = 0xffffffff;
 	RGBCOLOR activeTextColor = 0xffffff33;
@@ -289,7 +289,7 @@ void GlobalPause::handleEvent(EventPtr evt)
 		Event_GUI_ButtonClick* pEvent = evt->cast<Event_GUI_ButtonClick>();
 		if(pEvent->m_button->getID() == k_pauseButtonsResume)
 		{
-			
+			TheEventMgr.pushEventToQueye(EventPtr(new Event_Game_Resume()));	
 		}
 
 		if(pEvent->m_button->getID() == k_pauseButtonsMenu)
