@@ -64,6 +64,8 @@ bool GameApplication::run()
 		return false;
 	}*/
 
+	if(deltaTime > 33) deltaTime = 33; 
+
 	m_eventManager.processEvents(0);
 	m_processManager.updateProcesses(deltaTime);
 
