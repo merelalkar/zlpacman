@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="application"
+	Name="spider_app"
 	ProjectGUID="{6235E9C4-A556-4046-8BED-CF5906363FBB}"
 	RootNamespace="FakeSpider"
 	Keyword="MFCProj"

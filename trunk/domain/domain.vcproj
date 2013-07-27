@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="domain"
+	Name="spider_logic"
 	ProjectGUID="{F0DAF738-78E4-49DF-B4CA-1DF003C7889D}"
 	RootNamespace="domain"
 	TargetFrameworkVersion="131072"

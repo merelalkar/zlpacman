@@ -19,7 +19,7 @@ const int32 GameWorld::k_scoresForPile = 10;
 const int32 GameWorld::k_numLives = 4;
 const int32 GameWorld::k_baseScoresForFrag = 200;
 const int32 GameWorld::k_baseScoresToLife = 10000;
-const int32 GameWorld::k_updateScoresToLife = 2000;
+const int32 GameWorld::k_updateScoresToLife = 5000;
 const float GameWorld::k_baseSuperForceTime = 10.0f;
 const int32 GameWorld::k_baseScoresForBonus = 100;
 const int32 GameWorld::k_baseBonusScoresPerLevel = 200;
@@ -473,12 +473,17 @@ void GameWorld::handleEvent(EventPtr evt)
 			EventPtr evt(new Pegas::Event_SuperForceOn());
 			TheEventMgr.pushEventToQueye(evt);
 
-			float superForceTime = k_baseSuperForceTime - (2.0f * (m_currentLevel - 1));
+			float superForceTime = k_baseSuperForceTime - (1.0f * (m_currentLevel - 1));
 			if(superForceTime <= 0.0f)
 			{
 				superForceTime = 1.0f;
 			}
-			float superForcePreTime = superForceTime * 0.8;
+			
+			float superForcePreTime = superForceTime - 1.0f;
+			if(superForcePreTime <= 0.0f)
+			{
+				superForcePreTime = 0.1f;
+			}
 
 			m_context->terminateProcess(m_superForceTimer1);
 			m_context->terminateProcess(m_superForceTimer2);
