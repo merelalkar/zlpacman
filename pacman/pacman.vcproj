@@ -120,7 +120,6 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\platform;..\engine"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
@@ -138,8 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="winmm.lib opengl32.lib glu32.lib engine.lib platform.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\platform\Release;..\engine\Release"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -182,11 +182,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\bitmap1.bmp"
+				RelativePath=".\media\bitmap1.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\media\bitmap1.bmp"
+				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
 			<File
