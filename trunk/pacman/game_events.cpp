@@ -35,20 +35,6 @@ const EventType Event_BonusOff::k_type = "Event_BonusOff";
 const EventType Event_ResetActors::k_type = "Event_ResetActors";
 const EventType Event_RestartGame::k_type = "Event_RestartGame";
 
-
-const EventType Event_GUI_ButtonClick::k_type = "Event_GUI_ButtonClick";
-const EventType Event_GUI_StartFadein::k_type = "Event_GUI_StartFadein";
-const EventType Event_GUI_StartFadeout::k_type = "Event_GUI_StartFadeout";
-const EventType Event_GUI_FadeinComplete::k_type = "Event_GUI_FadeinComplete";
-const EventType Event_GUI_FadeoutComplete::k_type = "Event_GUI_FadeoutComplete";
-const EventType Event_GUI_FadeOn::k_type = "Event_GUI_FadeOn";
-const EventType Event_GUI_FadeOff::k_type = "Event_GUI_FadeOff";
-
-
-const EventType Event_Game_ChangeState::k_type = "Event_Game_ChangeState";
-const EventType Event_Game_ForwardToState::k_type = "Event_Game_ForwardToState";
-const EventType Event_Game_BackwardToPreviousState::k_type = "Event_Game_BackwardToPreviousState";
-
 const EventType Event_HUD_LevelChanged::k_type = "Event_HUD_LevelChanged";
 const EventType Event_HUD_ScoresChanged::k_type = "Event_HUD_ScoresChanged";
 const EventType Event_HUD_LivesChanged::k_type = "Event_HUD_LivesChanged";
@@ -58,5 +44,4 @@ const EventType Event_HUD_NewLevel::k_type = "Event_HUD_NewLevel";
 const EventType Event_HUD_GetReady::k_type = "Event_HUD_GetReady";
 const EventType Event_HUD_GameOver::k_type = "Event_HUD_GameOver";
 
-const EventType Event_Game_Pause::k_type = "Event_Game_Pause";
-const EventType Event_Game_Resume::k_type = "Event_Game_Resume";
+

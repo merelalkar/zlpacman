@@ -19,4 +19,5 @@
 
 
 // TODO. Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
-//#include "platform_windows.h"
+#include "engine.h"
+#include "platform_windows.h"

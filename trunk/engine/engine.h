@@ -64,11 +64,19 @@ namespace Pegas
 #include "gui_manager.h"
 #include "sound_manager.h"
 #include "animation.h"
-#include "game_objects.h"
+#include "game_objects_old.h"
 
 #include "smart_pointer.h"
 #include "interfaces.h"
 #include "event_system.h"
 #include "processes.h"
+
+#include "common_events.h"
+#include "default_game_state.h"
+#include "gui_layer.h"
+#include "fader_layer.h"
+#include "standart_widgets.h"
+#include "waiting.h"
+#include "collision_checker.h"
 
 #endif //PEGAS_ENGINE_H

@@ -182,11 +182,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\media\bitmap1.bmp"
+				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\bitmap1.bmp"
+				RelativePath=".\media\bitmap1.bmp"
 				>
 			</File>
 			<File
@@ -345,14 +345,6 @@
 				RelativePath=".\targetver.h"
 				>
 			</File>
-			<File
-				RelativePath=".\waiting.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\waiting.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="game logic"
@@ -402,27 +394,11 @@
 			Name="gui"
 			>
 			<File
-				RelativePath=".\default_game_state.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\default_game_state.h"
-				>
-			</File>
-			<File
 				RelativePath=".\editor.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\editor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fader_layer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\fader_layer.h"
 				>
 			</File>
 			<File
@@ -434,27 +410,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gui_layer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gui_layer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\pacman_game_screens.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\pacman_game_screens.h"
-				>
-			</File>
-			<File
-				RelativePath=".\standart_widgets.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\standart_widgets.h"
 				>
 			</File>
 		</Filter>
