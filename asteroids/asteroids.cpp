@@ -126,8 +126,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // —охранить дескриптор экземпл€ра в глобальной переменной
 
    //Samsung Galaxy S+ Screen Resolution
-   int WINDOW_WIDTH = 480;
-   int WINDOW_HEIGHT = 800;
+   int WINDOW_WIDTH = 800;
+   int WINDOW_HEIGHT = 480;
 
    hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, 
 	   CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInstance, NULL);

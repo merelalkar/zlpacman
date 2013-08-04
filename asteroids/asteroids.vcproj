@@ -172,6 +172,18 @@
 	</References>
 	<Files>
 		<Filter
+			Name="game_logic"
+			>
+			<File
+				RelativePath=".\game_objects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_objects.h"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="app"
 			>
 			<File
