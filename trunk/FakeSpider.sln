@@ -23,6 +23,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pacman", "pacman\pacman.vcp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asteroids", "asteroids\asteroids.vcproj", "{7E498C75-9A6A-49BC-A195-5E2DC282146B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15E459B8-D29E-4DD2-86E7-607A6594B53A} = {15E459B8-D29E-4DD2-86E7-607A6594B53A}
+		{4FED7CDC-62F2-41A0-A078-9506BF819BEC} = {4FED7CDC-62F2-41A0-A078-9506BF819BEC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,10 @@
-// asteroids.cpp: определяет точку входа для приложения.
+// pacman.cpp: определяет точку входа для приложения.
 //
 
 #include "stdafx.h"
 #include "asteroids.h"
+
+#include "game_application.h"
 
 #define MAX_LOADSTRING 100
 
@@ -29,6 +31,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	MSG msg;
 	HACCEL hAccelTable;
 
+	Pegas::GameApplication app(hInstance);
+
 	// Инициализация глобальных строк
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hInstance, IDC_ASTEROIDS, szWindowClass, MAX_LOADSTRING);
@@ -43,14 +47,28 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_ASTEROIDS));
 
 	// Цикл основного сообщения:
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+	// Main message loop:
+	while (1) 
+	{ 
+        while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE) 
+        { 
+            if (GetMessage(&msg, NULL, 0, 0) ) 
+            { 
+                TranslateMessage(&msg); 
+                DispatchMessage(&msg); 
+            } else { 
+                return TRUE; 
+            } 
+        } 
+        
+		if(app.run())
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			break;
 		}
-	}
+    }
+
+	app.cleanup();
+
 
 	return (int) msg.wParam;
 }
@@ -107,13 +125,23 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    hInst = hInstance; // Сохранить дескриптор экземпляра в глобальной переменной
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+   //Samsung Galaxy S+ Screen Resolution
+   int WINDOW_WIDTH = 480;
+   int WINDOW_HEIGHT = 800;
+
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, 
+	   CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
       return FALSE;
    }
+
+   RECT rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+   WINDOWINFO info;
+   GetWindowInfo(hWnd, &info);
+   AdjustWindowRectEx(&rect, info.dwStyle, GetMenu(hWnd) != NULL, info.dwExStyle);
+   MoveWindow(hWnd, 0, 0, (rect.right - rect.left), (rect.bottom - rect.top), FALSE); 
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -136,9 +164,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
+	RECT rect;
+
+	Pegas::GameApplication& app = (Pegas::GameApplication&)Pegas::BaseGameApplication::getInstance();
+
+	if((message >= WM_MOUSEFIRST && message <= WM_MOUSELAST) 
+		|| 	(message >= WM_KEYFIRST && message <= WM_KEYLAST)
+		|| message == WM_MOUSEMOVE)
+	{
+		app.processInput(message, wParam, lParam);
+		return 0;
+	}
 
 	switch (message)
 	{
+	case WM_CREATE: 
+        GetClientRect(hWnd, &rect);
+
+		app.init(hWnd);
+		app.resize(rect.right, rect.bottom);
+        
+		break;
+	case WM_SIZE:
+		
+		GetClientRect(hWnd, &rect); 
+    	app.resize(rect.right, rect.bottom);
+		break;
+	case WM_ACTIVATE:
+         
+		app.activate((bool)LOWORD(wParam)); 
+		break;
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
@@ -161,11 +216,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
+		
+		app.cleanup();
 		PostQuitMessage(0);
 		break;
+		
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+
 	return 0;
 }
 
