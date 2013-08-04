@@ -77,7 +77,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)/bin"
 			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)/obj"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -135,14 +135,26 @@
 	</References>
 	<Files>
 		<Filter
-			Name="header"
+			Name="app"
 			>
 			<File
-				RelativePath=".\animation.h"
+				RelativePath=".\collision_checker.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\engine.h"
+				RelativePath=".\collision_checker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\default_game_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\default_game_state.h"
+				>
+			</File>
+			<File
+				RelativePath=".\event_system.cpp"
 				>
 			</File>
 			<File
@@ -150,19 +162,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\game_objects.h"
-				>
-			</File>
-			<File
-				RelativePath=".\graf_manager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gui_manager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\interfaces.h"
+				RelativePath=".\processes.cpp"
 				>
 			</File>
 			<File
@@ -170,9 +170,93 @@
 				>
 			</File>
 			<File
+				RelativePath=".\waiting.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\waiting.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="game_view"
+			>
+			<File
+				RelativePath=".\fader_layer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fader_layer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\gui_layer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\gui_layer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\standart_widgets.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\standart_widgets.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="old"
+			>
+			<File
+				RelativePath=".\animation.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\animation.h"
+				>
+			</File>
+			<File
+				RelativePath=".\game_objects.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_objects_old.h"
+				>
+			</File>
+			<File
+				RelativePath=".\graf_manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\graf_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\gui_manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\gui_manager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource_manager.h"
 				>
 			</File>
+			<File
+				RelativePath=".\sound_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\utils.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="core"
+			>
 			<File
 				RelativePath=".\singleton.h"
 				>
@@ -182,7 +266,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\sound_manager.h"
+				RelativePath=".\types.cpp"
 				>
 			</File>
 			<File
@@ -190,54 +274,34 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utils.h"
-				>
-			</File>
-			<File
 				RelativePath=".\vectors.h"
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="source"
+		<File
+			RelativePath=".\common_events.cpp"
 			>
-			<File
-				RelativePath=".\animation.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\engine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\event_system.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\game_objects.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\graf_manager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gui_manager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\interfaces.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\processes.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\types.cpp"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath=".\common_events.h"
+			>
+		</File>
+		<File
+			RelativePath=".\engine.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\engine.h"
+			>
+		</File>
+		<File
+			RelativePath=".\interfaces.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\interfaces.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
