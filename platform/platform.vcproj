@@ -133,6 +133,10 @@
 			Name="header"
 			>
 			<File
+				RelativePath=".\base_game_application.h"
+				>
+			</File>
+			<File
 				RelativePath=".\file.h"
 				>
 			</File>
@@ -164,6 +168,10 @@
 		<Filter
 			Name="source"
 			>
+			<File
+				RelativePath=".\base_game_application.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\file.cpp"
 				>

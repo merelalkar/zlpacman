@@ -183,6 +183,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\game_application.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_application.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Resource.h"
 				>
 			</File>

@@ -21,5 +21,6 @@
 #include "ogl_graf_manager.h"
 #include "file.h"
 #include "sprite_animation.h"
+#include "base_game_application.h"
 
 #endif
