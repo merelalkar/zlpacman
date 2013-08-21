@@ -2,6 +2,9 @@
 
 namespace Pegas
 {
+	/**********************************************************************
+		Game actors
+	******************************************************************/
 	struct Event_Actor_CreateAsteroid: public Event
 	{
 	public:
@@ -76,5 +79,98 @@ namespace Pegas
 		static const EventType k_type;
 
 		int32 _actorID;		
+	};
+
+	/************************************************************************************
+		Player control
+	************************************************************************************/
+	struct Event_Player_EnableControl: public Event
+	{
+	public:
+		Event_Player_EnableControl() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_DisableControl: public Event
+	{
+	public:
+		Event_Player_DisableControl() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_RotateLeft: public Event
+	{
+	public:
+		Event_Player_RotateLeft() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Stop_RotateLeft: public Event
+	{
+	public:
+		Event_Player_Stop_RotateLeft() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_RotateRight: public Event
+	{
+	public:
+		Event_Player_RotateRight() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Stop_RotateRight: public Event
+	{
+	public:
+		Event_Player_Stop_RotateRight() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Thrust: public Event
+	{
+	public:
+		Event_Player_Thrust() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Stop_Thrust: public Event
+	{
+	public:
+		Event_Player_Stop_Thrust() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Fire: public Event
+	{
+	public:
+		Event_Player_Fire() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Stop_Fire: public Event
+	{
+	public:
+		Event_Player_Stop_Fire() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
 	};
 }

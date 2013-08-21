@@ -175,6 +175,14 @@
 			Name="game_logic"
 			>
 			<File
+				RelativePath=".\game_events.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_events.h"
+				>
+			</File>
+			<File
 				RelativePath=".\game_objects.cpp"
 				>
 			</File>
