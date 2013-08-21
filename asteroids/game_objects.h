@@ -62,34 +62,69 @@ namespace Pegas
 
 		CollisionManager* m_collisionManager;
 		Vector3			  m_position;
-		float			  m_radius;
-
 		Vector3			  m_direction;
+		
 		std::vector<Vector3> m_points;
 	};
 
 	class Shatter: public Asteroid
 	{
 	public:
+		Shatter(CollisionManager* collisionManager, 
+			const Vector3& position, const Vector3& direction);
+
+		virtual GameObjectType getType() { return "Shatter" };
 		virtual void onCollisionEnter(IGameObject* other);
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
 	};
 	
-	class Bullet: public Process, public IEventListener
+	class Bullet: public Process, public IGameObject
 	{
 	public:
+		Bullet(CollisionManager* collisionManager, 
+			const Vector3& position, const Vector3& direction);
+
+		virtual GameObjectType getType() { return "Bullet" };
+		virtual void onCollisionEnter(IGameObject* other);
+		virtual void onDraw(GrafManager& graphManager);
+
 		virtual void update(MILLISECONDS deltaTime);
-		virtual void handleEvent(EventPtr evt);
-		virtual ListenerType getListenerName();
+		virtual void terminate();
+
+	protected:
+		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+
+		CollisionManager* m_collisionManager;
+		Vector3			  m_position;
+		Vector3			  m_direction;
 	};
 
-	class Ship: public Process, public IEventListener
+	class Ship: public Process, public IEventListener, public IGameObject 
 	{
 	public:
+		Ship(CollisionManager* collisionManager, 
+			const Vector3& position, const Vector3& direction);
+
 		virtual void update(MILLISECONDS deltaTime);
+		virtual void terminate();
+		
 		virtual void handleEvent(EventPtr evt);
-		virtual ListenerType getListenerName();
+		virtual ListenerType getListenerName() { return "Ship" }
+
+		virtual GameObjectType getType() { return "Ship" }
+		virtual void onCollisionEnter(IGameObject* other);
+		virtual void onDraw(GrafManager& graphManager);
+
+	protected:
+		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+
+		CollisionManager* m_collisionManager;
+		Vector3			  m_position;
+		Vector3			  m_direction;
+		
+		std::vector<Vector3> m_initialPoints;
+		std::vector<Vector3> m_points;
 	};
 
 }

@@ -14,6 +14,7 @@ namespace Pegas
 
 	const float k_asteroidRadius = 10.0f;
 	const float k_shatterRadius = 5.0f;
+	const float k_bulletSize = 5.0f;
 
 	const int32 k_asteroidCollisionGroup = 1;
 	const int32 k_shipCollisionGroup = 2;
@@ -177,6 +178,12 @@ namespace Pegas
 	/******************************************************************************************************
 		Shatter class implementation
 	*******************************************************************************************************/
+	Shatter::Shatter(CollisionManager* collisionManager, const Vector3& position, const Vector3& direction)
+		:Asteroid(collisionManager, position, direction)
+	{
+
+	}
+
 	void Shatter::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 	{
 		Process::start(myHandle, owner);
@@ -197,5 +204,110 @@ namespace Pegas
 			EventPtr evt(new Event_Actor_Destroy(m_handle));
 			TheEventMgr.pushEventToQueye(evt);
 		}
+	}
+
+	/****************************************************************************************************
+		Bullet class implementation
+	***************************************************************************************************/
+	Bullet::Bullet(CollisionManager* collisionManager, const Vector3& position, const Vector3& direction)
+	{
+		m_collisionManager = collisionManager;
+		m_position = position;
+		m_direction = direction;
+	}
+
+	void Bullet::onCollisionEnter(IGameObject* other)
+	{
+		EventPtr evt(new Event_Actor_Destroy(m_handle));
+		TheEventMgr.pushEventToQueye(evt);
+	}
+
+	void Bullet::onDraw(GrafManager& graphManager)
+	{
+		CURCOORD fromX, fromY, toX, toY;
+		RGBCOLOR color = 0xffffffff;
+
+		Vector3 to = m_position + m_direction * k_bulletSize;
+
+		fromX = m_position._x;
+		fromY = m_position._y;
+		toX = to._x;
+		toY = to._y;
+
+		graphManager.drawLine(fromX, fromY, toX, toY, color);
+	}
+
+	void Bullet::start(ProcessHandle myHandle, ProcessManagerPtr owner)
+	{
+		Process::start(myHandle, owner);
+		
+		m_collisionManager.registerPoint(myHandle, k_bulletCollisionGroup, m_position);
+	}
+
+	void Bullet::update(MILLISECONDS deltaTime)
+	{
+		Vector3 offset = m_direction * k_asteroidVelosity * (deltaTime / 1000.0f);
+		m_position+= offset;
+
+		m_collisionManager.moveObject(m_handle, offset);	
+	}
+
+	void Bullet::terminate()
+	{
+		m_collisionManager.unregisterCollisionHull(m_handle);
+
+		Process::terminate();
+	}
+
+	/*****************************************************************************************
+		Ship class implementation	
+	*****************************************************************************************/
+	
+	Ship::Ship(CollisionManager* collisionManager, const Vector3& position, const Vector3& direction)
+	{
+
+	}
+
+	void Ship::start(ProcessHandle myHandle, ProcessManagerPtr owner)
+	{
+		Process::start(myHandle, owner);
+
+		TheEventMgr.addEventListener(this, Event_Player_EnableControl::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_DisableControl::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_RotateLeft::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_RotateRight::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Thrust::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Fire::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Stop_RotateLeft::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Stop_RotateRight::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Stop_Thrust::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Stop_Fire::k_type);
+	}
+
+	void Ship::update(MILLISECONDS deltaTime)
+	{
+
+	}
+
+	void Ship::terminate()
+	{
+		TheEventMgr.removeEventListener(this);
+
+		Process::terminate();
+	}
+		
+	void Ship::handleEvent(EventPtr evt)
+	{
+
+	}
+
+	void Ship::onCollisionEnter(IGameObject* other)
+	{
+
+	}
+
+	void Ship::onDraw(GrafManager& graphManager)
+	{
+
 	}
 }
