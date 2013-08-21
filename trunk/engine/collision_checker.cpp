@@ -1,7 +1,6 @@
 #include "engine.h"
 #include "collision_checker.h"
 
-using namespace Pegas;
 /*
 void CollisionChecker::init(TileGrid* tileGrid)
 {
@@ -85,6 +84,48 @@ bool CollisionChecker::isIntersects(IColissionHull* a, IColissionHull* b)
 }
 */
 
+namespace Pegas
+{
+	//TODO: add realisation of this class
+	bool CollisionManager::registerPoint(int32 id, int32 group, const Vector3& position)
+	{
+		return false;
+	}
+	
+	bool CollisionManager::registerCircle(int32 id, int32 group, const Vector3& position, float radius)
+	{
+		return false;
+	}
+	
+	bool CollisionManager::registerPoligon(int32 id, int32 group, const PointList& points)
+	{
+		return false;
+	}
+	
+	void CollisionManager::unregisterCollisionHull(int32 id)
+	{
 
+	}
+		
+	void CollisionManager::moveObject(int32 id, const Vector3& offset)
+	{
+
+	}
+	
+	void CollisionManager::rotateObject(int32 id, float degreesOffset)
+	{
+
+	}
+		
+	void CollisionManager::update()
+	{
+
+	}
+	
+	void CollisionManager::getCollidedPairs(CollisionPairList& outPairs)
+	{
+
+	}
+}
 
 

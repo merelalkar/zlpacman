@@ -40,4 +40,24 @@ namespace Pegas
 		ProcessingList			  m_processingLists;
 		CollisionPairs			  m_prevCollisionPairs;	
 	};*/
+
+	class CollisionManager
+	{
+	public:
+		typedef std::list<Vector3> PointList;
+		typedef std::pair<int32, int32> CollisionPair;
+		typedef std::list<CollisionPair> CollisionPairList;
+
+	public:
+		bool registerPoint(int32 id, int32 group, const Vector3& position);
+		bool registerCircle(int32 id, int32 group, const Vector3& position, float radius);
+		bool registerPoligon(int32 id, int32 group, const PointList& points);
+		void unregisterCollisionHull(int32 id);
+		
+		void moveObject(int32 id, const Vector3& offset);
+		void rotateObject(int32 id, float degreesOffset);
+		
+		void update();
+		void getCollidedPairs(CollisionPairList& outPairs);
+	};
 }
