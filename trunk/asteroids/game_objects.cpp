@@ -265,7 +265,9 @@ namespace Pegas
 	
 	Ship::Ship(CollisionManager* collisionManager, const Vector3& position, const Vector3& direction)
 	{
-
+		m_collisionManager = collisionManager;
+		m_position = position;
+		m_direction = direction;
 	}
 
 	void Ship::start(ProcessHandle myHandle, ProcessManagerPtr owner)
