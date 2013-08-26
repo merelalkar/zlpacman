@@ -5,6 +5,7 @@
 
 namespace Pegas
 {
+	//TODO: tweak constants
 	const int32 k_asteroidNumPoints = 7;
 	const int32 k_shatterNumPoints = 5;
 
@@ -20,6 +21,12 @@ namespace Pegas
 	const int32 k_shipCollisionGroup = 2;
 	const int32 k_bulletCollisionGroup = 3;
 	const int32	k_borderCollisionGroup = 4;
+
+	const float k_shipLinerVelocity = 2.0f;
+	const float k_shipAngleVelocity = 0.01f;
+	const float k_shipLinearSpeedAttenuation = -0.1f;
+
+	const Vector3 k_shipDefaultDirection(0.0f, -1.0f, 0.0f);
 
 	
 	// Generate a random number between 0 and 1
@@ -268,6 +275,36 @@ namespace Pegas
 		m_collisionManager = collisionManager;
 		m_position = position;
 		m_direction = direction;
+		
+		m_direction.normalize();
+
+		float cosA = m_direction.dotProduct(k_shipDefaultDirection);
+
+		m_rotation = acos(cosA); 
+		m_velocity = 0.0f;
+		m_nRotation = k_noRotation;	
+		m_bThrusted = false;
+		m_bFireOn = false;		
+	}
+
+	void Ship::transformPoints()
+	{
+		Matrix4x4 translation, rotation, world;
+		
+		rotation.identity();
+		rotation.rotateZ(m_nRotation);
+
+		translation.identity();
+		translation.translate(m_position._x, m_position._y, 0.0f);
+		
+		world = translation * rotation;
+
+		for(int32 i = 0; i < m_initialPoints.size(); i++)
+		{
+			m_points[i] = m_initialPoints[i] * world;
+		}
+
+		//TODO: update collision hull
 	}
 
 	void Ship::start(ProcessHandle myHandle, ProcessManagerPtr owner)
@@ -284,11 +321,64 @@ namespace Pegas
 		TheEventMgr.addEventListener(this, Event_Player_Stop_RotateRight::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Thrust::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Fire::k_type);
+
+		m_initialPoints.push_back(Vector3(18.0f, 4.0f));
+		m_initialPoints.push_back(Vector3(7.0f, 31.0f));
+		m_initialPoints.push_back(Vector3(30.0f, 31.0f));
+		m_initialPoints.push_back(Vector3(19.0f, 21.0f));
+		m_initialPoints.push_back(Vector3(12.0f, 27.0f));
+		m_initialPoints.push_back(Vector3(24.0f, 26.0f));
+		m_initialPoints.push_back(Vector3(17.0f, 32.0f));
+		m_initialPoints.push_back(Vector3(17.0f, 38.0f));
+		m_initialPoints.push_back(Vector3(18.0f, 4.0f));
+
+		m_spawnBulletPoint = m_initialPoints.size() - 1; 
+
+		//TODO: add initial scalling and translating of points;
+		m_points.insert(m_points.begin(), m_initialPoints.begin(), m_initialPoints.end());
+
+		transformPoints();
+				
+		m_corpusIndices.push_back(std::make_pair(0, 1));
+		m_corpusIndices.push_back(std::make_pair(1, 3));
+		m_corpusIndices.push_back(std::make_pair(3, 2));
+		m_corpusIndices.push_back(std::make_pair(2, 0));
+
+		m_flameIndices[0].push_back(std::make_pair(4, 6));
+		m_flameIndices[0].push_back(std::make_pair(6, 5));
+
+		m_flameIndices[0].push_back(std::make_pair(4, 7));
+		m_flameIndices[0].push_back(std::make_pair(7, 5));
+
+		m_collisionManager->registerPoligon(myHandle, k_shipCollisionGroup, 
+			CollisionManager::PointList(m_points.begin(), m_points.begin() + 3));
 	}
 
 	void Ship::update(MILLISECONDS deltaTime)
 	{
+		float dt = deltaTime / 1000.0f;
 
+		if(m_velocity > 0.0f)
+		{
+			m_position+= m_direction * m_velocity * dt;
+		}
+		
+		if(!m_bThrusted && m_velocity > 0.0f)
+		{
+			m_velocity+= k_shipLinearSpeedAttenuation * dt;
+			if(m_velocity < 0.0f)
+				m_velocity = 0.0f;
+		}
+
+		if(m_nRotation == k_rotationLeft)
+			m_rotation+= k_shipAngleVelocity * dt;
+
+		if(m_nRotation == k_rotationRight)
+			m_rotation-= k_shipAngleVelocity * dt;
+
+		transformPoints();
+
+		//TODO fireing processing		
 	}
 
 	void Ship::terminate()
