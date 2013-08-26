@@ -119,12 +119,31 @@ namespace Pegas
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
 
+		void transformPoints();
+
+		enum
+		{
+			k_noRotation = 0,
+			k_rotationLeft,
+			k_rotationRight
+		};
+
 		CollisionManager* m_collisionManager;
 		Vector3			  m_position;
 		Vector3			  m_direction;
 		
+		float			  m_rotation;
+		float			  m_velocity;
+
+		int32			  m_nRotation;	
+		bool			  m_bThrusted;
+		bool			  m_bFireOn;				  		
+		
 		std::vector<Vector3> m_initialPoints;
 		std::vector<Vector3> m_points;
+		std::vector<std::pair<int32, int32> > m_corpusIndices;
+		std::vector<std::pair<int32, int32> > m_flameIndices[2];
+		int32 m_spawnBulletPoint;
 	};
 
 }

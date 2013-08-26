@@ -258,6 +258,10 @@
 			Name="core"
 			>
 			<File
+				RelativePath=".\matrix.h"
+				>
+			</File>
+			<File
 				RelativePath=".\singleton.h"
 				>
 			</File>
