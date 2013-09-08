@@ -31,6 +31,14 @@ namespace Pegas
 	const float k_shotInterval = 0.5f;
 	const float k_flamePhaseTime = 0.3f;
 
+	const int32 k_minExplosionParticles = 10;
+	const int32 k_maxExplosionParticles = 30;
+	const float k_initialExplosionRadius = 10.0f;
+	const float k_particleVelocity = 4.0f;
+	const float k_particleHalfSize = 1.5f;
+	const float k_particleSize = 3.0f;
+	const float k_explosionLifeTime = 3.0f;
+
 	
 	// Generate a random number between 0 and 1
 	// return a uniform number in [0,1].
@@ -538,30 +546,73 @@ namespace Pegas
 	********************************************************************************************************************/
 	Explosion::Explosion(const Vector3& position)
 	{
-		//TODO: place code here
+		m_position = position;
+		m_lifeTime = 0.0f;
 	}
 		
 	void Explosion::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 	{
 		Process::start(myHandle, owner);
 
-		//TODO: place code here
+		m_lifeTime = 0.0f;
+		
+		int32 numParticles = k_minExplosionParticles + rand() %  (k_maxExplosionParticles - k_minExplosionParticles);
+		
+		float angleStep = (2.0f * _PI) / numPoints;
+		float angle = unifRand(0.0f, _PI);
+		
+		m_positions.reserve(numParticles);
+		m_directions.reserve(numParticles);
+		
+		for(int32 i = 0; i < numParticles; i++)
+		{
+			Vector3 point;
+			
+			float radius = unifRand(0.0f, k_initialExplosionRadius);
+			point._x = radius * cos(angle);
+			point._y = radius * sin(angle);
+
+			m_positions.push_back((m_positions + point));
+			point.normalize();
+			m_directions.push_back(point);
+
+			angle+= angleStep;
+		}
 	}
 	
 	void Explosion::terminate()
 	{
-		//TODO: place code here
-
 		Process::terminate();
 	}
 	
 	void Explosion::update(MILLISECONDS deltaTime)
 	{
-		//TODO: place code here
+		float dt = deltaTime / 1000.0f;
+		
+		m_lifeTime+= dt;
+		if(m_lifeTime >= k_explosionLifeTime)
+		{
+			terminate();
+			return;
+		}
+
+		for(int32 i = 0; i < m_positions.size(); i++)
+		{
+			m_positions[i]+= m_directions[i] * k_particleVelocity * dt;	
+		}
 	}
 
 	void Explosion::onDraw(GrafManager& graphManager)
 	{
-		//TODO: place code here
+		int32 alpha = 255 - 255 * (m_lifeTime / k_explosionLifeTime);
+		RGBCOLOR color = (alpha << 24) | 0x00ffffff:
+		CURCOORD left, top;
+		for(int32 i = 0; i < m_positions.size(); i++)
+		{
+			left = m_positions[i]._x - k_particleHalfSize;
+			top = m_positions[i]._y - k_particleHalfSize;
+			GrafManager::getInstance().drawEllipse(left, top, 
+				k_particleSize, k_particleSize, color, 0xff000000); 
+		}	
 	}		
 }
