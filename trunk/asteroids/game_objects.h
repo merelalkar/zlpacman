@@ -137,7 +137,12 @@ namespace Pegas
 
 		int32			  m_nRotation;	
 		bool			  m_bThrusted;
-		bool			  m_bFireOn;				  		
+		bool			  m_bFireOn;
+		bool			  m_enabled;	
+
+		float			  m_lastShotTime;
+		float			  m_thrustTime;
+		int32			  m_currentFlamePhase;		
 		
 		std::vector<Vector3> m_initialPoints;
 		std::vector<Vector3> m_points;
@@ -146,4 +151,19 @@ namespace Pegas
 		int32 m_spawnBulletPoint;
 	};
 
+	class Explosion: public Process, public IGameObject
+	{
+	public:
+		Explosion(const Vector3& position);
+
+		virtual void update(MILLISECONDS deltaTime);
+		virtual void terminate();
+		
+		virtual GameObjectType getType() { return "Explosion" }
+		virtual void onCollisionEnter(IGameObject* other) { };
+		virtual void onDraw(GrafManager& graphManager);
+
+	protected:
+		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+	};
 }

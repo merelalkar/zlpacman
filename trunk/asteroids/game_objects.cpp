@@ -28,6 +28,9 @@ namespace Pegas
 
 	const Vector3 k_shipDefaultDirection(0.0f, -1.0f, 0.0f);
 
+	const float k_shotInterval = 0.5f;
+	const float k_flamePhaseTime = 0.3f;
+
 	
 	// Generate a random number between 0 and 1
 	// return a uniform number in [0,1].
@@ -284,7 +287,10 @@ namespace Pegas
 		m_velocity = 0.0f;
 		m_nRotation = k_noRotation;	
 		m_bThrusted = false;
-		m_bFireOn = false;		
+		m_bFireOn = false;
+		m_enabled = false;
+
+		m_currentFlamePhase = 0;
 	}
 
 	void Ship::transformPoints()
@@ -370,6 +376,17 @@ namespace Pegas
 				m_velocity = 0.0f;
 		}
 
+		if(m_bThrusted)
+		{
+			m_thrustTime+= dt;
+
+			if(m_thrustTime >= k_flamePhaseTime)
+			{
+				m_thrustTime = 0.0f;
+				m_currentFlamePhase = 1 - m_currentFlamePhase;
+			}			
+		}
+
 		if(m_nRotation == k_rotationLeft)
 			m_rotation+= k_shipAngleVelocity * dt;
 
@@ -378,28 +395,173 @@ namespace Pegas
 
 		transformPoints();
 
-		//TODO fireing processing		
+		if(m_bFireOn)
+		{
+			m_lastShotTime+= dt;
+			if(m_lastShotTime > = k_shotInterval)
+			{
+				m_lastShotTime = 0.0f;
+
+				Matrix4x4 rotation;
+				rotation.identity();
+				rotation.rotateZ(m_nRotation);
+				
+				Vector3 position = m_points[m_spawnBulletPoint];
+				Vector3 direction = k_shipDefaultDirection * rotation;
+
+				EventPtr evt(new Event_Actor_CreateBullet(position, direction));
+				TheEventMgr.pushEventToQueye(evt);
+			}
+		}
 	}
 
 	void Ship::terminate()
 	{
 		TheEventMgr.removeEventListener(this);
+		m_collisionManager.unregisterCollisionHull(m_handle);
 
 		Process::terminate();
 	}
 		
 	void Ship::handleEvent(EventPtr evt)
 	{
+		if(m_enabled && evt->getType() == Event_Player_Fire::k_type)
+		{
+			m_bFireOn = true;
+			m_lastShotTime = k_shotInterval;
 
+			return;
+		}
+
+		if(m_enabled && evt->getType() == Event_Player_Thrust::k_type)
+		{
+			m_bThrusted = true;
+			m_velocity = k_shipVelocity;
+			m_thrustTime = 0.0f;
+
+			Matrix4x4 rotation;
+			rotation.identity();
+			rotation.rotateZ(m_nRotation);
+				
+			m_direction = k_shipDefaultDirection * rotation;
+
+			return;
+		}
+
+		if(m_enabled && evt->getType() == Event_Player_RotateLeft::k_type)
+		{
+			m_nRotation = k_rotationLeft;
+			return;
+		}
+
+		if(m_enabled && evt->getType() == Event_Player_RotateRight::k_type)
+		{
+			m_nRotation = k_rotationRight;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_Stop_Fire::k_type)
+		{
+			m_bFireOn = false;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_Stop_Thrust::k_type)
+		{
+			m_bThrusted = false;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_Stop_RotateLeft::k_type)
+		{
+			m_nRotation = k_noRotation;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_Stop_RotateRight::k_type)
+		{
+			m_nRotation = k_noRotation;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_EnableControl::k_type)
+		{
+			m_enabled = true;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_DisableControl::k_type)
+		{
+			m_enabled = false;
+			return;
+		}		
 	}
 
 	void Ship::onCollisionEnter(IGameObject* other)
 	{
+		if(other->getType() == "Asteroid" || other->getType() == "Shatter")
+		{
+			EventPtr evt(new Event_Actor_CreateExplosion(m_position));
+			TheEventMgr.pushEventToQueye(evt);
 
+			EventPtr evt(new Event_Actor_Destroy(m_handle));
+			TheEventMgr.pushEventToQueye(evt);
+		}
 	}
 
 	void Ship::onDraw(GrafManager& graphManager)
 	{
+		for(std::vector<std::pair<int32, int32> >::iterator it = m_corpusIndices.begin(); it != m_corpusIndices.end(); ++it)
+		{
+			Vector3 from = m_points[it->first];
+			Vector3 to = m_points[it->second];
+			
+			GrafManager::getInstance().drawLine(from._x, from._y, to._x, to._y, 0xffffffff);
+		}
 
+		if(m_bThrusted)
+		{
+			for(std::vector<std::pair<int32, int32> >::iterator it = m_flameIndices[m_currentFlamePhase].begin(); 
+				it != m_flameIndices[m_currentFlamePhase].end(); ++it)
+			{
+				Vector3 from = m_points[it->first];
+				Vector3 to = m_points[it->second];
+			
+				GrafManager::getInstance().drawLine(from._x, from._y, to._x, to._y, 0xffffffff);
+
+			}//for(std::vector<std::pair<int32, int32> >::iterator it = m_cor			
+		}//if(m_bThrusted)
 	}
+
+	/*******************************************************************************************************************
+		Explosion game object
+	********************************************************************************************************************/
+	Explosion::Explosion(const Vector3& position)
+	{
+		//TODO: place code here
+	}
+		
+	void Explosion::start(ProcessHandle myHandle, ProcessManagerPtr owner)
+	{
+		Process::start(myHandle, owner);
+
+		//TODO: place code here
+	}
+	
+	void Explosion::terminate()
+	{
+		//TODO: place code here
+
+		Process::terminate();
+	}
+	
+	void Explosion::update(MILLISECONDS deltaTime)
+	{
+		//TODO: place code here
+	}
+
+	void Explosion::onDraw(GrafManager& graphManager)
+	{
+		//TODO: place code here
+	}		
 }
