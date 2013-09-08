@@ -165,5 +165,10 @@ namespace Pegas
 
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+
+		Vector3 m_position;
+		float m_lifeTime;
+		std::vector<Vector3> m_positions;
+		std::vector<Vector3> m_directions;
 	};
 }
