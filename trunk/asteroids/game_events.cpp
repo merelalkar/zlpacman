@@ -15,8 +15,8 @@ namespace Pegas
 	const EventType Event_Player_RotateRight::k_type = "Event_Player_RotateRight";
 	const EventType Event_Player_Thrust::k_type = "Event_Player_Thrust";
 	const EventType Event_Player_Fire::k_type = "Event_Player_Fire";
-	const EventType Event_Player_Stop_RotateLeft::k_type = "Event_Player_Stop_RotateLeft";
-	const EventType Event_Player_Stop_RotateRight::k_type = "Event_Player_Stop_RotateRight";
 	const EventType Event_Player_Stop_Thrust::k_type = "Event_Player_Stop_Thrust";
 	const EventType Event_Player_Stop_Fire::k_type = "Event_Player_Stop_Fire";
+
+	const EventType Event_Player_Stop_Rotation::k_type = "Event_Player_Stop_Rotation";
 }

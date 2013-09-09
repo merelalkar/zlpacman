@@ -111,28 +111,10 @@ namespace Pegas
 		static const EventType k_type;			
 	};
 
-	struct Event_Player_Stop_RotateLeft: public Event
-	{
-	public:
-		Event_Player_Stop_RotateLeft() { }
-
-		virtual EventType getType() const { return k_type; }
-		static const EventType k_type;			
-	};
-
 	struct Event_Player_RotateRight: public Event
 	{
 	public:
 		Event_Player_RotateRight() { }
-
-		virtual EventType getType() const { return k_type; }
-		static const EventType k_type;			
-	};
-
-	struct Event_Player_Stop_RotateRight: public Event
-	{
-	public:
-		Event_Player_Stop_RotateRight() { }
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;			
@@ -169,6 +151,15 @@ namespace Pegas
 	{
 	public:
 		Event_Player_Stop_Fire() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_Stop_Rotation: public Event
+	{
+	public:
+		Event_Player_Stop_Rotation() { }
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;			

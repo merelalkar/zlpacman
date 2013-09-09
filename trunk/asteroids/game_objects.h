@@ -157,8 +157,7 @@ namespace Pegas
 		Explosion(const Vector3& position);
 
 		virtual void update(MILLISECONDS deltaTime);
-		virtual void terminate();
-		
+				
 		virtual GameObjectType getType() { return "Explosion" }
 		virtual void onCollisionEnter(IGameObject* other) { };
 		virtual void onDraw(GrafManager& graphManager);
