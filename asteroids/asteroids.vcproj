@@ -183,6 +183,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\game_manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\game_manager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\game_objects.cpp"
 				>
 			</File>

@@ -331,10 +331,9 @@ namespace Pegas
 		TheEventMgr.addEventListener(this, Event_Player_RotateRight::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Thrust::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Fire::k_type);
-		TheEventMgr.addEventListener(this, Event_Player_Stop_RotateLeft::k_type);
-		TheEventMgr.addEventListener(this, Event_Player_Stop_RotateRight::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Thrust::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Fire::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_Stop_Rotation::k_type);
 
 		m_initialPoints.push_back(Vector3(18.0f, 4.0f));
 		m_initialPoints.push_back(Vector3(7.0f, 31.0f));
@@ -480,13 +479,7 @@ namespace Pegas
 			return;
 		}
 
-		if(evt->getType() == Event_Player_Stop_RotateLeft::k_type)
-		{
-			m_nRotation = k_noRotation;
-			return;
-		}
-
-		if(evt->getType() == Event_Player_Stop_RotateRight::k_type)
+		if(evt->getType() == Event_Player_Stop_Rotation::k_type)
 		{
 			m_nRotation = k_noRotation;
 			return;
@@ -580,11 +573,6 @@ namespace Pegas
 		}
 	}
 	
-	void Explosion::terminate()
-	{
-		Process::terminate();
-	}
-	
 	void Explosion::update(MILLISECONDS deltaTime)
 	{
 		float dt = deltaTime / 1000.0f;
@@ -592,7 +580,8 @@ namespace Pegas
 		m_lifeTime+= dt;
 		if(m_lifeTime >= k_explosionLifeTime)
 		{
-			terminate();
+			EventPtr evt(new Event_Actor_Destroy(m_handle));
+			TheEventMgr.pushEventToQueye(evt);
 			return;
 		}
 
