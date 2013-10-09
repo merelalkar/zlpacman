@@ -48,7 +48,7 @@ namespace Pegas
 		virtual void terminate();
 
 		//IGameObject
-		virtual GameObjectType getType() { return "Asteroid" };
+		virtual GameObjectType getType() { return "Asteroid"; }
 		virtual void onCollisionEnter(IGameObject* other);
 		virtual void onDraw(GrafManager& graphManager);
 
@@ -73,7 +73,7 @@ namespace Pegas
 		Shatter(CollisionManager* collisionManager, 
 			const Vector3& position, const Vector3& direction);
 
-		virtual GameObjectType getType() { return "Shatter" };
+		virtual GameObjectType getType() { return "Shatter"; }
 		virtual void onCollisionEnter(IGameObject* other);
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
@@ -85,7 +85,7 @@ namespace Pegas
 		Bullet(CollisionManager* collisionManager, 
 			const Vector3& position, const Vector3& direction);
 
-		virtual GameObjectType getType() { return "Bullet" };
+		virtual GameObjectType getType() { return "Bullet"; }
 		virtual void onCollisionEnter(IGameObject* other);
 		virtual void onDraw(GrafManager& graphManager);
 
@@ -110,9 +110,9 @@ namespace Pegas
 		virtual void terminate();
 		
 		virtual void handleEvent(EventPtr evt);
-		virtual ListenerType getListenerName() { return "Ship" }
+		virtual ListenerType getListenerName() { return "Ship"; }
 
-		virtual GameObjectType getType() { return "Ship" }
+		virtual GameObjectType getType() { return "Ship"; }
 		virtual void onCollisionEnter(IGameObject* other);
 		virtual void onDraw(GrafManager& graphManager);
 
@@ -158,7 +158,7 @@ namespace Pegas
 
 		virtual void update(MILLISECONDS deltaTime);
 				
-		virtual GameObjectType getType() { return "Explosion" }
+		virtual GameObjectType getType() { return "Explosion"; }
 		virtual void onCollisionEnter(IGameObject* other) { };
 		virtual void onDraw(GrafManager& graphManager);
 
