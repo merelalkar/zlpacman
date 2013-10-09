@@ -95,7 +95,7 @@ namespace Pegas
 	{
 		for(int32 i = 0; i < m_points.size(); i++)
 		{
-			m_points[i]+= offset;
+			m_points[i]= m_points[i] + offset;
 		}
 	}
 
@@ -106,21 +106,21 @@ namespace Pegas
 		generatePoints(k_asteroidNumPoints, k_asteroidRadius, m_points);
 		movePoints(m_position);
 
-		m_collisionManager.registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_asteroidRadius);
+		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_asteroidRadius);
 	}
 
 	void Asteroid::update(MILLISECONDS deltaTime)
 	{
 		Vector3 offset = m_direction * k_asteroidVelosity * (deltaTime / 1000.0f);
-		m_position+= offset;
+		m_position = m_position + offset;
 
 		movePoints(offset);
-		m_collisionManager.moveObject(m_handle, offset);
+		m_collisionManager->moveObject(m_handle, offset);
 	}
 
 	void Asteroid::terminate()
 	{
-		m_collisionManager.unregisterCollisionHull(m_handle);
+		m_collisionManager->unregisterCollisionHull(m_handle);
 	
 		Process::terminate();
 	}
@@ -175,11 +175,11 @@ namespace Pegas
 		float angleStep = (2.0f * _PI) / numShatters;
 		float angle = unifRand(0.0f, _PI);
 		
-		for(int32 i = 0; i < numPoints; i++)
+		for(int32 i = 0; i < numShatters; i++)
 		{
 			Vector3 point, direction;
 			
-			float radius = unifRand(0.0f, maxRadius);
+			float radius = unifRand(0.0f, k_asteroidRadius);
 			point._x = radius * cos(angle);
 			point._y = radius * sin(angle);
 
@@ -206,10 +206,10 @@ namespace Pegas
 	{
 		Process::start(myHandle, owner);
 
-		generatePoints(k_shatterNumPoints, k_asteroidRadius, k_shatterRadius);
+		generatePoints(k_shatterNumPoints, k_shatterRadius, m_points);
 		movePoints(m_position);
 
-		m_collisionManager.registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_shatterRadius);
+		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_shatterRadius);
 	}
 
 	void Shatter::onCollisionEnter(IGameObject* other)
@@ -219,8 +219,8 @@ namespace Pegas
 			EventPtr evt(new Event_Actor_CreateExplosion(m_position));
 			TheEventMgr.pushEventToQueye(evt);
 
-			EventPtr evt(new Event_Actor_Destroy(m_handle));
-			TheEventMgr.pushEventToQueye(evt);
+			EventPtr evt2(new Event_Actor_Destroy(m_handle));
+			TheEventMgr.pushEventToQueye(evt2);
 		}
 	}
 
@@ -259,20 +259,20 @@ namespace Pegas
 	{
 		Process::start(myHandle, owner);
 		
-		m_collisionManager.registerPoint(myHandle, k_bulletCollisionGroup, m_position);
+		m_collisionManager->registerPoint(myHandle, k_bulletCollisionGroup, m_position);
 	}
 
 	void Bullet::update(MILLISECONDS deltaTime)
 	{
 		Vector3 offset = m_direction * k_asteroidVelosity * (deltaTime / 1000.0f);
-		m_position+= offset;
+		m_position = m_position + offset;
 
-		m_collisionManager.moveObject(m_handle, offset);	
+		m_collisionManager->moveObject(m_handle, offset);	
 	}
 
 	void Bullet::terminate()
 	{
-		m_collisionManager.unregisterCollisionHull(m_handle);
+		m_collisionManager->unregisterCollisionHull(m_handle);
 
 		Process::terminate();
 	}
@@ -335,15 +335,15 @@ namespace Pegas
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Fire::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Rotation::k_type);
 
-		m_initialPoints.push_back(Vector3(18.0f, 4.0f));
-		m_initialPoints.push_back(Vector3(7.0f, 31.0f));
-		m_initialPoints.push_back(Vector3(30.0f, 31.0f));
-		m_initialPoints.push_back(Vector3(19.0f, 21.0f));
-		m_initialPoints.push_back(Vector3(12.0f, 27.0f));
-		m_initialPoints.push_back(Vector3(24.0f, 26.0f));
-		m_initialPoints.push_back(Vector3(17.0f, 32.0f));
-		m_initialPoints.push_back(Vector3(17.0f, 38.0f));
-		m_initialPoints.push_back(Vector3(18.0f, 4.0f));
+		m_initialPoints.push_back(Vector3(18.0f, 4.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(7.0f, 31.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(30.0f, 31.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(19.0f, 21.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(12.0f, 27.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(24.0f, 26.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(17.0f, 32.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(17.0f, 38.0f, 0.0f));
+		m_initialPoints.push_back(Vector3(18.0f, 4.0f, 0.0f));
 
 		m_spawnBulletPoint = m_initialPoints.size() - 1; 
 
@@ -373,7 +373,7 @@ namespace Pegas
 
 		if(m_velocity > 0.0f)
 		{
-			m_position+= m_direction * m_velocity * dt;
+			m_position = m_position + (m_direction * m_velocity * dt);
 		}
 		
 		if(!m_bThrusted && m_velocity > 0.0f)
@@ -405,7 +405,7 @@ namespace Pegas
 		if(m_bFireOn)
 		{
 			m_lastShotTime+= dt;
-			if(m_lastShotTime > = k_shotInterval)
+			if(m_lastShotTime >= k_shotInterval)
 			{
 				m_lastShotTime = 0.0f;
 
@@ -425,7 +425,7 @@ namespace Pegas
 	void Ship::terminate()
 	{
 		TheEventMgr.removeEventListener(this);
-		m_collisionManager.unregisterCollisionHull(m_handle);
+		m_collisionManager->unregisterCollisionHull(m_handle);
 
 		Process::terminate();
 	}
@@ -505,8 +505,8 @@ namespace Pegas
 			EventPtr evt(new Event_Actor_CreateExplosion(m_position));
 			TheEventMgr.pushEventToQueye(evt);
 
-			EventPtr evt(new Event_Actor_Destroy(m_handle));
-			TheEventMgr.pushEventToQueye(evt);
+			EventPtr evt2(new Event_Actor_Destroy(m_handle));
+			TheEventMgr.pushEventToQueye(evt2);
 		}
 	}
 
@@ -551,7 +551,7 @@ namespace Pegas
 		
 		int32 numParticles = k_minExplosionParticles + rand() %  (k_maxExplosionParticles - k_minExplosionParticles);
 		
-		float angleStep = (2.0f * _PI) / numPoints;
+		float angleStep = (2.0f * _PI) / numParticles;
 		float angle = unifRand(0.0f, _PI);
 		
 		m_positions.reserve(numParticles);
@@ -565,7 +565,7 @@ namespace Pegas
 			point._x = radius * cos(angle);
 			point._y = radius * sin(angle);
 
-			m_positions.push_back((m_positions + point));
+			m_positions.push_back((m_position + point));
 			point.normalize();
 			m_directions.push_back(point);
 
@@ -587,14 +587,14 @@ namespace Pegas
 
 		for(int32 i = 0; i < m_positions.size(); i++)
 		{
-			m_positions[i]+= m_directions[i] * k_particleVelocity * dt;	
+			m_positions[i] = m_positions[i] + (m_directions[i] * k_particleVelocity * dt);	
 		}
 	}
 
 	void Explosion::onDraw(GrafManager& graphManager)
 	{
 		int32 alpha = 255 - 255 * (m_lifeTime / k_explosionLifeTime);
-		RGBCOLOR color = (alpha << 24) | 0x00ffffff:
+		RGBCOLOR color = (alpha << 24) | 0x00ffffff;
 		CURCOORD left, top;
 		for(int32 i = 0; i < m_positions.size(); i++)
 		{

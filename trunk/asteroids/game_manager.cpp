@@ -95,7 +95,7 @@ namespace Pegas
 			TheEventMgr.pushEventToQueye(evt);
 		}
 
-		BaseScreenLayer::onKeyDown(KeyCode key, KeyFlags flags);
+		BaseScreenLayer::onKeyDown(key, flags);
 	}
 
 	void GameManager::onKeyUp(KeyCode key, KeyFlags flags)
@@ -119,7 +119,7 @@ namespace Pegas
 			TheEventMgr.pushEventToQueye(evt);
 		}
 
-		BaseScreenLayer::onKeyUp(KeyCode key, KeyFlags flags);
+		BaseScreenLayer::onKeyUp(key, flags);
 	}
 
 	void GameManager::handleEvent(EventPtr evt)
