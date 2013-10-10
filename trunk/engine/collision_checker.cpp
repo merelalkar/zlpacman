@@ -172,12 +172,97 @@ namespace Pegas
 		
 	void CollisionManager::update()
 	{
+		std::set<int32> closedNodes;
 
+		m_pairs.clear();
+
+		for(CollisionHullMap::iterator it = m_collisionHulls.begin(); it != m_collisionHulls.end(); ++it)
+		{
+			Vector3 position = it->second->getPosition();
+			Cell<ICollisionHull*>* myCell =	m_cellGrid.getCell(position); 
+
+			ICollisionHull* a = it->second.get();
+			ICollisionHull* b = 0;
+
+			for(int32 i = 0; i < 9; i++)
+			{
+				Cell<ICollisionHull*>* currentCell = myCell->getSibling(i);
+				if(currentCell == 0) continue;
+				
+				for(Cell<ICollisionHull*>::ObjectListIt iit = currentCell->begin(); iit != currentCell->end(); ++iit)
+				{
+					b = *iit;
+
+					if(a == b) continue;
+					if(closedNodes.count(b->getId()) > 0) continue;
+
+					//TODO: collision groupos filter
+
+					int32 id_a = a->getId();
+					int32 id_b = b->getId();
+					int32 hash = std::max(id_a, id_b) << 16 | std::min(id_a, id_b);
+
+					if(a->isIntersects(b))
+					{
+						if(m_previousCollisionPairs.count(hash) > 0)
+						{
+							continue;
+						}
+						
+						CollisionPair pair(std::max(id_a, id_b), std::min(id_a, id_b));
+						m_pairs.push_back(pair);
+						m_previousCollisionPairs.insert(hash);
+					}else
+					{
+						m_previousCollisionPairs.erase(hash);
+					}
+					
+				}//for(Cell<ICollisionHull*>::ObjectListIt iit = currentCell->begin(); iit != currentCell->end(); ++iit)
+			}//for(int32 i = 0; i < 9; i++)
+
+			closedNodes.insert(a->getId());
+
+		}//for(CollisionHullMap::iterator it = m_collisionHulls.begin(); it != m_collisionHulls.end(); ++it)
 	}
 	
-	void CollisionManager::getCollidedPairs(CollisionPairList& outPairs)
+	CollisionManager::CollisionPairList& CollisionManager::getCollidedPairs()
+	{
+		return m_pairs;
+	}
+
+	/***********************************************************************************************
+
+	************************************************************************************************/
+	PointCollisionHull::PointCollisionHull(int32 id, int32 group, const Vector3& position)
+		:ICollisionHull(id, group), m_initialPosition(position), m_currentPosition(position)
 	{
 
+	}
+
+	void PointCollisionHull::moveObject(const Vector3& offset, bool absolute)
+	{
+		m_currentPosition = absolute ? (m_initialPosition + offset) : (m_currentPosition + offset); 
+	}
+
+	void PointCollisionHull::rotateObject(float degreesOffset, bool absolute)
+	{
+		Matrix4x4 mat;
+		
+		mat.identity();
+		mat.rotateZ(degreesOffset);
+
+		m_currentPosition = absolute ? (m_initialPosition * mat) : (m_currentPosition * mat);
+	}
+
+	bool PointCollisionHull::isIntersects(ICollisionHull* other)
+	{
+		//TOD: add code
+		return false;
+	}
+
+	Vector3 PointCollisionHull::getPosition()
+	{
+		return m_currentPosition;
 	}
 }
 

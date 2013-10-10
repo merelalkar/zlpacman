@@ -126,6 +126,8 @@ namespace Pegas
 			return m_owner->getCell(m_row, m_column - 1);
 		case 7:
 			return m_owner->getCell(m_row + 1, m_column - 1);
+		case 8:
+			return this;
 		default:
 			break;
 		}

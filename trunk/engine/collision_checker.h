@@ -67,9 +67,11 @@ namespace Pegas
 		typedef std::list<Vector3> PointList;
 		typedef std::pair<int32, int32> CollisionPair;
 		typedef std::list<CollisionPair> CollisionPairList;
+		typedef CollisionPairList::iterator CollisionPairListIt;
 		
 		typedef ptr<ICollisionHull> CollisionHullPtr;
 		typedef std::map<int32, CollisionHullPtr> CollisionHullMap;
+		typedef std::set<int32> CollisionPairsHashes;
 
 	public:
 		bool registerPoint(int32 id, int32 group, const Vector3& position);
@@ -81,11 +83,13 @@ namespace Pegas
 		void rotateObject(int32 id, float degreesOffset, bool absolute = true);
 		
 		void update();
-		void getCollidedPairs(CollisionPairList& outPairs);
+		CollisionPairList& getCollidedPairs();
 
 	private:
 		CellGrid<ICollisionHull*> m_cellGrid;
 		CollisionHullMap m_collisionHulls;
+		CollisionPairsHashes m_previousCollisionPairs;
+		CollisionPairList m_pairs;
 	};
 
 	class PointCollisionHull: public ICollisionHull 
