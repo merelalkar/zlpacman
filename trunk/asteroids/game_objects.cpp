@@ -19,8 +19,8 @@ namespace Pegas
 
 	const int32 k_asteroidCollisionGroup = 1;
 	const int32 k_shipCollisionGroup = 2;
-	const int32 k_bulletCollisionGroup = 3;
-	const int32	k_borderCollisionGroup = 4;
+	const int32 k_bulletCollisionGroup = 4;
+	const int32	k_borderCollisionGroup = 8;
 
 	const float k_shipLinerVelocity = 2.0f;
 	const float k_shipAngleVelocity = 0.01f;
