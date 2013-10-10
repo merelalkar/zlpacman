@@ -86,35 +86,88 @@ bool CollisionChecker::isIntersects(IColissionHull* a, IColissionHull* b)
 
 namespace Pegas
 {
-	//TODO: add realisation of this class
+	/*********************************************************************************************************
+		CollisionManager implementation
+	**********************************************************************************************************/
 	bool CollisionManager::registerPoint(int32 id, int32 group, const Vector3& position)
 	{
-		return false;
+		assert(id > 0);
+		assert(group > 0);
+		assert(m_collisionHulls.count(id) == 0);
+
+		if(m_collisionHulls.count(id) > 0)
+		{
+			return false;
+		}
+
+		CollisionHullPtr hull = new PointCollisionHull(id, group, position);
+		m_collisionHulls[id] = hull;
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
+
+		return true;
 	}
 	
 	bool CollisionManager::registerCircle(int32 id, int32 group, const Vector3& position, float radius)
 	{
-		return false;
+		assert(id > 0);
+		assert(group > 0);
+		assert(m_collisionHulls.count(id) == 0);
+
+		if(m_collisionHulls.count(id) > 0)
+		{
+			return false;
+		}
+
+		CollisionHullPtr hull = new CircleCollisionHull(id, group, position, radius);
+		m_collisionHulls[id] = hull;
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
+
+		return true;
 	}
 	
 	bool CollisionManager::registerPoligon(int32 id, int32 group, const PointList& points)
 	{
-		return false;
+		assert(id > 0);
+		assert(group > 0);
+		assert(m_collisionHulls.count(id) == 0);
+
+		if(m_collisionHulls.count(id) > 0)
+		{
+			return false;
+		}
+
+		CollisionHullPtr hull = new PoligonCollisionHull(id, group, points);
+		m_collisionHulls[id] = hull;
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
+
+		return true;
 	}
 	
 	void CollisionManager::unregisterCollisionHull(int32 id)
 	{
+		assert(m_collisionHulls.count(id) > 0);
 
+		CollisionHullPtr hull = m_collisionHulls[id];
+		m_collisionHulls.erase(id);
+		m_cellGrid.removeObject(hull.get());
 	}
 		
-	void CollisionManager::moveObject(int32 id, const Vector3& offset)
+	void CollisionManager::moveObject(int32 id, const Vector3& offset, bool absolute)
 	{
+		assert(m_collisionHulls.count(id) > 0);
 
+		CollisionHullPtr hull = m_collisionHulls[id];
+		hull->moveObject(offset, absolute);
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
 	}
 	
-	void CollisionManager::rotateObject(int32 id, float degreesOffset)
+	void CollisionManager::rotateObject(int32 id, float degreesOffset, bool absolute)
 	{
+		assert(m_collisionHulls.count(id) > 0);
 
+		CollisionHullPtr hull = m_collisionHulls[id];
+		hull->rotateObject(degreesOffset, absolute);
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
 	}
 		
 	void CollisionManager::update()
