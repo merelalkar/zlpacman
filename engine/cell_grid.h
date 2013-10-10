@@ -1,249 +1,256 @@
 #pragma once
 
+#include "types.h"
+
 /****************************************************************************
 	Вспомогательные классы для минимизации числа проверок пересечения
 	игровых объектов
 *****************************************************************************/
 
-template<class T>
-class CellGrid;
-
-/*
-	Ячейка. Предоставляет доступ к объектам, занимающим данную ячейку,
-	а также к соседним ячейкам.
-*/
-template<class T>
-class Cell
+namespace Pegas
 {
-public:
-	typedef typename std::set<T> ObjectList;
-	typedef typename ObjectList::iterator ObjectListIt;
 
-	//получить указатель на соседнюю ячейку, в качестве параметра передаеться
-	//число от 0 до 7 - индекс ячейки. Ячейки выдаються в порядке по часовой стрелке,
-	//начиная той, что находиться на одну строку выше данной и в том же столбце
-	//если соседняя ячейка отсуствует (например для ячеек по границам сетки) - выдает 0,
-	//результат следует проверять на ноль. 
-	Cell<T>* getSibling(int32 index);
-	/*
-		получить итератор указывающий на первый обьект в ячейке
-	*/
-	ObjectListIt begin();
-	ObjectListIt end();
-	
-private:
-	friend class CellGrid<T>; 
-	//эти функции вызваються классом CellGrid
-
-	//инициализация ячейки её номером строки и столбца
-	void init(CellGrid<T>* owner, int32 row, int32 column);
-	//поместить обьект в ячейку
-	void addObject(const T& object);
-	//удалить объект из ячейки
-	void removeObject(const T& object);	
-
-private:
-	CellGrid<T>*	m_owner;
-	ObjectList		m_objects;
-	int32			m_row;
-	int32			m_column;
-};
-
-/*
-	Собственно, сетка
-*/
-template<class T>
-class CellGrid
-{
-public:
-	CellGrid(): m_cells(0) {}
+	template<class T>
+	class CellGrid;
 
 	/*
-		создание сетки. в качестве параметров передаються ширина и высота 
-		(по размеру игрового уровня) и размер ячейки (по размеру самого крупного обьекта
-		в игре)
+		Ячейка. Предоставляет доступ к объектам, занимающим данную ячейку,
+		а также к соседним ячейкам.
 	*/
-	void create(float gridWidth, float gridHeight, float cellLength);
-	void destroy();
-
-	/*
-		поместить игровой обьект в ячейку. если обьект уже расположен в сетке, он перемещаеться
-		в другую ячейку. Игровые обьекты вызвают эту функцию каждый раз, когда их позиция меняеться
-	*/
-	void placeToGrid(const Vector3& position, const T& obj);
-	/*
-	  удалить обьект из ячейки. игровые обьекты вызвают эту функцию в конце при уничтожении обьекта
-	*/
-	void removeObject(const T& obj);
-	/*
-	  получить ячейку для данной точки
-	*/
-	Cell<T>* getCell(const Vector3& position);
-	Cell<T>* getCell(int32 row, int32 column);
-
-private:
-	Cell<T>** m_cells;
-	int32    m_numRows;
-	int32    m_numColumns;
-	float     m_width;
-	float     m_height;
-	float     m_cellLength;
-
-	typedef typename std::map<T, Cell<T>*>  CellsLookupMap;
-	CellsLookupMap m_lookupMap;
-
-private:
-	CellGrid(const CellGrid& src);
-	CellGrid& operator=(const CellGrid& src);
-};
-
-/*******************************************************************************************
-	Cell class functions
-*******************************************************************************************/
-template<class T>
-inline Cell<T>* Cell<T>::getSibling(int32 index)
-{
-	switch(index)
+	template<class T>
+	class Cell
 	{
-	case 0:
-		return m_owner->getCell(m_row + 1, m_column);
-	case 1:
-		return m_owner->getCell(m_row + 1, m_column + 1);
-	case 2:
-		return m_owner->getCell(m_row, m_column + 1);
-	case 3:
-		return m_owner->getCell(m_row - 1, m_column + 1);
-	case 4:
-		return m_owner->getCell(m_row - 1, m_column);
-	case 5:
-		return m_owner->getCell(m_row - 1, m_column - 1);
-	case 6:
-		return m_owner->getCell(m_row, m_column - 1);
-	case 7:
-		return m_owner->getCell(m_row + 1, m_column - 1);
-	default:
-		break;
-	}
+	public:
+		typedef typename std::set<T> ObjectList;
+		typedef typename ObjectList::iterator ObjectListIt;
 
-	return 0;
-};
+		//получить указатель на соседнюю ячейку, в качестве параметра передаеться
+		//число от 0 до 7 - индекс ячейки. Ячейки выдаються в порядке по часовой стрелке,
+		//начиная той, что находиться на одну строку выше данной и в том же столбце
+		//если соседняя ячейка отсуствует (например для ячеек по границам сетки) - выдает 0,
+		//результат следует проверять на ноль. 
+		Cell<T>* getSibling(int32 index);
+		/*
+			получить итератор указывающий на первый обьект в ячейке
+		*/
+		ObjectListIt begin();
+		ObjectListIt end();
+		
+	private:
+		friend class CellGrid<T>; 
+		//эти функции вызваються классом CellGrid
 
-template<class T>
-inline typename Cell<T>::ObjectListIt Cell<T>::begin()
-{
-	return m_objects.begin(); 
-};
+		//инициализация ячейки её номером строки и столбца
+		void init(CellGrid<T>* owner, int32 row, int32 column);
+		//поместить обьект в ячейку
+		void addObject(const T& object);
+		//удалить объект из ячейки
+		void removeObject(const T& object);	
 
-template<class T>
-inline typename Cell<T>::ObjectListIt Cell<T>::end()
-{
-	return m_objects.end();
-};
+	private:
+		CellGrid<T>*	m_owner;
+		ObjectList		m_objects;
+		int32			m_row;
+		int32			m_column;
+	};
 
-template<class T>
-inline void Cell<T>::init(CellGrid<T>* owner, int32 row, int32 column)
-{
-	m_owner = owner;
-	m_row = row;
-	m_column = column;
-};
-
-template<class T>
-inline void Cell<T>::addObject(const T& object)
-{
-	if(m_objects.count(object) == 0)
-		m_objects.insert(object);
-};
-
-template<class T>
-inline void Cell<T>::removeObject(const T& object)
-{
-	if(m_objects.count(object) > 0)
-		m_objects.erase(object);
-};
-
-/***************************************************************************
-	CellGrid class implementation
-*****************************************************************************/
-template<class T>
-inline void CellGrid<T>::create(float gridWidth, float gridHeight, float cellLength)
-{
-	assert(gridWidth > 0 && "invalid argument");
-	assert(gridHeight > 0 && "invalid argument");
-	assert(cellLength > 0 && "invalid argument");
-
-	m_width = gridWidth;
-	m_height = gridHeight;
-	m_cellLength = cellLength;
-	m_numRows = ceil(gridWidth / cellLength);
-	m_numColumns = ceil(gridHeight / cellLength);
-
-	m_cells = new Cell<T>*[m_numRows];
-	for(int32 row = 0; row < m_numRows; row++)
+	/*
+		Собственно, сетка
+	*/
+	template<class T>
+	class CellGrid
 	{
-		m_cells[row] = new Cell<T>[m_numColumns];
-		for(int32 column = 0; column < m_numColumns; column++)
+	public:
+		CellGrid(): m_cells(0) {}
+
+		/*
+			создание сетки. в качестве параметров передаються ширина и высота 
+			(по размеру игрового уровня) и размер ячейки (по размеру самого крупного обьекта
+			в игре)
+		*/
+		void create(float gridWidth, float gridHeight, float cellLength);
+		void destroy();
+
+		/*
+			поместить игровой обьект в ячейку. если обьект уже расположен в сетке, он перемещаеться
+			в другую ячейку. Игровые обьекты вызвают эту функцию каждый раз, когда их позиция меняеться
+		*/
+		void placeToGrid(const Vector3& position, const T& obj);
+		/*
+		  удалить обьект из ячейки. игровые обьекты вызвают эту функцию в конце при уничтожении обьекта
+		*/
+		void removeObject(const T& obj);
+		/*
+		  получить ячейку для данной точки
+		*/
+		Cell<T>* getCell(const Vector3& position);
+		Cell<T>* getCell(int32 row, int32 column);
+
+	private:
+		Cell<T>** m_cells;
+		int32    m_numRows;
+		int32    m_numColumns;
+		float     m_width;
+		float     m_height;
+		float     m_cellLength;
+
+		typedef typename std::map<T, Cell<T>*>  CellsLookupMap;
+		CellsLookupMap m_lookupMap;
+
+	private:
+		CellGrid(const CellGrid& src);
+		CellGrid& operator=(const CellGrid& src);
+	};
+
+	/*******************************************************************************************
+		Cell class functions
+	*******************************************************************************************/
+	template<class T>
+	inline Cell<T>* Cell<T>::getSibling(int32 index)
+	{
+		switch(index)
 		{
-			m_cells[row][column].init(this, row, column);
+		case 0:
+			return m_owner->getCell(m_row + 1, m_column);
+		case 1:
+			return m_owner->getCell(m_row + 1, m_column + 1);
+		case 2:
+			return m_owner->getCell(m_row, m_column + 1);
+		case 3:
+			return m_owner->getCell(m_row - 1, m_column + 1);
+		case 4:
+			return m_owner->getCell(m_row - 1, m_column);
+		case 5:
+			return m_owner->getCell(m_row - 1, m_column - 1);
+		case 6:
+			return m_owner->getCell(m_row, m_column - 1);
+		case 7:
+			return m_owner->getCell(m_row + 1, m_column - 1);
+		default:
+			break;
 		}
-	}
-};
 
-template<class T>
-inline void CellGrid<T>::destroy()
-{
-	if(m_cells)
+		return 0;
+	};
+
+	template<class T>
+	inline typename Cell<T>::ObjectListIt Cell<T>::begin()
 	{
+		return m_objects.begin(); 
+	};
+
+	template<class T>
+	inline typename Cell<T>::ObjectListIt Cell<T>::end()
+	{
+		return m_objects.end();
+	};
+
+	template<class T>
+	inline void Cell<T>::init(CellGrid<T>* owner, int32 row, int32 column)
+	{
+		m_owner = owner;
+		m_row = row;
+		m_column = column;
+	};
+
+	template<class T>
+	inline void Cell<T>::addObject(const T& object)
+	{
+		if(m_objects.count(object) == 0)
+			m_objects.insert(object);
+	};
+
+	template<class T>
+	inline void Cell<T>::removeObject(const T& object)
+	{
+		if(m_objects.count(object) > 0)
+			m_objects.erase(object);
+	};
+
+	/***************************************************************************
+		CellGrid class implementation
+	*****************************************************************************/
+	template<class T>
+	inline void CellGrid<T>::create(float gridWidth, float gridHeight, float cellLength)
+	{
+		assert(gridWidth > 0 && "invalid argument");
+		assert(gridHeight > 0 && "invalid argument");
+		assert(cellLength > 0 && "invalid argument");
+
+		m_width = gridWidth;
+		m_height = gridHeight;
+		m_cellLength = cellLength;
+		m_numRows = ceil(gridWidth / cellLength);
+		m_numColumns = ceil(gridHeight / cellLength);
+
+		m_cells = new Cell<T>*[m_numRows];
 		for(int32 row = 0; row < m_numRows; row++)
 		{
-			delete[] m_cells[row];		
+			m_cells[row] = new Cell<T>[m_numColumns];
+			for(int32 column = 0; column < m_numColumns; column++)
+			{
+				m_cells[row][column].init(this, row, column);
+			}
+		}
+	};
+
+	template<class T>
+	inline void CellGrid<T>::destroy()
+	{
+		if(m_cells)
+		{
+			for(int32 row = 0; row < m_numRows; row++)
+			{
+				delete[] m_cells[row];		
+			}
+
+			delete[] m_cells;
+			m_cells = 0;
 		}
 
-		delete[] m_cells;
-		m_cells = 0;
-	}
+		m_lookupMap.clear();
+	};
 
-	m_lookupMap.clear();
-};
-
-template<class T>
-inline void CellGrid<T>::placeToGrid(const Vector3& position, const T& obj)
-{
-	removeObject(obj);
-
-	Cell<T>* cell = getCell(position);
-	if(cell)
+	template<class T>
+	inline void CellGrid<T>::placeToGrid(const Vector3& position, const T& obj)
 	{
-		cell->addObject(obj);
-		m_lookupMap[obj] = cell;
-	}
-};
+		removeObject(obj);
 
-template<class T>
-inline void CellGrid<T>::removeObject(const T& obj)
-{
-	if(m_lookupMap.count(obj) > 0)
+		Cell<T>* cell = getCell(position);
+		if(cell)
+		{
+			cell->addObject(obj);
+			m_lookupMap[obj] = cell;
+		}
+	};
+
+	template<class T>
+	inline void CellGrid<T>::removeObject(const T& obj)
 	{
-		m_lookupMap[obj]->removeObject(obj);
-		m_lookupMap.erase(obj);
-	}
-};
+		if(m_lookupMap.count(obj) > 0)
+		{
+			m_lookupMap[obj]->removeObject(obj);
+			m_lookupMap.erase(obj);
+		}
+	};
 
-template<class T>
-inline Cell<T>* CellGrid<T>::getCell(const Vector3& position)
-{
-	int32 row = floor((position._x / m_width) * m_numRows);
-	int32 column = floor((position._y / m_height) * m_numColumns);
-
-	return getCell(row, column);
-};
-
-template<class T>
-inline Cell<T>* CellGrid<T>::getCell(int32 row, int32 column)
-{
-	if(row >= 0 && row < m_numRows && column >= 0 && column <  m_numColumns)
+	template<class T>
+	inline Cell<T>* CellGrid<T>::getCell(const Vector3& position)
 	{
-		return &m_cells[row][column];
-	}
-	return 0;
-};
+		int32 row = floor((position._x / m_width) * m_numRows);
+		int32 column = floor((position._y / m_height) * m_numColumns);
+
+		return getCell(row, column);
+	};
+
+	template<class T>
+	inline Cell<T>* CellGrid<T>::getCell(int32 row, int32 column)
+	{
+		if(row >= 0 && row < m_numRows && column >= 0 && column <  m_numColumns)
+		{
+			return &m_cells[row][column];
+		}
+		return 0;
+	};
+
+}
