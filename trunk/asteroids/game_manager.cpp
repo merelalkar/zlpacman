@@ -42,8 +42,7 @@ namespace Pegas
 		m_processes.updateProcesses(deltaTime, timeLimit);
 		m_collisionManager.update();
 
-		CollisionManager::CollisionPairList pairList;
-		m_collisionManager.getCollidedPairs(pairList);
+		CollisionManager::CollisionPairList pairList = m_collisionManager.getCollidedPairs();		
 
 		for(CollisionManager::CollisionPairList::iterator it = pairList.begin(); it != pairList.end(); ++it)
 		{
