@@ -117,10 +117,11 @@ namespace Pegas
 		{
 			return false;
 		}
-
-		CollisionHullPtr hull = new CircleCollisionHull(id, group, position, radius);
+		
+		//TODO: добавить реализацию 
+		/*CollisionHullPtr hull = new CircleCollisionHull(id, group, position, radius);
 		m_collisionHulls[id] = hull;
-		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());*/
 
 		return true;
 	}
@@ -136,9 +137,10 @@ namespace Pegas
 			return false;
 		}
 
-		CollisionHullPtr hull = new PoligonCollisionHull(id, group, points);
+		//TODO: добавить реализацию 
+		/*CollisionHullPtr hull = new PoligonCollisionHull(id, group, points);
 		m_collisionHulls[id] = hull;
-		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());*/
 
 		return true;
 	}
