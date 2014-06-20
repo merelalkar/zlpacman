@@ -118,10 +118,10 @@ namespace Pegas
 			return false;
 		}
 		
-		//TODO: добавить реализацию 
-		/*CollisionHullPtr hull = new CircleCollisionHull(id, group, position, radius);
+		
+		CollisionHullPtr hull = new CircleCollisionHull(id, group, position, radius);
 		m_collisionHulls[id] = hull;
-		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());*/
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
 
 		return true;
 	}
@@ -137,10 +137,10 @@ namespace Pegas
 			return false;
 		}
 
-		//TODO: добавить реализацию 
-		/*CollisionHullPtr hull = new PoligonCollisionHull(id, group, points);
+		
+		CollisionHullPtr hull = new PoligonCollisionHull(id, group, points);
 		m_collisionHulls[id] = hull;
-		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());*/
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
 
 		return true;
 	}
@@ -198,7 +198,7 @@ namespace Pegas
 					if(a == b) continue;
 					if(closedNodes.count(b->getId()) > 0) continue;
 
-					//TODO: collision groupos filter
+					//TODO: collision groups filter
 
 					int32 id_a = a->getId();
 					int32 id_b = b->getId();
@@ -230,6 +230,200 @@ namespace Pegas
 	CollisionManager::CollisionPairList& CollisionManager::getCollidedPairs()
 	{
 		return m_pairs;
+	}
+
+
+	/***********************************************************************************************
+		Collision checkers
+	************************************************************************************************/
+	bool CollisionManager::isIntersectsPointCircle(ICollisionHull* point, ICollisionHull* circle)
+	{
+		PointCollisionHull* pointCH = dynamic_cast<PointCollisionHull*>(point);
+		CircleCollisionHull* circleCH = dynamic_cast<CircleCollisionHull*>(circle);
+
+		Vector3 dv = pointCH->getPosition() - circleCH->getPosition();
+		float distance = dv.length();
+
+		return (distance <= circleCH->getRadius());
+	}
+
+	bool CollisionManager::isIntersectsCirclePoint(ICollisionHull* circle, ICollisionHull* point)
+	{
+		return isIntersectsPointCircle(point, circle);
+	}
+
+	bool CollisionManager::isIntersectsPointPolygon(ICollisionHull* point, ICollisionHull* polygon)
+	{
+		PointCollisionHull* pointCH = dynamic_cast<PointCollisionHull*>(point);
+		PoligonCollisionHull* poligonCH = dynamic_cast<PoligonCollisionHull*>(polygon);
+
+		Vector3 position = pointCH->getPosition();
+		PointList points = poligonCH->getPoints();
+
+		int i0, i1;
+		float A, B, C, D;
+		Vector3 P0, P1;
+		for(int i = 0; i < points.size(); i++)
+		{
+			i0 = i;
+			i1 = (i == (points.size() - 1)) ? 0 : i + 1;
+			
+			P0 = points[i0];
+			P1 = points[i1];
+			
+			A = P0._y - P1._y;
+			B = P1._x - P0._x;
+			C = (P0._x * P1._y) - (P1._x * P0._y);
+			D =  (A * position._x) + (B * position._y) + C;
+
+			if(D > 0)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool CollisionManager::isIntersectsPolygonPoint(ICollisionHull* polygon, ICollisionHull* point)
+	{
+		return isIntersectsPointPolygon(point, polygon);
+	}
+
+	bool CollisionManager::isIntersectsCirclePolygon(ICollisionHull* circle, ICollisionHull* polygon)
+	{
+		CircleCollisionHull* circleCH = dynamic_cast<CircleCollisionHull*>(circle);
+		PoligonCollisionHull* poligonCH = dynamic_cast<PoligonCollisionHull*>(polygon);
+
+		Vector3 position = circleCH->getPosition();
+		float radius = circleCH->getRadius();
+		PointList points = poligonCH->getPoints();
+		
+		Vector3 dv;
+		float distance;
+		for(int i = 0; i < points.size(); i++)
+		{
+			dv = position - points[i];
+			distance = dv.length();
+			if(distance <= radius)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool CollisionManager::isIntersectsPolygonCircle(ICollisionHull* polygon, ICollisionHull* circle)
+	{
+		return isIntersectsCirclePolygon(circle, polygon);
+	}
+		
+	bool CollisionManager::isIntersectsPointPoint(ICollisionHull* point1, ICollisionHull* point2)
+	{
+		PointCollisionHull* pointCH1 = dynamic_cast<PointCollisionHull*>(point1);
+		PointCollisionHull* pointCH2 = dynamic_cast<PointCollisionHull*>(point2);
+		
+		Vector3 p1 = pointCH1->getPosition();
+		Vector3 p2 = pointCH2->getPosition();
+		
+		const float epsilon = 0.001;
+		bool b1 = abs(p1._x - p2._x) < epsilon;
+		bool b2 = abs(p1._y - p2._y) < epsilon;
+
+		return (b1 && b2);
+	}
+
+	bool CollisionManager::isIntersectsCircleCircle(ICollisionHull* circle1, ICollisionHull* circle2)
+	{
+		CircleCollisionHull* circleCH1 = dynamic_cast<CircleCollisionHull*>(circle1);
+		CircleCollisionHull* circleCH2 = dynamic_cast<CircleCollisionHull*>(circle2);
+
+		Vector3 p1 = circleCH1->getPosition();
+		Vector3 p2 = circleCH2->getPosition();
+		float r1 = circleCH1->getRadius();
+		float r2 = circleCH2->getRadius();
+		
+		Vector3 dv = p1 - p2;
+		float distance = dv.length();
+
+		return (distance < (r1 + r2));
+	}
+
+	bool CollisionManager::isIntersectsPolygonPolygon(ICollisionHull* polygon1, ICollisionHull* polygon2)
+	{
+		PoligonCollisionHull* poligonCH1 = dynamic_cast<PoligonCollisionHull*>(polygon1);
+		PoligonCollisionHull* poligonCH2 = dynamic_cast<PoligonCollisionHull*>(polygon2);
+
+		PointList points1 = poligonCH1->getPoints();
+		PointList points2 = poligonCH2->getPoints();
+
+		std::vector<float> A1(points1.size());
+		std::vector<float> B1(points1.size());
+		std::vector<float> C1(points1.size());
+
+		std::vector<float> A2(points2.size());
+		std::vector<float> B2(points2.size());
+		std::vector<float> C2(points2.size());
+
+		int i0, i1;
+		float D;
+		Vector3 P0, P1;
+		for(int i = 0; i < points1.size(); i++)
+		{
+			i0 = i;
+			i1 = (i == (points1.size() - 1)) ? 0 : i + 1;
+			
+			P0 = points1[i0];
+			P1 = points1[i1];
+			
+			A1[i] = P0._y - P1._y;
+			B1[i] = P1._x - P0._x;
+			C1[i] = (P0._x * P1._y) - (P1._x * P0._y);
+		}
+
+		for(int i = 0; i < points2.size(); i++)
+		{
+			i0 = i;
+			i1 = (i == (points2.size() - 1)) ? 0 : i + 1;
+			
+			P0 = points2[i0];
+			P1 = points2[i1];
+			
+			A2[i] = P0._y - P1._y;
+			B2[i] = P1._x - P0._x;
+			C2[i] = (P0._x * P1._y) - (P1._x * P0._y);
+		}
+
+		//cheking 1 against 2
+		for(int i = 0; i < points1.size(); i++)
+		{
+			for(int j = 0; j < points2.size(); j++)
+			{
+				P0 = points1[i];
+				D = (P0._x * A2[j]) + (P0._y * B2[j]) + C2[j];
+				if(D > 0)
+				{
+					return true;
+				}
+			}
+		}//cheking 1 against 2
+
+		//cheking 2 against 1
+		for(int i = 0; i < points2.size(); i++)
+		{
+			for(int j = 0; j < points1.size(); j++)
+			{
+				P0 = points2[i];
+				D = (P0._x * A1[j]) + (P0._y * B1[j]) + C1[j];
+				if(D > 0)
+				{
+					return true;
+				}
+			}
+		}//cheking 2 against 1
+
+		return false;
 	}
 
 	/***********************************************************************************************
