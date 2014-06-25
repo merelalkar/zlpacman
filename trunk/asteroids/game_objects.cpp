@@ -9,12 +9,12 @@ namespace Pegas
 	const int32 k_asteroidNumPoints = 7;
 	const int32 k_shatterNumPoints = 5;
 
-	const float k_asteroidVelosity = 1.0f;
-	const float k_bulletVelocity = 3.0f;
-	const float k_shipVelocity = 2.0f;
+	const float k_asteroidVelosity = 50.0f;
+	const float k_bulletVelocity = 400.0f;
+	const float k_shipVelocity = 100.0f;
 
-	const float k_asteroidRadius = 10.0f;
-	const float k_shatterRadius = 5.0f;
+	const float k_asteroidRadius = 30.0f;
+	const float k_shatterRadius = 10.0f;
 	const float k_bulletSize = 5.0f;
 
 	const int32 k_asteroidCollisionGroup = 1;
@@ -23,12 +23,13 @@ namespace Pegas
 	const int32	k_borderCollisionGroup = 8;
 
 	const float k_shipLinerVelocity = 2.0f;
-	const float k_shipAngleVelocity = 0.01f;
-	const float k_shipLinearSpeedAttenuation = -0.1f;
+	const float k_shipAngleVelocity = 5.0f;
+	const float k_shipLinearSpeedAcceleration = 150.0f;
+	const float k_shipLinearSpeedAttenuation = 20.0f;
 
 	const Vector3 k_shipDefaultDirection(0.0f, -1.0f, 0.0f);
 
-	const float k_shotInterval = 0.5f;
+	const float k_shotInterval = 0.1f;
 	const float k_flamePhaseTime = 0.3f;
 
 	const int32 k_minExplosionParticles = 10;
@@ -103,6 +104,8 @@ namespace Pegas
 	{
 		Process::start(myHandle, owner);
 
+		TheEventMgr.addEventListener(this, Event_Actor_SetPoisition::k_type);
+
 		generatePoints(k_asteroidNumPoints, k_asteroidRadius, m_points);
 		movePoints(m_position);
 
@@ -115,14 +118,32 @@ namespace Pegas
 		m_position = m_position + offset;
 
 		movePoints(offset);
-		m_collisionManager->moveObject(m_handle, offset);
+		m_collisionManager->moveObject(m_handle, offset, false);
 	}
 
 	void Asteroid::terminate()
 	{
+		TheEventMgr.removeEventListener(this);
 		m_collisionManager->unregisterCollisionHull(m_handle);
 	
 		Process::terminate();
+	}
+
+	void Asteroid::handleEvent(EventPtr evt)
+	{
+		if(evt->getType() == Event_Actor_SetPoisition::k_type)
+		{
+			Event_Actor_SetPoisition* evt2 = evt->cast<Event_Actor_SetPoisition>();
+			if(evt2->_actorID == m_handle)
+			{
+				Vector3 offset = evt2->_position - m_position;
+				m_position = evt2->_position;
+
+				movePoints(offset);
+				m_collisionManager->moveObject(m_handle, offset, false);
+			}
+			return;
+		}
 	}
 
 	void Asteroid::onCollisionEnter(IGameObject* other)
@@ -236,8 +257,8 @@ namespace Pegas
 
 	void Bullet::onCollisionEnter(IGameObject* other)
 	{
-		EventPtr evt(new Event_Actor_Destroy(m_handle));
-		TheEventMgr.pushEventToQueye(evt);
+		/*EventPtr evt(new Event_Actor_Destroy(m_handle));
+		TheEventMgr.pushEventToQueye(evt);*/
 	}
 
 	void Bullet::onDraw(GrafManager& graphManager)
@@ -264,10 +285,10 @@ namespace Pegas
 
 	void Bullet::update(MILLISECONDS deltaTime)
 	{
-		Vector3 offset = m_direction * k_asteroidVelosity * (deltaTime / 1000.0f);
+		Vector3 offset = m_direction * k_bulletVelocity * (deltaTime / 1000.0f);
 		m_position = m_position + offset;
 
-		m_collisionManager->moveObject(m_handle, offset);	
+		m_collisionManager->moveObject(m_handle, offset, false);	
 	}
 
 	void Bullet::terminate()
@@ -292,7 +313,7 @@ namespace Pegas
 		float cosA = m_direction.dotProduct(k_shipDefaultDirection);
 
 		m_rotation = acos(cosA); 
-		m_velocity = 0.0f;
+		m_velocity = Vector3(0.0f, 0.0f, 0.0f);
 		m_nRotation = k_noRotation;	
 		m_bThrusted = false;
 		m_bFireOn = false;
@@ -306,19 +327,22 @@ namespace Pegas
 		Matrix4x4 translation, rotation, world;
 		
 		rotation.identity();
-		rotation.rotateZ(m_nRotation);
+		rotation.rotateZ(m_rotation);
 
 		translation.identity();
 		translation.translate(m_position._x, m_position._y, 0.0f);
 		
-		world = translation * rotation;
+		world = rotation * translation;
 
 		for(int32 i = 0; i < m_initialPoints.size(); i++)
 		{
 			m_points[i] = m_initialPoints[i] * world;
 		}
 
-		//TODO: update collision hull
+		m_direction = k_shipDefaultDirection * rotation; 
+
+		m_collisionManager->rotateObject(m_handle, m_rotation);
+		m_collisionManager->moveObject(m_handle, m_position); 
 	}
 
 	void Ship::start(ProcessHandle myHandle, ProcessManagerPtr owner)
@@ -334,6 +358,7 @@ namespace Pegas
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Thrust::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Fire::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Rotation::k_type);
+		TheEventMgr.addEventListener(this, Event_Actor_SetPoisition::k_type);
 
 		m_initialPoints.push_back(Vector3(18.0f, 4.0f, 0.0f));
 		m_initialPoints.push_back(Vector3(7.0f, 31.0f, 0.0f));
@@ -347,8 +372,20 @@ namespace Pegas
 
 		m_spawnBulletPoint = m_initialPoints.size() - 1; 
 
-		//TODO: add initial scalling and translating of points;
+		//initial scalling and translating of points;
+		Matrix4x4 translation;
+		translation.identity();
+		translation.translate(-m_initialPoints[3]._x, -m_initialPoints[3]._y, 0.0f);
+		
+		for(int32 i = 0; i < m_initialPoints.size(); i++)
+		{
+			m_initialPoints[i] = m_initialPoints[i] * translation;
+		}
+
 		m_points.insert(m_points.begin(), m_initialPoints.begin(), m_initialPoints.end());
+		
+		m_collisionManager->registerPoligon(myHandle, k_shipCollisionGroup, 
+			CollisionManager::PointList(m_points.begin(), m_points.begin() + 3));
 
 		transformPoints();
 				
@@ -360,31 +397,17 @@ namespace Pegas
 		m_flameIndices[0].push_back(std::make_pair(4, 6));
 		m_flameIndices[0].push_back(std::make_pair(6, 5));
 
-		m_flameIndices[0].push_back(std::make_pair(4, 7));
-		m_flameIndices[0].push_back(std::make_pair(7, 5));
-
-		m_collisionManager->registerPoligon(myHandle, k_shipCollisionGroup, 
-			CollisionManager::PointList(m_points.begin(), m_points.begin() + 3));
+		m_flameIndices[1].push_back(std::make_pair(4, 7));
+		m_flameIndices[1].push_back(std::make_pair(7, 5));		
 	}
 
 	void Ship::update(MILLISECONDS deltaTime)
 	{
 		float dt = deltaTime / 1000.0f;
 
-		if(m_velocity > 0.0f)
-		{
-			m_position = m_position + (m_direction * m_velocity * dt);
-		}
-		
-		if(!m_bThrusted && m_velocity > 0.0f)
-		{
-			m_velocity+= k_shipLinearSpeedAttenuation * dt;
-			if(m_velocity < 0.0f)
-				m_velocity = 0.0f;
-		}
-
 		if(m_bThrusted)
 		{
+			m_velocity = m_velocity + (m_direction * k_shipLinearSpeedAcceleration * dt);
 			m_thrustTime+= dt;
 
 			if(m_thrustTime >= k_flamePhaseTime)
@@ -393,6 +416,20 @@ namespace Pegas
 				m_currentFlamePhase = 1 - m_currentFlamePhase;
 			}			
 		}
+		
+		/*if(!m_bThrusted && m_velocity.length() > 1.0f)
+		{
+			Vector3 normalSpeed = m_velocity;
+			normalSpeed.normalize();
+
+			m_velocity = m_velocity - (normalSpeed * k_shipLinearSpeedAttenuation * dt);
+			if(m_velocity.length() < 1.0f)
+			{
+				m_velocity = Vector3(0.0, 0.0, 0.0);
+			}
+		}*/
+
+		m_position = m_position + (m_velocity * dt);
 
 		if(m_nRotation == k_rotationLeft)
 			m_rotation+= k_shipAngleVelocity * dt;
@@ -409,14 +446,8 @@ namespace Pegas
 			{
 				m_lastShotTime = 0.0f;
 
-				Matrix4x4 rotation;
-				rotation.identity();
-				rotation.rotateZ(m_nRotation);
-				
 				Vector3 position = m_points[m_spawnBulletPoint];
-				Vector3 direction = k_shipDefaultDirection * rotation;
-
-				EventPtr evt(new Event_Actor_CreateBullet(position, direction));
+				EventPtr evt(new Event_Actor_CreateBullet(position, m_direction));
 				TheEventMgr.pushEventToQueye(evt);
 			}
 		}
@@ -443,14 +474,7 @@ namespace Pegas
 		if(m_enabled && evt->getType() == Event_Player_Thrust::k_type)
 		{
 			m_bThrusted = true;
-			m_velocity = k_shipVelocity;
 			m_thrustTime = 0.0f;
-
-			Matrix4x4 rotation;
-			rotation.identity();
-			rotation.rotateZ(m_nRotation);
-				
-			m_direction = k_shipDefaultDirection * rotation;
 
 			return;
 		}
@@ -495,7 +519,18 @@ namespace Pegas
 		{
 			m_enabled = false;
 			return;
-		}		
+		}
+
+		if(evt->getType() == Event_Actor_SetPoisition::k_type)
+		{
+			Event_Actor_SetPoisition* evt2 = evt->cast<Event_Actor_SetPoisition>();
+			if(evt2->_actorID == m_handle)
+			{
+				m_position = evt2->_position;
+				transformPoints();
+			}
+			return;
+		}
 	}
 
 	void Ship::onCollisionEnter(IGameObject* other)
@@ -603,5 +638,5 @@ namespace Pegas
 			GrafManager::getInstance().drawEllipse(left, top, 
 				k_particleSize, k_particleSize, color, 0xff000000); 
 		}	
-	}		
+	}	
 }

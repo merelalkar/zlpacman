@@ -92,6 +92,8 @@ namespace Pegas
 		int32    m_numColumns;
 		float     m_width;
 		float     m_height;
+		float	  m_halfWidth;
+		float     m_halfHeight;
 		float     m_cellLength;
 
 		typedef typename std::map<T, Cell<T>*>  CellsLookupMap;
@@ -181,6 +183,9 @@ namespace Pegas
 
 		m_width = gridWidth;
 		m_height = gridHeight;
+		m_halfWidth = m_width / 2;
+		m_halfHeight = m_height / 2;
+
 		m_cellLength = cellLength;
 		m_numRows = ceil(gridWidth / cellLength);
 		m_numColumns = ceil(gridHeight / cellLength);
@@ -239,8 +244,8 @@ namespace Pegas
 	template<class T>
 	inline Cell<T>* CellGrid<T>::getCell(const Vector3& position)
 	{
-		int32 row = floor((position._x / m_width) * m_numRows);
-		int32 column = floor((position._y / m_height) * m_numColumns);
+		int32 row = floor(((position._x + m_halfWidth) / m_width) * m_numRows);
+		int32 column = floor(((position._y + m_halfHeight) / m_height) * m_numColumns);
 
 		return getCell(row, column);
 	};

@@ -35,9 +35,10 @@ namespace Pegas
 		virtual GameObjectType getType() = 0;
 		virtual void onCollisionEnter(IGameObject* other) = 0;
 		virtual void onDraw(GrafManager& graphManager) = 0;
+		virtual Vector3 getPosition() = 0;
 	};
 
-	class Asteroid: public Process, public IGameObject
+	class Asteroid: public Process, public IGameObject, public IEventListener
 	{
 	public:
 		Asteroid(CollisionManager* collisionManager, 
@@ -51,6 +52,10 @@ namespace Pegas
 		virtual GameObjectType getType() { return "Asteroid"; }
 		virtual void onCollisionEnter(IGameObject* other);
 		virtual void onDraw(GrafManager& graphManager);
+		virtual Vector3 getPosition() { return m_position; }
+
+		virtual void handleEvent(EventPtr evt);
+		virtual ListenerType getListenerName() { return "Asteroid"; }
 
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
@@ -74,6 +79,8 @@ namespace Pegas
 			const Vector3& position, const Vector3& direction);
 
 		virtual GameObjectType getType() { return "Shatter"; }
+		virtual ListenerType getListenerName() { return "Shatter"; }
+
 		virtual void onCollisionEnter(IGameObject* other);
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
@@ -88,6 +95,7 @@ namespace Pegas
 		virtual GameObjectType getType() { return "Bullet"; }
 		virtual void onCollisionEnter(IGameObject* other);
 		virtual void onDraw(GrafManager& graphManager);
+		virtual Vector3 getPosition() { return m_position; }
 
 		virtual void update(MILLISECONDS deltaTime);
 		virtual void terminate();
@@ -115,6 +123,7 @@ namespace Pegas
 		virtual GameObjectType getType() { return "Ship"; }
 		virtual void onCollisionEnter(IGameObject* other);
 		virtual void onDraw(GrafManager& graphManager);
+		virtual Vector3 getPosition() { return m_position; }
 
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
@@ -130,11 +139,11 @@ namespace Pegas
 
 		CollisionManager* m_collisionManager;
 		Vector3			  m_position;
-		Vector3			  m_direction;
-		
-		float			  m_rotation;
-		float			  m_velocity;
+		Vector3			  m_velocity;
 
+		Vector3			  m_direction;
+		float			  m_rotation;
+		
 		int32			  m_nRotation;	
 		bool			  m_bThrusted;
 		bool			  m_bFireOn;
@@ -161,6 +170,7 @@ namespace Pegas
 		virtual GameObjectType getType() { return "Explosion"; }
 		virtual void onCollisionEnter(IGameObject* other) { };
 		virtual void onDraw(GrafManager& graphManager);
+		virtual Vector3 getPosition() { return m_position; }
 
 	protected:
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
@@ -169,5 +179,5 @@ namespace Pegas
 		float m_lifeTime;
 		std::vector<Vector3> m_positions;
 		std::vector<Vector3> m_directions;
-	};
+	};	
 }

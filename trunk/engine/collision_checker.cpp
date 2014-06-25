@@ -1,94 +1,41 @@
 #include "engine.h"
 #include "collision_checker.h"
 
-/*
-void CollisionChecker::init(TileGrid* tileGrid)
-{
-	m_collisionGrid.create(tileGrid->getNumRows(), tileGrid->getNumColumns());
-	m_collisionGrid.setArea(tileGrid->getLeft(), tileGrid->getTop(), tileGrid->getWidth(), tileGrid->getLeft());
-}
-
-void CollisionChecker::destroy()
-{
-	m_collisionGrid.destroy();
-}
-
-void CollisionChecker::update(MILLISECONDS deltaTime)
-{
-	for(ProcessingListIt it = m_processingLists.begin(); it != m_processingLists.end(); ++it)
-	{
-		m_collisionGrid.placeToGrid((*it)->getPosition(), (*it));	
-	}
-
-	CollisionPairs currentCollisionPairs, removedCollisionPairs;
-
-	for(ProcessingListIt it = m_processingLists.begin(); it != m_processingLists.end(); ++it)
-	{
-		IColissionHull* subject = (*it);
-		Cell<IColissionHull*>* myCell = m_collisionGrid.getCell(subject->getPosition()); 
-		for(int32 index = 0; index <= 8; index++)
-		{
-			Cell<IColissionHull*>* cell = myCell->getSibling(index);
-			for(Cell<IColissionHull*>::ObjectListIt iit = cell->begin(); iit != cell->end(); ++iit)
-			{
-				IColissionHull* object = (*iit);
-				if(subject == object) continue;
-				
-				if(isIntersects(subject, object))
-				{
-					IColissionHull* a = max(subject, object);
-					IColissionHull* b = min(subject, object);
-
-					CollisionPair pair = std::make_pair(a, b);
-					currentCollisionPairs.insert(pair);
-					
-					if(m_prevCollisionPairs.count(pair) == 0)
-					{
-						a->onCollisionEnter(b);
-						b->onCollisionEnter(a);
-					}
-				}
-			}//for(Cell<IColissionHull*>::ObjectListIt iit = cell->begin(); iit != cell->end(); ++iit)			
-		}//for(int32 index = 0; index <= 8; index++)		
-	}//for(ProcessingListIt it = m_processingLists.begin(); it != m_processingLists.end(); ++it)
-
-	std::set_difference(m_prevCollisionPairs.begin(), m_prevCollisionPairs.end(),
-						currentCollisionPairs.begin(), currentCollisionPairs.end(),
-						std::inserter(removedCollisionPairs, removedCollisionPairs.begin()));
-
-	for(CollisionPairsIt it = removedCollisionPairs.begin(); it != removedCollisionPairs.end(); ++it)
-	{
-		IColissionHull* a =	(*it).first;
-		IColissionHull* b = (*it).second;
-
-		a->onCollisionLeave(b);
-		b->onCollisionLeave(a);
-	}
-	
-	m_prevCollisionPairs = currentCollisionPairs;
-}
-
-void CollisionChecker::addCollisionHull(IColissionHull* hull)
-{
-	m_processingLists.push_back(hull);	
-}
-
-bool CollisionChecker::isIntersects(IColissionHull* a, IColissionHull* b)
-{
-	assert(a != 0);
-	assert(b != 0);
-
-	Vector3 distance = a->getPosition() - b->getPosition();
-
-	return distance.length() <= (a->getRadius() + b->getRadius());
-}
-*/
-
 namespace Pegas
 {
 	/*********************************************************************************************************
 		CollisionManager implementation
 	**********************************************************************************************************/
+	CollisionManager::CollisionManager()
+	{
+		m_cellGrid.create(10000, 10000, 50);
+
+		m_checkers[ICollisionHull::k_typePoint][ICollisionHull::k_typePoint] = &CollisionManager::isIntersectsPointPoint;
+		m_checkers[ICollisionHull::k_typePoint][ICollisionHull::k_typeCircle] = &CollisionManager::isIntersectsPointCircle;
+		m_checkers[ICollisionHull::k_typePoint][ICollisionHull::k_typePolygon] = &CollisionManager::isIntersectsPointPolygon;
+
+		m_checkers[ICollisionHull::k_typeCircle][ICollisionHull::k_typePoint] = &CollisionManager::isIntersectsCirclePoint;
+		m_checkers[ICollisionHull::k_typeCircle][ICollisionHull::k_typeCircle] = &CollisionManager::isIntersectsCircleCircle;
+		m_checkers[ICollisionHull::k_typeCircle][ICollisionHull::k_typePolygon] = &CollisionManager::isIntersectsCirclePolygon;
+
+		m_checkers[ICollisionHull::k_typePolygon][ICollisionHull::k_typePoint] = &CollisionManager::isIntersectsPolygonPoint;
+		m_checkers[ICollisionHull::k_typePolygon][ICollisionHull::k_typeCircle] = &CollisionManager::isIntersectsPolygonCircle;
+		m_checkers[ICollisionHull::k_typePolygon][ICollisionHull::k_typePolygon] = &CollisionManager::isIntersectsPolygonPolygon;
+	}
+
+	CollisionManager::~CollisionManager()
+	{
+		m_cellGrid.destroy();
+	}
+
+	bool CollisionManager::isIntersects(ICollisionHull* a, ICollisionHull* b)
+	{
+		int32 aIndex = a->getType();
+		int32 bIndex = b->getType();
+
+		return (m_checkers[aIndex][bIndex])(a, b);
+	}
+
 	bool CollisionManager::registerPoint(int32 id, int32 group, const Vector3& position)
 	{
 		assert(id > 0);
@@ -204,7 +151,7 @@ namespace Pegas
 					int32 id_b = b->getId();
 					int32 hash = std::max(id_a, id_b) << 16 | std::min(id_a, id_b);
 
-					if(a->isIntersects(b))
+					if(isIntersects(a, b))
 					{
 						if(m_previousCollisionPairs.count(hash) > 0)
 						{
@@ -427,7 +374,7 @@ namespace Pegas
 	}
 
 	/***********************************************************************************************
-
+		PointCollisionHull class implementation
 	************************************************************************************************/
 	PointCollisionHull::PointCollisionHull(int32 id, int32 group, const Vector3& position)
 		:ICollisionHull(id, group), m_initialPosition(position), m_currentPosition(position)
@@ -450,15 +397,62 @@ namespace Pegas
 		m_currentPosition = absolute ? (m_initialPosition * mat) : (m_currentPosition * mat);
 	}
 
-	bool PointCollisionHull::isIntersects(ICollisionHull* other)
-	{
-		//TOD: add code
-		return false;
-	}
-
 	Vector3 PointCollisionHull::getPosition()
 	{
 		return m_currentPosition;
+	}
+
+	/*************************************************************************************************
+		CircleCollisionHull class imlementation
+	*************************************************************************************************/
+	CircleCollisionHull::CircleCollisionHull(int32 id, int32 group, const Vector3& position, float radius)
+		:PointCollisionHull(id, group, position), m_radius(radius)
+	{
+		
+	}
+
+	/***************************************************************************************************
+		PoligonCollisionHull class implemenation
+	****************************************************************************************************/
+	PoligonCollisionHull::PoligonCollisionHull(int32 id, int32 group, const CollisionManager::PointList& points)
+		:ICollisionHull(id, group), m_initalPoints(points.begin(), points.end()), m_currentPoints(points.begin(), points.end())
+	{
+		for(int i = 0; i < m_currentPoints.size(); i++)
+		{
+			m_currentPosition = m_currentPosition + m_currentPoints[i];
+		}
+		m_currentPosition = m_currentPosition / m_currentPoints.size();
+		m_initialPosition = m_currentPosition;
+	}
+
+	void PoligonCollisionHull::moveObject(const Vector3& offset, bool absolute)
+	{
+		for(int i = 0; i < m_currentPoints.size(); i++)
+		{
+			m_currentPoints[i] = absolute ? (m_initalPoints[i] + offset) : (m_currentPoints[i] + offset); 
+		}
+
+		m_currentPosition = absolute ? (m_initialPosition + offset) : (m_currentPosition + offset);
+	}
+
+	void PoligonCollisionHull::rotateObject(float degreesOffset, bool absolute)
+	{
+		Matrix4x4 mat;
+		
+		mat.identity();
+		mat.rotateZ(degreesOffset);
+
+		for(int i = 0; i < m_currentPoints.size(); i++)
+		{
+			m_currentPoints[i] = absolute ? (m_initalPoints[i] * mat) : (m_currentPoints[i] * mat); 
+		}
+
+		m_currentPosition = absolute ? (m_initialPosition * mat) : (m_currentPosition * mat);
+	}
+
+	Vector3 PoligonCollisionHull::getPosition()
+	{
+		return m_currentPosition; 
 	}
 }
 

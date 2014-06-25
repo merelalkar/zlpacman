@@ -30,6 +30,29 @@ namespace Pegas
 		TheEventMgr.addEventListener(this, Event_Actor_CreateBullet::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_CreateExplosion::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_Destroy::k_type);
+
+		GrafManager& graph = GrafManager::getInstance();
+		
+		const float span = 10;
+		m_worldLeft = -span;
+		m_worldRight = graph.getCanvasWidth() + span;
+		m_worldTop = -span;
+		m_worldBottom = graph.getCanvasHeight() + span;
+
+		m_worldCenter._x = graph.getCanvasWidth() / 2;
+		m_worldCenter._y = graph.getCanvasHeight() / 2; 
+
+		Vector3 direction(0.0, -1.0, 0.0);
+		
+		Ship* ship = new Ship(&m_collisionManager, m_worldCenter, direction);
+		ProcessHandle id = m_processes.attachProcess(ProcessPtr(ship));
+		m_gameObjects.insert(std::make_pair(id, ship));
+
+		EventPtr evt(new Event_Player_EnableControl());
+		TheEventMgr.pushEventToQueye(evt);
+
+		EventPtr evt2(new Event_Actor_CreateAsteroid(Vector3(50.0f, 50.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f)));
+		TheEventMgr.pushEventToQueye(evt2);
 	}
 
 	void GameManager::destroy(IPlatformContext* context)
@@ -57,12 +80,38 @@ namespace Pegas
 			o1->onCollisionEnter(o2);
 			o2->onCollisionEnter(o1);
 		}
+
+		for(std::map<ProcessHandle, IGameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
+		{
+			Vector3 position = it->second->getPosition();
+			if(!isObjectVisible(position))
+			{
+				GameObjectType got = it->second->getType();
+
+				if(got == "Asteroid" || got == "Ship")
+				{
+					int32 actorID = it->first;
+					Vector3 newPosition = getPositionToTeleport(position);
+
+					EventPtr evt(new Event_Actor_SetPoisition(actorID, newPosition));
+					TheEventMgr.pushEventToQueye(evt);
+				}
+
+				if(got == "Bullet" ||  got == "Shatter")
+				{
+					int32 actorID = it->first;
+
+					EventPtr evt(new Event_Actor_Destroy(actorID));
+					TheEventMgr.pushEventToQueye(evt);
+				}
+			}			
+		}//for(std::map<ProcessHandle, IGameObject*>::iterator it = m_gameObjects.begin();
 	}
 
 	void GameManager::render(IPlatformContext* context)
 	{
 		GrafManager& graph = GrafManager::getInstance();
-		for(std::map<ProcessHandle, IGameObject*>::iterator it; it != m_gameObjects.begin(); ++it)
+		for(std::map<ProcessHandle, IGameObject*>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end(); ++it)
 		{
 			it->second->onDraw(graph);
 		}
@@ -72,7 +121,7 @@ namespace Pegas
 	{
 		if(key == IKeyboardController::k_keyCodeUP &&  !(flags & k_keyFlagRepeat))
 		{
-			EventPtr evt(new Event_Player_Thrust());
+ 			EventPtr evt(new Event_Player_Thrust());
 			TheEventMgr.pushEventToQueye(evt);
 		}
 
@@ -177,5 +226,34 @@ namespace Pegas
 
 			return;
 		}
+	}
+
+	bool GameManager::isObjectVisible(const Vector3& position)
+	{
+		if(position._x > m_worldRight)
+			return false;
+		if(position._x < m_worldLeft)
+			return false;
+		if(position._y > m_worldBottom)
+			return false;
+		if(position._y < m_worldTop)
+			return false;
+
+		return true;
+	}
+
+	Vector3 GameManager::getPositionToTeleport(const Vector3& position)
+	{
+		Vector3 offset = position - m_worldCenter;
+		offset = offset * -1.0;
+		
+		Vector3 result;
+		do
+		{
+			result = m_worldCenter + offset;
+			offset = offset * 0.9;
+		}while(!isObjectVisible(result));
+
+		return result;
 	}
 }

@@ -1,14 +1,38 @@
 #include "stdafx.h"
 #include "game_application.h"
 
+#include "game_manager.h"
+
 namespace Pegas
 {
+	/******************************************************************************************************************
+		MainMenu
+	*******************************************************************************************************************/
 	MainMenu::MainMenu()
 		:DefaultGameState(k_stateMainMenu)
 	{
 
 	}
 
+	/************************************************************************************************************************
+		GameScreen
+	**************************************************************************************************************************/
+	GameScreen::GameScreen()
+		:DefaultGameState(k_stateGame)
+	{
+
+	}
+
+	void GameScreen::enter(IPlatformContext* context)
+	{
+		DefaultGameState::enter(context);
+
+		pushLayer(BaseScreenLayerPtr(new GameManager()));
+	}
+
+	/************************************************************************************************************************
+		GameApplication
+	*************************************************************************************************************************/
 	GameApplication::GameApplication(HINSTANCE hInstance)
 		:BaseGameApplication(hInstance)
 	{
@@ -20,6 +44,7 @@ namespace Pegas
 		BaseGameApplication::init(hWnd);
 
 		addGameState(GameStatePtr(new MainMenu()));
-		changeState(k_stateMainMenu);
+		addGameState(GameStatePtr(new GameScreen()));
+		changeState(k_stateGame);
 	}
 }
