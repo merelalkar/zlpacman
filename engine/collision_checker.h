@@ -5,43 +5,6 @@
 
 namespace Pegas
 {
-	/*
-	class IColissionHull
-	{
-	public:
-		virtual int32	getCollisionGroup() = 0;
-		virtual Vector3 getPosition() = 0;
-		virtual float	getRadius() = 0;
-		virtual void	onCollisionEnter(IColissionHull* other) {};
-		virtual void	onCollisionLeave(IColissionHull* other) {};
-	};
-
-	class CollisionChecker
-	{
-	public:
-		CollisionChecker() {}
-
-		void init(TileGrid* tileGrid);
-		void destroy();
-		void update(MILLISECONDS deltaTime);
-
-		void addCollisionHull(IColissionHull* hull);		
-
-	private:
-		bool isIntersects(IColissionHull* a, IColissionHull* b);
-		
-		typedef std::list<IColissionHull*> ProcessingList;
-		typedef ProcessingList::iterator ProcessingListIt;
-		
-		typedef std::pair<IColissionHull*, IColissionHull*> CollisionPair;
-		typedef std::set<CollisionPair> CollisionPairs;
-		typedef CollisionPairs::iterator	CollisionPairsIt;
-				
-		CellGrid<IColissionHull*> m_collisionGrid;
-		ProcessingList			  m_processingLists;
-		CollisionPairs			  m_prevCollisionPairs;	
-	};*/
-
 	class ICollisionHull
 	{
 	public:
@@ -62,7 +25,6 @@ namespace Pegas
 
 		virtual void moveObject(const Vector3& offset, bool absolute) = 0;
 		virtual void rotateObject(float degreesOffset, bool absolute) = 0;
-		virtual bool isIntersects(ICollisionHull* other)= 0;
 		virtual Vector3 getPosition() = 0;
 
 	protected:
@@ -83,6 +45,9 @@ namespace Pegas
 		typedef std::set<int32> CollisionPairsHashes;
 
 	public:
+		CollisionManager();
+		~CollisionManager();
+
 		bool registerPoint(int32 id, int32 group, const Vector3& position);
 		bool registerCircle(int32 id, int32 group, const Vector3& position, float radius);
 		bool registerPoligon(int32 id, int32 group, const PointList& points);
@@ -94,7 +59,9 @@ namespace Pegas
 		void update();
 		CollisionPairList& getCollidedPairs();
 
-	public:
+		bool isIntersects(ICollisionHull* a, ICollisionHull* b);
+
+	private:
 		static bool isIntersectsPointCircle(ICollisionHull* point, ICollisionHull* circle);
 		static bool isIntersectsCirclePoint(ICollisionHull* circle, ICollisionHull* point);
 
@@ -127,7 +94,6 @@ namespace Pegas
 
 		virtual void moveObject(const Vector3& offset, bool absolute);
 		virtual void rotateObject(float degreesOffset, bool absolute);
-		virtual bool isIntersects(ICollisionHull* other);
 		virtual Vector3 getPosition();
 
 	protected:
@@ -141,8 +107,6 @@ namespace Pegas
 		CircleCollisionHull(int32 id, int32 group, const Vector3& position, float radius);
 
 		virtual int32 getType() { return k_typeCircle; }
-		virtual bool isIntersects(ICollisionHull* other);
-
 		float getRadius() const { return m_radius; }
 
 	protected:
@@ -158,12 +122,13 @@ namespace Pegas
 
 		virtual void moveObject(const Vector3& offset, bool absolute);
 		virtual void rotateObject(float degreesOffset, bool absolute);
-		virtual bool isIntersects(ICollisionHull* other);
 		virtual Vector3 getPosition();
 		CollisionManager::PointList getPoints() const { return m_currentPoints; }
 
 	protected:
 		CollisionManager::PointList m_initalPoints;
 		CollisionManager::PointList m_currentPoints;
+		Vector3 m_initialPosition;
+		Vector3 m_currentPosition;
 	};
 }

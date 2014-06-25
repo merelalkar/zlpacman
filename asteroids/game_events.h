@@ -81,6 +81,38 @@ namespace Pegas
 		int32 _actorID;		
 	};
 
+	struct Event_Actor_Moved: public Event
+	{
+	public:
+		Event_Actor_Moved(int32 actorID, const Vector3& position)
+		{
+			_actorID = actorID;
+			_position = position;
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _actorID;
+		Vector3 _position;
+	};
+
+	struct Event_Actor_SetPoisition: public Event
+	{
+	public:
+		Event_Actor_SetPoisition(int32 actorID, const Vector3& position)
+		{
+			_actorID = actorID;
+			_position = position;
+		}
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;
+
+		int32 _actorID;
+		Vector3 _position;
+	};
+
 	/************************************************************************************
 		Player control
 	************************************************************************************/

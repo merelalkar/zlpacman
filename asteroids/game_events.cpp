@@ -9,6 +9,9 @@ namespace Pegas
 	const EventType Event_Actor_CreateExplosion::k_type = "Event_Actor_CreateExplosion";
 	const EventType Event_Actor_Destroy::k_type = "Event_Actor_Destroy";
 
+	const EventType Event_Actor_SetPoisition::k_type = "Event_Actor_SetPoisition";
+	const EventType Event_Actor_Moved::k_type = "Event_Actor_Moved";
+
 	const EventType Event_Player_EnableControl::k_type = "Event_Player_EnableControl";
 	const EventType Event_Player_DisableControl::k_type = "Event_Player_DisableControl";
 	const EventType Event_Player_RotateLeft::k_type = "Event_Player_RotateLeft";

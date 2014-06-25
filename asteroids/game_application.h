@@ -15,6 +15,13 @@ namespace Pegas
 		MainMenu();
 	};
 
+	class GameScreen: public DefaultGameState
+	{
+	public:
+		GameScreen();
+		virtual void enter(IPlatformContext* context);
+	};
+
 	class GameApplication: public BaseGameApplication
 	{
 	public:

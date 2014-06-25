@@ -25,5 +25,14 @@ namespace Pegas
 		ProcessManager m_processes;
 		CollisionManager m_collisionManager;
 		std::map<ProcessHandle, IGameObject*> m_gameObjects;
+
+		bool isObjectVisible(const Vector3& position);
+		Vector3 getPositionToTeleport(const Vector3& position);
+
+		Vector3 m_worldCenter;
+		float m_worldLeft;
+		float m_worldRight;
+		float m_worldTop;
+		float m_worldBottom;
 	};	
 }
