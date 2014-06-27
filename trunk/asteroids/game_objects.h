@@ -151,7 +151,11 @@ namespace Pegas
 
 		float			  m_lastShotTime;
 		float			  m_thrustTime;
-		int32			  m_currentFlamePhase;		
+		int32			  m_currentFlamePhase;
+
+		bool			  m_bGodMode;
+		float             m_GMBlinkTime;
+		int32			  m_GMBlinkPhase;	
 		
 		std::vector<Vector3> m_initialPoints;
 		std::vector<Vector3> m_points;

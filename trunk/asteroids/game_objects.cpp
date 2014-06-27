@@ -31,6 +31,7 @@ namespace Pegas
 
 	const float k_shotInterval = 0.1f;
 	const float k_flamePhaseTime = 0.3f;
+	const float k_blinkPhaseTime = 0.2f;
 
 	const int32 k_minExplosionParticles = 10;
 	const int32 k_maxExplosionParticles = 30;
@@ -104,12 +105,16 @@ namespace Pegas
 	{
 		Process::start(myHandle, owner);
 
-		TheEventMgr.addEventListener(this, Event_Actor_SetPoisition::k_type);
+		TheEventMgr.addEventListener(this, Event_Actor_SetPosition::k_type);
 
 		generatePoints(k_asteroidNumPoints, k_asteroidRadius, m_points);
+		
+		//m_collisionManager->registerPoligon(myHandle, k_asteroidCollisionGroup, m_points);
+		//m_collisionManager->moveObject(myHandle, m_position);
+		
 		movePoints(m_position);
 
-		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_asteroidRadius);
+		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_asteroidRadius);		
 	}
 
 	void Asteroid::update(MILLISECONDS deltaTime)
@@ -131,9 +136,9 @@ namespace Pegas
 
 	void Asteroid::handleEvent(EventPtr evt)
 	{
-		if(evt->getType() == Event_Actor_SetPoisition::k_type)
+		if(evt->getType() == Event_Actor_SetPosition::k_type)
 		{
-			Event_Actor_SetPoisition* evt2 = evt->cast<Event_Actor_SetPoisition>();
+			Event_Actor_SetPosition* evt2 = evt->cast<Event_Actor_SetPosition>();
 			if(evt2->_actorID == m_handle)
 			{
 				Vector3 offset = evt2->_position - m_position;
@@ -204,8 +209,10 @@ namespace Pegas
 			point._x = radius * cos(angle);
 			point._y = radius * sin(angle);
 
-			direction = point - m_position;
+			direction = point;
 			direction.normalize();
+
+			point = point + m_position;
 
 			angle+= angleStep;
 
@@ -226,6 +233,8 @@ namespace Pegas
 	void Shatter::start(ProcessHandle myHandle, ProcessManagerPtr owner)
 	{
 		Process::start(myHandle, owner);
+
+		TheEventMgr.addEventListener(this, Event_Actor_SetPosition::k_type);
 
 		generatePoints(k_shatterNumPoints, k_shatterRadius, m_points);
 		movePoints(m_position);
@@ -257,8 +266,8 @@ namespace Pegas
 
 	void Bullet::onCollisionEnter(IGameObject* other)
 	{
-		/*EventPtr evt(new Event_Actor_Destroy(m_handle));
-		TheEventMgr.pushEventToQueye(evt);*/
+		EventPtr evt(new Event_Actor_Destroy(m_handle));
+		TheEventMgr.pushEventToQueye(evt);
 	}
 
 	void Bullet::onDraw(GrafManager& graphManager)
@@ -280,7 +289,7 @@ namespace Pegas
 	{
 		Process::start(myHandle, owner);
 		
-		m_collisionManager->registerPoint(myHandle, k_bulletCollisionGroup, m_position);
+		m_collisionManager->registerPoint(myHandle, k_shipCollisionGroup, m_position);
 	}
 
 	void Bullet::update(MILLISECONDS deltaTime)
@@ -318,8 +327,11 @@ namespace Pegas
 		m_bThrusted = false;
 		m_bFireOn = false;
 		m_enabled = false;
+		m_bGodMode = false;
 
 		m_currentFlamePhase = 0;
+		m_GMBlinkTime = 0;
+		m_GMBlinkPhase = 0;
 	}
 
 	void Ship::transformPoints()
@@ -358,7 +370,10 @@ namespace Pegas
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Thrust::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Fire::k_type);
 		TheEventMgr.addEventListener(this, Event_Player_Stop_Rotation::k_type);
-		TheEventMgr.addEventListener(this, Event_Actor_SetPoisition::k_type);
+		TheEventMgr.addEventListener(this, Event_Actor_SetPosition::k_type);
+
+		TheEventMgr.addEventListener(this, Event_Player_EnableGodMode::k_type);
+		TheEventMgr.addEventListener(this, Event_Player_DisableGodMode::k_type);
 
 		m_initialPoints.push_back(Vector3(18.0f, 4.0f, 0.0f));
 		m_initialPoints.push_back(Vector3(7.0f, 31.0f, 0.0f));
@@ -451,6 +466,16 @@ namespace Pegas
 				TheEventMgr.pushEventToQueye(evt);
 			}
 		}
+
+		if(m_bGodMode)
+		{
+			m_GMBlinkTime+= dt;
+			if(m_GMBlinkTime >= k_blinkPhaseTime)
+			{
+				m_GMBlinkTime = 0.0f;
+				m_GMBlinkPhase = 1 - m_GMBlinkPhase;
+			}
+		}
 	}
 
 	void Ship::terminate()
@@ -521,9 +546,21 @@ namespace Pegas
 			return;
 		}
 
-		if(evt->getType() == Event_Actor_SetPoisition::k_type)
+		if(evt->getType() == Event_Player_EnableGodMode::k_type)
 		{
-			Event_Actor_SetPoisition* evt2 = evt->cast<Event_Actor_SetPoisition>();
+			m_bGodMode = true;
+			return;
+		}
+
+		if(evt->getType() == Event_Player_DisableGodMode::k_type)
+		{
+			m_bGodMode = false;
+			return;
+		}
+
+		if(evt->getType() == Event_Actor_SetPosition::k_type)
+		{
+			Event_Actor_SetPosition* evt2 = evt->cast<Event_Actor_SetPosition>();
 			if(evt2->_actorID == m_handle)
 			{
 				m_position = evt2->_position;
@@ -535,6 +572,11 @@ namespace Pegas
 
 	void Ship::onCollisionEnter(IGameObject* other)
 	{
+		if(m_bGodMode)
+		{
+			return;
+		}
+
 		if(other->getType() == "Asteroid" || other->getType() == "Shatter")
 		{
 			EventPtr evt(new Event_Actor_CreateExplosion(m_position));
@@ -547,6 +589,11 @@ namespace Pegas
 
 	void Ship::onDraw(GrafManager& graphManager)
 	{
+		if(m_bGodMode && m_GMBlinkPhase == 1)
+		{
+			return;
+		}
+
 		for(std::vector<std::pair<int32, int32> >::iterator it = m_corpusIndices.begin(); it != m_corpusIndices.end(); ++it)
 		{
 			Vector3 from = m_points[it->first];
