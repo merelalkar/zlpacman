@@ -20,7 +20,9 @@ namespace Pegas
 	GameManager::GameManager()
 		:BaseScreenLayer(_text("game screen"), k_layerGameWorld, false)
 	{
-
+		m_numAsteroids = 0;
+		m_numShatters = 0;
+		m_bDrawCollisions = false;
 	}
 
 	void GameManager::create(IPlatformContext* context)
@@ -73,8 +75,26 @@ namespace Pegas
 
 	void GameManager::createAsteroids()
 	{
-		EventPtr evt2(new Event_Actor_CreateAsteroid(Vector3(50.0f, 50.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f)));
-		TheEventMgr.pushEventToQueye(evt2);
+		const int32 numAsteroids = 8;
+
+		GrafManager& graph = GrafManager::getInstance();
+		Vector3 position, direction;
+		float angle;
+		for(int32 i = 0; i < numAsteroids; i++)
+		{
+			position._x = Math::rand(0.0f, graph.getCanvasWidth());
+			position._y = Math::rand(0.0f, graph.getCanvasHeight());
+			position._z = 0.0f;
+
+			angle = Math::rand(0.0f, Math::PI * 2.0f);
+			direction._x = cos(angle);
+			direction._y = sin(angle);
+			direction._z = 0.0f;
+			direction.normalize();
+
+			EventPtr evt(new Event_Actor_CreateAsteroid(position, direction));
+			TheEventMgr.pushEventToQueye(evt);
+		}		
 	}
 
 	void GameManager::destroy(IPlatformContext* context)
@@ -137,6 +157,11 @@ namespace Pegas
 		{
 			it->second->onDraw(graph);
 		}
+
+		if(m_bDrawCollisions)
+		{
+			m_collisionManager.debugDraw();
+		}
 	}
 
 	void GameManager::onKeyDown(KeyCode key, KeyFlags flags)
@@ -163,6 +188,11 @@ namespace Pegas
 		{
 			EventPtr evt(new Event_Player_Fire());
 			TheEventMgr.pushEventToQueye(evt);
+		}
+
+		if(key == IKeyboardController::k_keyCode_T &&  !(flags & k_keyFlagRepeat))
+		{
+			m_bDrawCollisions = (!m_bDrawCollisions);
 		}
 
 		BaseScreenLayer::onKeyDown(key, flags);
@@ -200,7 +230,9 @@ namespace Pegas
 			
 			Asteroid* asteroid = new Asteroid(&m_collisionManager, pEvent->_position, pEvent->_direction);
 			ProcessHandle id = m_processes.attachProcess(ProcessPtr(asteroid));
-			m_gameObjects.insert(std::make_pair(id, asteroid));			
+			m_gameObjects.insert(std::make_pair(id, asteroid));
+
+			m_numAsteroids++;
 			
 			return;
 		}
@@ -213,6 +245,8 @@ namespace Pegas
 			ProcessHandle id = m_processes.attachProcess(ProcessPtr(shatter));
 			m_gameObjects.insert(std::make_pair(id, shatter));
 			
+			m_numShatters++;
+
 			return;
 		}
 
@@ -254,6 +288,30 @@ namespace Pegas
 					Waiting* delayedEvent = new Waiting(3.0f);
 					delayedEvent->addFinalEvent(evt2);
 					m_processes.attachProcess(ProcessPtr(delayedEvent));
+				}
+
+				if(m_gameObjects[id]->getType() == "Asteroid")
+				{
+					m_numAsteroids--;
+					
+				}
+
+				if(m_gameObjects[id]->getType() == "Shatter")
+				{
+					m_numShatters--;
+				}
+
+				if(m_numAsteroids <= 0 && m_numShatters <= 0)
+				{
+					EventPtr evt2(new Event_Player_EnableGodMode());
+					TheEventMgr.pushEventToQueye(evt2);
+
+					EventPtr evt3(new Event_Player_DisableGodMode());
+					Waiting* delayedEvent = new Waiting(4.0f);
+					delayedEvent->addFinalEvent(evt3);
+					m_processes.attachProcess(ProcessPtr(delayedEvent));
+						
+					createAsteroids();
 				}
 			}
 			

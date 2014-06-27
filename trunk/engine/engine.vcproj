@@ -262,6 +262,14 @@
 			Name="core"
 			>
 			<File
+				RelativePath=".\math_utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\math_utils.h"
+				>
+			</File>
+			<File
 				RelativePath=".\matrix.h"
 				>
 			</File>

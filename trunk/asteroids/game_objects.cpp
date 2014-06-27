@@ -24,6 +24,7 @@ namespace Pegas
 
 	const float k_shipLinerVelocity = 2.0f;
 	const float k_shipAngleVelocity = 5.0f;
+	const float k_asteroidsSpinVelocity = 2.0f;
 	const float k_shipLinearSpeedAcceleration = 150.0f;
 	const float k_shipLinearSpeedAttenuation = 20.0f;
 
@@ -42,23 +43,7 @@ namespace Pegas
 	const float k_explosionLifeTime = 3.0f;
 
 	
-	// Generate a random number between 0 and 1
-	// return a uniform number in [0,1].
-	float unifRand()
-	{
-		return rand() / float(RAND_MAX);
-	}
 	
-	// Generate a random number in a real interval.
-	// param a one end point of the interval
-	// param b the other end of the interval
-	// return a inform rand numberin [a,b].
-	float unifRand(float a, float b)
-	{
-		return (b-a) * unifRand() + a;
-	}
-
-	const float _PI = 3.14159265f;
 
 	/********************************************************************************
 		Asteroid class implementation
@@ -68,6 +53,8 @@ namespace Pegas
 		m_collisionManager = collisionManager;
 		m_position = position;
 		m_direction = direction;
+		m_rotation = 0.0f;
+		m_spinVelosity = Math::rand(-k_asteroidsSpinVelocity, k_asteroidsSpinVelocity);
 	}
 
 	void Asteroid::generatePoints(int32 numPoints, float maxRadius, std::vector<Vector3>& points)
@@ -75,8 +62,8 @@ namespace Pegas
 		assert(numPoints > 0);
 		assert(maxRadius > 0.0f);
 
-		float angleStep = (2.0f * _PI) / numPoints;
-		float angle = unifRand(0.0f, _PI);
+		float angleStep = (2.0f * Math::PI) / numPoints;
+		float angle = Math::rand(0.0f, Math::PI);
 		float minRadius = maxRadius * 0.5f;
 
 		points.reserve(numPoints);
@@ -84,7 +71,7 @@ namespace Pegas
 		{
 			Vector3 point;
 			
-			float radius = unifRand(minRadius, maxRadius);
+			float radius = Math::rand(minRadius, maxRadius);
 			point._x = radius * cos(angle);
 			point._y = radius * sin(angle);
 
@@ -93,12 +80,24 @@ namespace Pegas
 		}
 	}
 
-	void Asteroid::movePoints(const Vector3& offset)
+	void Asteroid::transformPoints()
 	{
-		for(int32 i = 0; i < m_points.size(); i++)
+		Matrix4x4 translation, rotation, world;
+		
+		rotation.identity();
+		rotation.rotateZ(m_rotation);
+
+		translation.identity();
+		translation.translate(m_position._x, m_position._y, 0.0f);
+		
+		world = rotation * translation;
+
+		for(int32 i = 0; i < m_initialPoints.size(); i++)
 		{
-			m_points[i]= m_points[i] + offset;
+			m_points[i] = m_initialPoints[i] * world;
 		}
+
+		m_collisionManager->transformObject(m_handle, world);
 	}
 
 	void Asteroid::start(ProcessHandle myHandle, ProcessManagerPtr owner)
@@ -107,23 +106,24 @@ namespace Pegas
 
 		TheEventMgr.addEventListener(this, Event_Actor_SetPosition::k_type);
 
-		generatePoints(k_asteroidNumPoints, k_asteroidRadius, m_points);
+		generatePoints(k_asteroidNumPoints, k_asteroidRadius, m_initialPoints);
+		m_points.insert(m_points.begin(), m_initialPoints.begin(), m_initialPoints.end());
 		
-		//m_collisionManager->registerPoligon(myHandle, k_asteroidCollisionGroup, m_points);
-		//m_collisionManager->moveObject(myHandle, m_position);
+		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, 
+			Vector3(0.0f, 0.0f, 0.0f), k_asteroidRadius);
+		//m_collisionManager->registerPoligon(myHandle, k_asteroidCollisionGroup, m_initialPoints);
 		
-		movePoints(m_position);
-
-		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_asteroidRadius);		
+		transformPoints();
 	}
 
 	void Asteroid::update(MILLISECONDS deltaTime)
 	{
-		Vector3 offset = m_direction * k_asteroidVelosity * (deltaTime / 1000.0f);
+		float dt = deltaTime / 1000.0f;
+		Vector3 offset = m_direction * k_asteroidVelosity * dt;
 		m_position = m_position + offset;
+		m_rotation = m_rotation + (m_spinVelosity * dt);
 
-		movePoints(offset);
-		m_collisionManager->moveObject(m_handle, offset, false);
+		transformPoints();		
 	}
 
 	void Asteroid::terminate()
@@ -141,11 +141,8 @@ namespace Pegas
 			Event_Actor_SetPosition* evt2 = evt->cast<Event_Actor_SetPosition>();
 			if(evt2->_actorID == m_handle)
 			{
-				Vector3 offset = evt2->_position - m_position;
 				m_position = evt2->_position;
-
-				movePoints(offset);
-				m_collisionManager->moveObject(m_handle, offset, false);
+				transformPoints();
 			}
 			return;
 		}
@@ -198,14 +195,14 @@ namespace Pegas
 			numShatters = maxShatters;
 		}
 
-		float angleStep = (2.0f * _PI) / numShatters;
-		float angle = unifRand(0.0f, _PI);
+		float angleStep = (2.0f * Math::PI) / numShatters;
+		float angle = Math::rand(0.0f, Math::PI);
 		
 		for(int32 i = 0; i < numShatters; i++)
 		{
 			Vector3 point, direction;
 			
-			float radius = unifRand(0.0f, k_asteroidRadius);
+			float radius = Math::rand(0.0f, k_asteroidRadius);
 			point._x = radius * cos(angle);
 			point._y = radius * sin(angle);
 
@@ -227,7 +224,7 @@ namespace Pegas
 	Shatter::Shatter(CollisionManager* collisionManager, const Vector3& position, const Vector3& direction)
 		:Asteroid(collisionManager, position, direction)
 	{
-
+		
 	}
 
 	void Shatter::start(ProcessHandle myHandle, ProcessManagerPtr owner)
@@ -236,10 +233,12 @@ namespace Pegas
 
 		TheEventMgr.addEventListener(this, Event_Actor_SetPosition::k_type);
 
-		generatePoints(k_shatterNumPoints, k_shatterRadius, m_points);
-		movePoints(m_position);
+		generatePoints(k_shatterNumPoints, k_shatterRadius, m_initialPoints);
+		m_points.insert(m_points.begin(), m_initialPoints.begin(), m_initialPoints.end());
 
-		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, m_position, k_shatterRadius);
+		m_collisionManager->registerCircle(myHandle, k_asteroidCollisionGroup, Vector3(0.0, 0.0, 0.0), k_shatterRadius);
+		//m_collisionManager->registerPoligon(myHandle, k_asteroidCollisionGroup, m_initialPoints);
+		transformPoints();
 	}
 
 	void Shatter::onCollisionEnter(IGameObject* other)
@@ -327,7 +326,7 @@ namespace Pegas
 		m_bThrusted = false;
 		m_bFireOn = false;
 		m_enabled = false;
-		m_bGodMode = false;
+		m_bGodMode = true;
 
 		m_currentFlamePhase = 0;
 		m_GMBlinkTime = 0;
@@ -353,8 +352,9 @@ namespace Pegas
 
 		m_direction = k_shipDefaultDirection * rotation; 
 
-		m_collisionManager->rotateObject(m_handle, m_rotation);
-		m_collisionManager->moveObject(m_handle, m_position); 
+		//m_collisionManager->rotateObject(m_handle, m_rotation);
+		//m_collisionManager->moveObject(m_handle, m_position);
+		m_collisionManager->transformObject(m_handle, world);
 	}
 
 	void Ship::start(ProcessHandle myHandle, ProcessManagerPtr owner)
@@ -447,10 +447,14 @@ namespace Pegas
 		m_position = m_position + (m_velocity * dt);
 
 		if(m_nRotation == k_rotationLeft)
+		{
 			m_rotation+= k_shipAngleVelocity * dt;
+		}
 
 		if(m_nRotation == k_rotationRight)
+		{
 			m_rotation-= k_shipAngleVelocity * dt;
+		}
 
 		transformPoints();
 
@@ -633,8 +637,8 @@ namespace Pegas
 		
 		int32 numParticles = k_minExplosionParticles + rand() %  (k_maxExplosionParticles - k_minExplosionParticles);
 		
-		float angleStep = (2.0f * _PI) / numParticles;
-		float angle = unifRand(0.0f, _PI);
+		float angleStep = (2.0f * Math::PI) / numParticles;
+		float angle = Math::rand(0.0f, Math::PI);
 		
 		m_positions.reserve(numParticles);
 		m_directions.reserve(numParticles);
@@ -643,7 +647,7 @@ namespace Pegas
 		{
 			Vector3 point;
 			
-			float radius = unifRand(0.0f, k_initialExplosionRadius);
+			float radius = Math::rand(0.0f, k_initialExplosionRadius);
 			point._x = radius * cos(angle);
 			point._y = radius * sin(angle);
 

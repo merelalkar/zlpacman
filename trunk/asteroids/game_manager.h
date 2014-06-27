@@ -38,5 +38,10 @@ namespace Pegas
 		float m_worldRight;
 		float m_worldTop;
 		float m_worldBottom;
+
+		int m_numAsteroids;
+		int m_numShatters;
+
+		bool m_bDrawCollisions;
 	};	
 }

@@ -61,14 +61,16 @@ namespace Pegas
 		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
 
 		void generatePoints(int32 numPoints, float maxRadius, std::vector<Vector3>& points);
-		void movePoints(const Vector3& offset);
-
 		void createShatters();
+		void transformPoints();	
 
 		CollisionManager* m_collisionManager;
 		Vector3			  m_position;
 		Vector3			  m_direction;
+		float			  m_rotation;
+		float			  m_spinVelosity;	
 		
+		std::vector<Vector3> m_initialPoints;
 		std::vector<Vector3> m_points;
 	};
 
