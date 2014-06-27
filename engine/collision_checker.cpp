@@ -94,11 +94,14 @@ namespace Pegas
 	
 	void CollisionManager::unregisterCollisionHull(int32 id)
 	{
-		assert(m_collisionHulls.count(id) > 0);
-
-		CollisionHullPtr hull = m_collisionHulls[id];
-		m_collisionHulls.erase(id);
-		m_cellGrid.removeObject(hull.get());
+		//assert(m_collisionHulls.count(id) > 0);
+		
+		if(m_collisionHulls.count(id) > 0)
+		{
+			CollisionHullPtr hull = m_collisionHulls[id];
+			m_collisionHulls.erase(id);
+			m_cellGrid.removeObject(hull.get());
+		}
 	}
 		
 	void CollisionManager::moveObject(int32 id, const Vector3& offset, bool absolute)
@@ -146,6 +149,7 @@ namespace Pegas
 					if(closedNodes.count(b->getId()) > 0) continue;
 
 					//TODO: collision groups filter
+					if(a->getCollisionGroup() == b->getCollisionGroup()) continue;
 
 					int32 id_a = a->getId();
 					int32 id_b = b->getId();

@@ -7,9 +7,10 @@ namespace Pegas
 	const EventType Event_Actor_CreateShatter::k_type = "Event_Actor_CreateShatter";
 	const EventType Event_Actor_CreateBullet::k_type = "Event_Actor_CreateBullet";
 	const EventType Event_Actor_CreateExplosion::k_type = "Event_Actor_CreateExplosion";
+	const EventType Event_Actor_CreateShip::k_type = "Event_Actor_CreateShip";
 	const EventType Event_Actor_Destroy::k_type = "Event_Actor_Destroy";
 
-	const EventType Event_Actor_SetPoisition::k_type = "Event_Actor_SetPoisition";
+	const EventType Event_Actor_SetPosition::k_type = "Event_Actor_SetPosition";
 	const EventType Event_Actor_Moved::k_type = "Event_Actor_Moved";
 
 	const EventType Event_Player_EnableControl::k_type = "Event_Player_EnableControl";
@@ -22,4 +23,7 @@ namespace Pegas
 	const EventType Event_Player_Stop_Fire::k_type = "Event_Player_Stop_Fire";
 
 	const EventType Event_Player_Stop_Rotation::k_type = "Event_Player_Stop_Rotation";
+
+	const EventType Event_Player_EnableGodMode::k_type = "Event_Player_EnableGodMode";
+	const EventType Event_Player_DisableGodMode::k_type = "Event_Player_DisableGodMode";
 }

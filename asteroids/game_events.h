@@ -67,6 +67,15 @@ namespace Pegas
 		Vector3 _position;		
 	};
 
+	struct Event_Actor_CreateShip: public Event
+	{
+	public:
+		Event_Actor_CreateShip() {}
+		
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;				
+	};
+
 	struct Event_Actor_Destroy: public Event
 	{
 	public:
@@ -97,10 +106,10 @@ namespace Pegas
 		Vector3 _position;
 	};
 
-	struct Event_Actor_SetPoisition: public Event
+	struct Event_Actor_SetPosition: public Event
 	{
 	public:
-		Event_Actor_SetPoisition(int32 actorID, const Vector3& position)
+		Event_Actor_SetPosition(int32 actorID, const Vector3& position)
 		{
 			_actorID = actorID;
 			_position = position;
@@ -192,6 +201,24 @@ namespace Pegas
 	{
 	public:
 		Event_Player_Stop_Rotation() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_EnableGodMode: public Event
+	{
+	public:
+		Event_Player_EnableGodMode() { }
+
+		virtual EventType getType() const { return k_type; }
+		static const EventType k_type;			
+	};
+
+	struct Event_Player_DisableGodMode: public Event
+	{
+	public:
+		Event_Player_DisableGodMode() { }
 
 		virtual EventType getType() const { return k_type; }
 		static const EventType k_type;			

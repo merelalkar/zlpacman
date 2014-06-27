@@ -25,12 +25,20 @@ namespace Pegas
 
 	void GameManager::create(IPlatformContext* context)
 	{
+		TheEventMgr.addEventListener(this, Event_Actor_CreateShip::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_CreateAsteroid::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_CreateShatter::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_CreateBullet::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_CreateExplosion::k_type);
 		TheEventMgr.addEventListener(this, Event_Actor_Destroy::k_type);
+		
+		setupWorldBound();
+		createShip();
+		createAsteroids();	
+	}
 
+	void GameManager::setupWorldBound()
+	{
 		GrafManager& graph = GrafManager::getInstance();
 		
 		const float span = 10;
@@ -40,8 +48,11 @@ namespace Pegas
 		m_worldBottom = graph.getCanvasHeight() + span;
 
 		m_worldCenter._x = graph.getCanvasWidth() / 2;
-		m_worldCenter._y = graph.getCanvasHeight() / 2; 
+		m_worldCenter._y = graph.getCanvasHeight() / 2;
+	}
 
+	void GameManager::createShip()
+	{
 		Vector3 direction(0.0, -1.0, 0.0);
 		
 		Ship* ship = new Ship(&m_collisionManager, m_worldCenter, direction);
@@ -51,6 +62,17 @@ namespace Pegas
 		EventPtr evt(new Event_Player_EnableControl());
 		TheEventMgr.pushEventToQueye(evt);
 
+		EventPtr evt2(new Event_Player_EnableGodMode());
+		TheEventMgr.pushEventToQueye(evt2);
+
+		EventPtr evt3(new Event_Player_DisableGodMode());
+		Waiting* delayedEvent = new Waiting(4.0f);
+		delayedEvent->addFinalEvent(evt3);
+		m_processes.attachProcess(ProcessPtr(delayedEvent));
+	}
+
+	void GameManager::createAsteroids()
+	{
 		EventPtr evt2(new Event_Actor_CreateAsteroid(Vector3(50.0f, 50.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f)));
 		TheEventMgr.pushEventToQueye(evt2);
 	}
@@ -71,9 +93,9 @@ namespace Pegas
 		{
 			CollisionManager::CollisionPair pair = *it;
 
-			assert(m_gameObjects.count(pair.first > 0));
-			assert(m_gameObjects.count(pair.second > 0));
-			
+			assert(m_gameObjects.count(pair.first)  > 0);
+			assert(m_gameObjects.count(pair.second) > 0);
+						
 			IGameObject* o1 = m_gameObjects[pair.first];
 			IGameObject* o2 = m_gameObjects[pair.second];
 
@@ -88,16 +110,16 @@ namespace Pegas
 			{
 				GameObjectType got = it->second->getType();
 
-				if(got == "Asteroid" || got == "Ship")
+				if(got == "Asteroid" || got == "Ship" ||  got == "Shatter")
 				{
 					int32 actorID = it->first;
 					Vector3 newPosition = getPositionToTeleport(position);
 
-					EventPtr evt(new Event_Actor_SetPoisition(actorID, newPosition));
+					EventPtr evt(new Event_Actor_SetPosition(actorID, newPosition));
 					TheEventMgr.pushEventToQueye(evt);
 				}
 
-				if(got == "Bullet" ||  got == "Shatter")
+				if(got == "Bullet")
 				{
 					int32 actorID = it->first;
 
@@ -220,10 +242,30 @@ namespace Pegas
 		{
 			Event_Actor_Destroy* pEvent = evt->cast<Event_Actor_Destroy>();
 			ProcessHandle id = pEvent->_actorID;
+
+			if(m_gameObjects.count(id) > 0)
+			{
+				if(m_gameObjects[id]->getType() == "Ship")
+				{
+					//TODO: decrement life scores;
+
+					//TODO: if not zero:
+					EventPtr evt2(new Event_Actor_CreateShip());
+					Waiting* delayedEvent = new Waiting(3.0f);
+					delayedEvent->addFinalEvent(evt2);
+					m_processes.attachProcess(ProcessPtr(delayedEvent));
+				}
+			}
 			
 			m_gameObjects.erase(id);
 			m_processes.terminateProcess(id);
 
+			return;
+		}
+
+		if(evt->getType() == Event_Actor_CreateShip::k_type)
+		{
+			createShip();
 			return;
 		}
 	}

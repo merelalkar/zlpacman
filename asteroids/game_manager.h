@@ -26,6 +26,10 @@ namespace Pegas
 		CollisionManager m_collisionManager;
 		std::map<ProcessHandle, IGameObject*> m_gameObjects;
 
+		void setupWorldBound();
+		void createShip();
+		void createAsteroids();
+
 		bool isObjectVisible(const Vector3& position);
 		Vector3 getPositionToTeleport(const Vector3& position);
 
