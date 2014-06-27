@@ -25,7 +25,10 @@ namespace Pegas
 
 		virtual void moveObject(const Vector3& offset, bool absolute) = 0;
 		virtual void rotateObject(float degreesOffset, bool absolute) = 0;
+		virtual void transformObject(const Matrix4x4& m) = 0;
+
 		virtual Vector3 getPosition() = 0;
+		virtual void draw(GrafManager& graph) = 0;
 
 	protected:
 		int32 m_id;
@@ -55,11 +58,14 @@ namespace Pegas
 		
 		void moveObject(int32 id, const Vector3& offset, bool absolute = true);
 		void rotateObject(int32 id, float degreesOffset, bool absolute = true);
+		void transformObject(int32 id, const Matrix4x4& m);
 		
 		void update();
 		CollisionPairList& getCollidedPairs();
 
 		bool isIntersects(ICollisionHull* a, ICollisionHull* b);
+
+		void debugDraw();
 
 	private:
 		static bool isIntersectsPointCircle(ICollisionHull* point, ICollisionHull* circle);
@@ -94,7 +100,9 @@ namespace Pegas
 
 		virtual void moveObject(const Vector3& offset, bool absolute);
 		virtual void rotateObject(float degreesOffset, bool absolute);
+		virtual void transformObject(const Matrix4x4& m);
 		virtual Vector3 getPosition();
+		virtual void draw(GrafManager& graph) { }
 
 	protected:
 		Vector3 m_initialPosition;
@@ -108,6 +116,8 @@ namespace Pegas
 
 		virtual int32 getType() { return k_typeCircle; }
 		float getRadius() const { return m_radius; }
+		
+		virtual void draw(GrafManager& graph);
 
 	protected:
 		float m_radius;
@@ -122,8 +132,12 @@ namespace Pegas
 
 		virtual void moveObject(const Vector3& offset, bool absolute);
 		virtual void rotateObject(float degreesOffset, bool absolute);
+		virtual void transformObject(const Matrix4x4& m);
+
 		virtual Vector3 getPosition();
 		CollisionManager::PointList getPoints() const { return m_currentPoints; }
+
+		virtual void draw(GrafManager& graph);
 
 	protected:
 		CollisionManager::PointList m_initalPoints;

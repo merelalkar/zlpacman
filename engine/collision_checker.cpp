@@ -121,6 +121,15 @@ namespace Pegas
 		hull->rotateObject(degreesOffset, absolute);
 		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
 	}
+
+	void CollisionManager::transformObject(int32 id, const Matrix4x4& m)
+	{
+		assert(m_collisionHulls.count(id) > 0);
+
+		CollisionHullPtr hull = m_collisionHulls[id];
+		hull->transformObject(m);
+		m_cellGrid.placeToGrid(hull->getPosition(), hull.get());
+	}
 		
 	void CollisionManager::update()
 	{
@@ -181,6 +190,16 @@ namespace Pegas
 	CollisionManager::CollisionPairList& CollisionManager::getCollidedPairs()
 	{
 		return m_pairs;
+	}
+
+	void CollisionManager::debugDraw()
+	{
+		GrafManager& graph = GrafManager::getInstance();
+
+		for(CollisionHullMap::iterator it = m_collisionHulls.begin(); it != m_collisionHulls.end(); ++it)
+		{
+			it->second->draw(graph);
+		}
 	}
 
 
@@ -401,6 +420,11 @@ namespace Pegas
 		m_currentPosition = absolute ? (m_initialPosition * mat) : (m_currentPosition * mat);
 	}
 
+	void PointCollisionHull::transformObject(const Matrix4x4& m)
+	{
+		m_currentPosition = m_initialPosition * m;
+	}
+
 	Vector3 PointCollisionHull::getPosition()
 	{
 		return m_currentPosition;
@@ -413,6 +437,18 @@ namespace Pegas
 		:PointCollisionHull(id, group, position), m_radius(radius)
 	{
 		
+	}
+
+	void CircleCollisionHull::draw(GrafManager& graph)
+	{
+		CURCOORD left, top, width, height;
+		RGBCOLOR color = 0xffff0000;
+
+		width = height = m_radius * 2;
+		left = m_currentPosition._x - m_radius;
+		top = m_currentPosition._y - m_radius;
+
+		graph.drawEllipse(left, top, width, height, color, 0x00000000);
 	}
 
 	/***************************************************************************************************
@@ -454,9 +490,44 @@ namespace Pegas
 		m_currentPosition = absolute ? (m_initialPosition * mat) : (m_currentPosition * mat);
 	}
 
+	void PoligonCollisionHull::transformObject(const Matrix4x4& m)
+	{
+		for(int i = 0; i < m_currentPoints.size(); i++)
+		{
+			m_currentPoints[i] = m_initalPoints[i] * m; 
+		}
+
+		m_currentPosition = m_initialPosition * m;
+	}
+
 	Vector3 PoligonCollisionHull::getPosition()
 	{
 		return m_currentPosition; 
+	}
+
+	void PoligonCollisionHull::draw(GrafManager& graph)
+	{
+		CURCOORD fromX, fromY, toX, toY;
+		RGBCOLOR color = 0xffff0000;
+
+		for(int32 i = 1; i < m_currentPoints.size(); i++)
+		{
+			fromX = m_currentPoints[i - 1]._x;
+			fromY = m_currentPoints[i - 1]._y;
+			toX = m_currentPoints[i]._x;
+			toY = m_currentPoints[i]._y;
+
+			graph.drawLine(fromX, fromY, toX, toY, color);
+		}
+
+		int32 iLast = m_currentPoints.size() - 1;
+
+		fromX = m_currentPoints[0]._x;
+		fromY = m_currentPoints[0]._y;
+		toX = m_currentPoints[iLast]._x;
+		toY = m_currentPoints[iLast]._y;
+
+		graph.drawLine(fromX, fromY, toX, toY, color);
 	}
 }
 

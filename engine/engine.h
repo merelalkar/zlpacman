@@ -57,6 +57,7 @@ namespace Pegas
 
 #include "types.h"
 #include "singleton.h"
+#include "math_utils.h"
 #include "vectors.h"
 #include "matrix.h"
 #include "resource_manager.h"
