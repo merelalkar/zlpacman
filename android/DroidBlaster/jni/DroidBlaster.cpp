@@ -1,0 +1,145 @@
+/*
+ * DroidBlaster.cpp
+ *
+ *  Created on: 25.07.2014
+ *      Author: DNS
+ */
+#include "DroidBlaster.h"
+#include "Types.h"
+#include "Log.h"
+#include "TimeService.h"
+
+#include <unistd.h>
+#include <math.h>
+
+using namespace Pegas;
+
+namespace dbs
+{
+	DroidBlaster::DroidBlaster(Pegas::Context& context, android_app* app)
+		:mGraphicsService(context.mGraphicsService), mTimeService(context.mTimeService), mBackground(NULL)
+	{
+		Pegas_log_debug("DroidBlaster constructor");
+
+		Pegas::GraphicsTexture* background = mGraphicsService->registerTexture("background.png");
+		mBackground = mGraphicsService->registerSprite(background);
+
+		mShip = new Ship(&context);
+	}
+
+	DroidBlaster::~DroidBlaster()
+	{
+		Pegas_log_debug("DroidBlaster destructor");
+
+		delete mShip;
+	}
+
+	status DroidBlaster::onActivate()
+	{
+		Pegas_log_debug("DroidBlaster::onActivate");
+
+
+		if(mGraphicsService->start() != STATUS_OK)
+		{
+			return STATUS_KO;
+		}
+
+		mShip->spawn();
+
+		const int32_t FRAME_1 = 0;
+		const int32_t FRAME_NB = 8;
+
+		mBackground->setAnimation(FRAME_1, FRAME_NB, 8.0f, true);
+		mBackground->getLocation()->setPosition(mGraphicsService->getWidth() * 1.0f / 2.0f, mGraphicsService->getHeight() * 1.0f / 2.0f);
+
+		mTimeService->reset();
+
+		return STATUS_OK;
+	}
+
+	void DroidBlaster::onDeactivate()
+	{
+		Pegas_log_debug("DroidBlaster::onDeactivate");
+
+		mGraphicsService->stop();
+	}
+
+	status DroidBlaster::onStep()
+	{
+		Pegas_log_debug("DroidBlaster::onStep");
+
+		mTimeService->update();
+
+		if(mGraphicsService->update() != STATUS_OK)
+		{
+			return STATUS_KO;
+		}
+
+		return STATUS_OK;
+	}
+
+	void DroidBlaster::onStart()
+	{
+		Pegas_log_debug("DroidBlaster::onStart");
+	}
+
+	void DroidBlaster::onResume()
+	{
+		Pegas_log_debug("DroidBlaster::onResume");
+	}
+
+	void DroidBlaster::onPause()
+	{
+		Pegas_log_debug("DroidBlaster::onPause");
+	}
+
+	void DroidBlaster::onStop()
+	{
+		Pegas_log_debug("DroidBlaster::onStop");
+	}
+
+	void DroidBlaster::onDestroy()
+	{
+		Pegas_log_debug("DroidBlaster::onDestroy");
+	}
+
+	void DroidBlaster::onSaveState(void** pData, int32_t* pSize)
+	{
+		Pegas_log_debug("DroidBlaster::onSaveState");
+	}
+
+	void DroidBlaster::onConfigurationChanged()
+	{
+		Pegas_log_debug("DroidBlaster::onConfigurationChanged");
+	}
+
+	void DroidBlaster::onLowMemory()
+	{
+		Pegas_log_debug("DroidBlaster::onLowMemory");
+	}
+
+	void DroidBlaster::onCreateWindow()
+	{
+		Pegas_log_debug("DroidBlaster::onCreateWindow");
+	}
+
+	void DroidBlaster::onDestroyWindow()
+	{
+		Pegas_log_debug("DroidBlaster::onDestroyWindow");
+	}
+
+	void DroidBlaster::onGainFocus()
+	{
+		Pegas_log_debug("DroidBlaster::onGainFocus");
+	}
+
+	void DroidBlaster::onLostFocus()
+	{
+		Pegas_log_debug("DroidBlaster::onLostFocus");
+	}
+}
+
+
+
+
+
