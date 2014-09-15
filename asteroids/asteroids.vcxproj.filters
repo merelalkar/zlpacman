@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="game_logic">
+      <UniqueIdentifier>{59735af1-4761-4521-b2c1-0518e6932aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{b22de5ea-9105-46c0-813a-6ab24d6cb14a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{c7c9f162-f5c6-4865-8689-5fc5f3ed8ae2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game_events.cpp">
+      <Filter>game_logic</Filter>
+    </ClCompile>
+    <ClCompile Include="game_manager.cpp">
+      <Filter>game_logic</Filter>
+    </ClCompile>
+    <ClCompile Include="game_objects.cpp">
+      <Filter>game_logic</Filter>
+    </ClCompile>
+    <ClCompile Include="asteroids.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="game_application.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game_events.h">
+      <Filter>game_logic</Filter>
+    </ClInclude>
+    <ClInclude Include="game_manager.h">
+      <Filter>game_logic</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects.h">
+      <Filter>game_logic</Filter>
+    </ClInclude>
+    <ClInclude Include="asteroids.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="game_application.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>app</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="asteroids.ico">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="small.ico">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="asteroids.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
