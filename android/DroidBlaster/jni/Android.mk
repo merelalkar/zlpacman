@@ -1,10 +1,13 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_CFLAGS += -D GL_GLEXT_PROTOTYPES
+
+LS_CPP=$(subst $(1)/,,$(wildcard $(1)/*.cpp))
+
+LOCAL_CFLAGS += -DGL_GLEXT_PROTOTYPES
+LOCAL_CFLAGS += -DRAPIDXML_NO_EXCEPTIONS
 LOCAL_MODULE    := droidblaster
-LOCAL_SRC_FILES := Main.cpp EventLoop.cpp Log.cpp TimeService.cpp GraphicsService.cpp GraphicsTexture.cpp GraphicsSprite.cpp Resource.cpp DroidBlaster.cpp Ship.cpp
-#LOCAL_SRC_FILES := $(call LS_CPP,$(LOCAL_PATH))
+LOCAL_SRC_FILES := $(call LS_CPP,$(LOCAL_PATH))
 LOCAL_LDLIBS := -landroid -llog -lEGL -lGLESv1_CM
 LOCAL_STATIC_LIBRARIES := android_native_app_glue png
 
