@@ -50,4 +50,14 @@ namespace Pegas
 
 		return (lRead == count) ? STATUS_OK : STATUS_KO;
 	}
+
+	off_t Resource::getLength()
+	{
+		return AAsset_getLength(mAsset);
+	}
+
+	const void* Resource::bufferize()
+	{
+		return AAsset_getBuffer(mAsset);
+	}
 }

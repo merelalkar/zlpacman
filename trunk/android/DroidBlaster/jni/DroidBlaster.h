@@ -13,6 +13,7 @@
 #include "TimeService.h"
 #include "GraphicsService.h"
 #include "Context.h"
+#include "Background.h"
 #include "Ship.h"
 
 #include <android_native_app_glue.h>
@@ -48,8 +49,8 @@ namespace dbs
 	private:
 		Pegas::GraphicsService* 	mGraphicsService;
 		Pegas::TimeService*  		mTimeService;
-		Pegas::GraphicsSprite* 		mBackground;
 		Ship*  mShip;
+		Background* mBackground;
 	};
 
 }

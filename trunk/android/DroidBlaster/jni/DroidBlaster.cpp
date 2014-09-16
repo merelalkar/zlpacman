@@ -21,9 +21,7 @@ namespace dbs
 	{
 		Pegas_log_debug("DroidBlaster constructor");
 
-		Pegas::GraphicsTexture* background = mGraphicsService->registerTexture("background.png");
-		mBackground = mGraphicsService->registerSprite(background);
-
+		mBackground = new Background(&context);
 		mShip = new Ship(&context);
 	}
 
@@ -32,6 +30,7 @@ namespace dbs
 		Pegas_log_debug("DroidBlaster destructor");
 
 		delete mShip;
+		delete mBackground;
 	}
 
 	status DroidBlaster::onActivate()
@@ -44,13 +43,8 @@ namespace dbs
 			return STATUS_KO;
 		}
 
+		mBackground->spawn();
 		mShip->spawn();
-
-		const int32_t FRAME_1 = 0;
-		const int32_t FRAME_NB = 8;
-
-		mBackground->setAnimation(FRAME_1, FRAME_NB, 8.0f, true);
-		mBackground->getLocation()->setPosition(mGraphicsService->getWidth() * 1.0f / 2.0f, mGraphicsService->getHeight() * 1.0f / 2.0f);
 
 		mTimeService->reset();
 
@@ -69,6 +63,8 @@ namespace dbs
 		Pegas_log_debug("DroidBlaster::onStep");
 
 		mTimeService->update();
+
+		mBackground->update();
 
 		if(mGraphicsService->update() != STATUS_OK)
 		{

@@ -12,7 +12,6 @@
 
 namespace Pegas
 {
-
 	GraphicsService::GraphicsService(android_app* app, TimeService* timer)
 		:mApplication(app), mTimer(timer),
 		 mWidth(0), mHeight(0),
@@ -20,7 +19,8 @@ namespace Pegas
 		 mSurface(EGL_NO_SURFACE),
 		 mContext(EGL_NO_CONTEXT),
 		 mTextureCount(0),
-		 mSpriteCount(0)
+		 mSpriteCount(0),
+		 mTileMapCount(0)
 	{
 		Pegas_log_debug("GraphicsService constructor [app: %X, timer: %X]", app, timer);
 	}
@@ -42,6 +42,13 @@ namespace Pegas
 			mSprites[i] = NULL;
 		}
 		mSpriteCount = 0;
+
+		for(int32_t i = 0; i < mTileMapCount; ++i)
+		{
+			delete mTileMaps[i];
+			mTileMaps[i] = NULL;
+		}
+		mTileMapCount = 0;
 	}
 
 	GraphicsTexture* GraphicsService::registerTexture(const char* pPath)
@@ -72,6 +79,16 @@ namespace Pegas
 		return sprite;
 	}
 
+	GraphicsTileMap* GraphicsService::registerTileMap(const char* pPath, GraphicsTexture* pTexture, Location* pLocation)
+	{
+		Pegas_log_debug("GraphicsService::registerTileMap [pPath: %s, pTexture: %X, pLocation: %X]", pPath, pTexture, pLocation);
+
+		GraphicsTileMap* tileMap = new GraphicsTileMap(mApplication, pPath, pTexture, pLocation);
+		mTileMaps[mTileMapCount++] = tileMap;
+
+		return tileMap;
+	}
+
 	void GraphicsService::setup()
 	{
 		Pegas_log_debug("GraphicsService::setup");
@@ -79,6 +96,13 @@ namespace Pegas
 		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrthof(0.0f, mWidth, 0.0f, mHeight, 0.0f, 1.0f);
+
+		glMatrixMode( GL_MODELVIEW);
+		glLoadIdentity();
 	}
 
 	status GraphicsService::loadResources()
@@ -98,12 +122,22 @@ namespace Pegas
 			mSprites[i]->load();
 		}
 
+		for(int32_t i = 0; i < mTileMapCount; ++i)
+		{
+			mTileMaps[i]->load();
+		}
+
 		return STATUS_OK;
 	}
 
 	status GraphicsService::unloadResources()
 	{
 		Pegas_log_debug("GraphicsService::unloadResources");
+
+		for(int32_t i = 0; i < mTileMapCount; ++i)
+		{
+			mTileMaps[i]->unload();
+		}
 
 		for(int32_t i = 0; i < mTextureCount; ++i)
 		{
@@ -264,6 +298,11 @@ namespace Pegas
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		for (int32_t i = 0; i < mTileMapCount; ++i)
+		{
+			mTileMaps[i]->draw();
+		}
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

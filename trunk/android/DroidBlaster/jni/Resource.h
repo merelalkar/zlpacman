@@ -33,6 +33,9 @@ namespace Pegas
 		void close();
 		status read(void* buffer, size_t count);
 
+		off_t getLength();
+		const void* bufferize();
+
 	private:
 		const char* mPath;
 		AAssetManager* mAssetManager;

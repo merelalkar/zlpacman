@@ -10,6 +10,7 @@
 
 #include "GraphicsSprite.h"
 #include "GraphicsTexture.h"
+#include "GraphicsTileMap.h"
 #include "TimeService.h"
 #include "Types.h"
 
@@ -34,6 +35,7 @@ namespace Pegas
 
 		GraphicsTexture* registerTexture(const char* pPath);
 		GraphicsSprite* registerSprite(GraphicsTexture* texture, int32_t width = 0, int32_t height = 0);
+		GraphicsTileMap* registerTileMap(const char* pPath, GraphicsTexture* pTexture, Location* pLocation);
 
 	protected:
 		status loadResources();
@@ -59,6 +61,9 @@ namespace Pegas
 
 		GraphicsSprite* mSprites[256];
 		int32_t mSpriteCount;
+
+		GraphicsTileMap* mTileMaps[8];
+		int32_t mTileMapCount;
 	};
 }
 
