@@ -33,6 +33,7 @@
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}\toolchains\arm-linux-androideabi-4.8\prebuilt\windows-x86_64\lib\gcc\arm-linux-androideabi\4.8\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}\sources\android\native_app_glue&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/sources/libpng&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}\..\..\..\3dparty\rapidxml&quot;"/>
 								</option>
 								<inputType id="com.android.gcc.inputType.344403494" superClass="com.android.gcc.inputType"/>
 							</tool>
@@ -59,4 +60,5 @@
 	<storageModule moduleId="refreshScope" versionNumber="1">
 		<resource resourceType="PROJECT" workspacePath="/DroidBlaster"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
