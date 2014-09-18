@@ -5,9 +5,9 @@
  *      Author: DNS
  */
 #include "DroidBlaster.h"
-#include "../engine/Types.h"
-#include "../engine/Log.h"
-#include "../engine/TimeService.h"
+#include "Types.h"
+#include "Log.h"
+#include "TimeService.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -17,7 +17,9 @@ using namespace Pegas;
 namespace dbs
 {
 	DroidBlaster::DroidBlaster(Pegas::Context& context, android_app* app)
-		:mGraphicsService(context.mGraphicsService), mTimeService(context.mTimeService), mBackground(NULL)
+		:mGraphicsService(context.mGraphicsService),
+		 mSoundService(context.mSoundService),
+		 mTimeService(context.mTimeService), mBackground(NULL)
 	{
 		Pegas_log_debug("DroidBlaster constructor");
 
@@ -43,6 +45,11 @@ namespace dbs
 			return STATUS_KO;
 		}
 
+		if(mSoundService->start() != STATUS_OK)
+		{
+			return STATUS_KO;
+		}
+
 		mBackground->spawn();
 		mShip->spawn();
 
@@ -55,6 +62,7 @@ namespace dbs
 	{
 		Pegas_log_debug("DroidBlaster::onDeactivate");
 
+		mSoundService->stop();
 		mGraphicsService->stop();
 	}
 

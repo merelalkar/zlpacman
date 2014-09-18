@@ -29,11 +29,12 @@
 							</builder>
 							<tool id="com.android.gcc.compiler.1924202681" name="Android GCC Compiler" superClass="com.android.gcc.compiler">
 								<option id="com.android.gcc.option.includePath.1567786759" superClass="com.android.gcc.option.includePath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}\platforms\android-9\arch-arm\usr\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}\toolchains\arm-linux-androideabi-4.8\prebuilt\windows-x86_64\lib\gcc\arm-linux-androideabi\4.8\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}\sources\android\native_app_glue&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/sources/libpng&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${project_loc}\..\..\..\3dparty\rapidxml&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/platforms/android-9/arch-arm/usr/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/sources/android/native_app_glue&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8/prebuilt/windows-x86_64/lib/gcc/arm-linux-androideabi/4.8/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/../../../3dparty/rapidxml&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/platform_android&quot;"/>
 								</option>
 								<inputType id="com.android.gcc.inputType.344403494" superClass="com.android.gcc.inputType"/>
 							</tool>
