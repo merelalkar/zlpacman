@@ -5,7 +5,7 @@
  *      Author: DNS
  */
 #include "Ship.h"
-#include "../engine/Log.h"
+#include "Log.h"
 
 namespace dbs
 {

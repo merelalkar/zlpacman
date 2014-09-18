@@ -8,10 +8,10 @@
 #ifndef SHIP_H_
 #define SHIP_H_
 
-#include "../engine/Context.h"
-#include "../engine/GraphicsService.h"
-#include "../engine/GraphicsSprite.h"
-#include "../engine/Types.h"
+#include "Context.h"
+#include "GraphicsService.h"
+#include "GraphicsSprite.h"
+#include "Types.h"
 
 
 namespace dbs

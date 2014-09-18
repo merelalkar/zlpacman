@@ -8,10 +8,10 @@
 #ifndef BACKGROUND_H_
 #define BACKGROUND_H_
 
-#include "../engine/Context.h"
-#include "../engine/GraphicsService.h"
-#include "../engine/GraphicsTileMap.h"
-#include "../engine/Types.h"
+#include "Context.h"
+#include "GraphicsService.h"
+#include "GraphicsTileMap.h"
+#include "Types.h"
 
 namespace dbs
 {

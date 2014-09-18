@@ -8,11 +8,12 @@
 #ifndef DROIDBLASTER_H_
 #define DROIDBLASTER_H_
 
-#include "../engine/ActivityHandler.h"
-#include "../engine/Types.h"
-#include "../engine/TimeService.h"
-#include "../engine/GraphicsService.h"
-#include "../engine/Context.h"
+#include "ActivityHandler.h"
+#include "Types.h"
+#include "TimeService.h"
+#include "GraphicsService.h"
+#include "SoundService.h"
+#include "Context.h"
 #include "Background.h"
 #include "Ship.h"
 
@@ -48,6 +49,7 @@ namespace dbs
 
 	private:
 		Pegas::GraphicsService* 	mGraphicsService;
+		Pegas::SoundService*		mSoundService;
 		Pegas::TimeService*  		mTimeService;
 		Ship*  mShip;
 		Background* mBackground;

@@ -5,7 +5,7 @@
  *      Author: borisov.v
  */
 #include "Background.h"
-#include "../engine/Log.h"
+#include "Log.h"
 
 namespace dbs
 {
