@@ -60,4 +60,18 @@ namespace Pegas
 	{
 		return AAsset_getBuffer(mAsset);
 	}
+
+	ResourceDescriptor Resource::descript()
+	{
+		ResourceDescriptor lDescriptor = { -1, 0, 0 };
+
+		AAsset* lAsset = AAssetManager_open(mAssetManager, mPath, AASSET_MODE_UNKNOWN);
+		if (lAsset != NULL)
+		{
+			lDescriptor.mDescriptor = AAsset_openFileDescriptor(lAsset, &lDescriptor.mStart, &lDescriptor.mLength);
+			AAsset_close(lAsset);
+		}
+
+		return lDescriptor;
+	}
 }

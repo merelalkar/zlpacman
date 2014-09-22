@@ -12,6 +12,7 @@
 #include "Types.h"
 #include "TimeService.h"
 #include "GraphicsService.h"
+#include "Sound.h"
 #include "SoundService.h"
 #include "Context.h"
 #include "Background.h"
@@ -53,6 +54,7 @@ namespace dbs
 		Pegas::TimeService*  		mTimeService;
 		Ship*  mShip;
 		Background* mBackground;
+		Pegas::Sound* mStartSound;
 	};
 
 }
