@@ -1,20 +1,16 @@
-obj/local/armeabi/objs-debug/platform_android/GraphicsTileMap.o: \
- jni/platform_android/GraphicsTileMap.cpp \
- jni/platform_android/GraphicsTileMap.h jni/platform_android/Types.h \
+obj/local/armeabi/objs-debug/droidblaster/DroidBlaster.o: \
+ jni/game/DroidBlaster.cpp jni/game/DroidBlaster.h \
+ jni/game/../platform_android/ActivityHandler.h \
+ jni/game/../platform_android/Types.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/stdint.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/_types.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/machine/_types.h \
- jni/platform_android/GraphicsTexture.h jni/platform_android/Context.h \
- jni/platform_android/Resource.h \
- D:/android/android-ndk-r10b/sources/android/native_app_glue/android_native_app_glue.h \
- D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/poll.h \
+ jni/game/../platform_android/Types.h \
+ jni/game/../platform_android/TimeService.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/time.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/cdefs.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/cdefs_elf.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/android/api-level.h \
- D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/poll.h \
- D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm/poll.h \
- D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/pthread.h \
- D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/time.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/time.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/types.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/posix_types.h \
@@ -28,6 +24,16 @@ obj/local/armeabi/objs-debug/platform_android/GraphicsTileMap.o: \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/time.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm/siginfo.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm-generic/siginfo.h \
+ jni/game/../platform_android/GraphicsService.h \
+ jni/game/../platform_android/GraphicsSprite.h \
+ jni/game/../platform_android/GraphicsTexture.h \
+ jni/game/../platform_android/Context.h \
+ jni/game/../platform_android/Resource.h \
+ D:/android/android-ndk-r10b/sources/android/native_app_glue/android_native_app_glue.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/poll.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/poll.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm/poll.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/pthread.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/signal.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/limits.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/limits.h \
@@ -60,16 +66,34 @@ obj/local/armeabi/objs-debug/platform_android/GraphicsTileMap.o: \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/stdio.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/setjmp.h \
  D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/machine/setjmp.h \
- jni/platform_android/Log.h \
- D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/GLES/glext.h \
- jni/platform_android/../../../../3dparty/rapidxml/rapidxml.hpp \
- D:/android/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.6/include/cstdlib \
- D:/android/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.6/include/cassert \
- D:/android/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.6/include/new
+ jni/game/../platform_android/TimeService.h \
+ jni/game/../platform_android/GraphicsTileMap.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/EGL/egl.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/EGL/eglplatform.h \
+ jni/game/../platform_android/Sound.h \
+ jni/game/../platform_android/SoundService.h \
+ jni/game/../platform_android/Sound.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES_Platform.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES_Android.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES_AndroidConfiguration.h \
+ jni/game/../platform_android/Context.h jni/game/Background.h \
+ jni/game/../platform_android/GraphicsTileMap.h jni/game/Ship.h \
+ jni/game/../platform_android/GraphicsSprite.h \
+ jni/game/../platform_android/Log.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/unistd.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/select.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/sysconf.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/capability.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/pathconf.h \
+ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/math.h
 
-jni/platform_android/GraphicsTileMap.h:
+jni/game/DroidBlaster.h:
 
-jni/platform_android/Types.h:
+jni/game/../platform_android/ActivityHandler.h:
+
+jni/game/../platform_android/Types.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/stdint.h:
 
@@ -77,29 +101,17 @@ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/_types.
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/machine/_types.h:
 
-jni/platform_android/GraphicsTexture.h:
+jni/game/../platform_android/Types.h:
 
-jni/platform_android/Context.h:
+jni/game/../platform_android/TimeService.h:
 
-jni/platform_android/Resource.h:
-
-D:/android/android-ndk-r10b/sources/android/native_app_glue/android_native_app_glue.h:
-
-D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/poll.h:
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/time.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/cdefs.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/cdefs_elf.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/android/api-level.h:
-
-D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/poll.h:
-
-D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm/poll.h:
-
-D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/pthread.h:
-
-D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/time.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/time.h:
 
@@ -126,6 +138,26 @@ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/time.
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm/siginfo.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm-generic/siginfo.h:
+
+jni/game/../platform_android/GraphicsService.h:
+
+jni/game/../platform_android/GraphicsSprite.h:
+
+jni/game/../platform_android/GraphicsTexture.h:
+
+jni/game/../platform_android/Context.h:
+
+jni/game/../platform_android/Resource.h:
+
+D:/android/android-ndk-r10b/sources/android/native_app_glue/android_native_app_glue.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/poll.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/poll.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/asm/poll.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/pthread.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/signal.h:
 
@@ -191,14 +223,50 @@ D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/setjmp.h:
 
 D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/machine/setjmp.h:
 
-jni/platform_android/Log.h:
+jni/game/../platform_android/TimeService.h:
 
-D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/GLES/glext.h:
+jni/game/../platform_android/GraphicsTileMap.h:
 
-jni/platform_android/../../../../3dparty/rapidxml/rapidxml.hpp:
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/EGL/egl.h:
 
-D:/android/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.6/include/cstdlib:
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/EGL/eglplatform.h:
 
-D:/android/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.6/include/cassert:
+jni/game/../platform_android/Sound.h:
 
-D:/android/android-ndk-r10b/sources/cxx-stl/gnu-libstdc++/4.6/include/new:
+jni/game/../platform_android/SoundService.h:
+
+jni/game/../platform_android/Sound.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES_Platform.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES_Android.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/SLES/OpenSLES_AndroidConfiguration.h:
+
+jni/game/../platform_android/Context.h:
+
+jni/game/Background.h:
+
+jni/game/../platform_android/GraphicsTileMap.h:
+
+jni/game/Ship.h:
+
+jni/game/../platform_android/GraphicsSprite.h:
+
+jni/game/../platform_android/Log.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/unistd.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/select.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/sys/sysconf.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/linux/capability.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/pathconf.h:
+
+D:/android/android-ndk-r10b/platforms/android-9/arch-arm/usr/include/math.h:
