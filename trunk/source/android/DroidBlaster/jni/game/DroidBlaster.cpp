@@ -19,7 +19,8 @@ namespace dbs
 	DroidBlaster::DroidBlaster(Pegas::Context& context, android_app* app)
 		:mGraphicsService(context.mGraphicsService),
 		 mSoundService(context.mSoundService),
-		 mTimeService(context.mTimeService), mBackground(NULL)
+		 mTimeService(context.mTimeService), mBackground(NULL),
+		 mStartSound(mSoundService->registerSound("start.pcm"))
 	{
 		Pegas_log_debug("DroidBlaster constructor");
 
@@ -49,6 +50,9 @@ namespace dbs
 		{
 			return STATUS_KO;
 		}
+
+		mSoundService->playBackgroundMusic("bgm.mp3");
+		mSoundService->playSound(mStartSound);
 
 		mBackground->spawn();
 		mShip->spawn();

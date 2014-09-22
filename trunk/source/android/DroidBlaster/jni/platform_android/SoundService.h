@@ -9,6 +9,7 @@
 #define SOUNDSERVICE_H_
 
 #include "Types.h"
+#include "Sound.h"
 
 #include <android_native_app_glue.h>
 #include <SLES/OpenSLES.h>
@@ -21,15 +22,37 @@ namespace Pegas
 	{
 	public:
 		SoundService(android_app* app);
+		~SoundService();
 
 		status start();
 		void stop();
+
+		status playBackgroundMusic(const char* pPath);
+		void stopBackgroundMusic();
+
+		Sound* registerSound(const char* pPath);
+		status playSound(Sound* pSound);
+
+	private:
+		status startSoundPlayer();
 
 	private:
 		android_app* mApplication;
 		SLObjectItf mEngineObj;
 		SLEngineItf mEngine;
 		SLObjectItf mOutputMixObj;
+
+		//music
+		SLObjectItf mBGMPlayerObj;
+		SLPlayItf mBGMPlayer;
+		SLSeekItf mBGMPlayerSeek;
+
+		//sounds
+		SLObjectItf mPlayerObj;
+		SLPlayItf mPlayer;
+		SLBufferQueueItf mPlayerQueue;
+		Sound* mSounds[32];
+		int32_t mSoundCount;
 	};
 }
 
