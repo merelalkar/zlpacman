@@ -19,6 +19,7 @@ namespace dbs
 	DroidBlaster::DroidBlaster(Pegas::Context& context, android_app* app)
 		:mGraphicsService(context.mGraphicsService),
 		 mSoundService(context.mSoundService),
+		 mInputService(context.mInputService),
 		 mTimeService(context.mTimeService), mBackground(NULL),
 		 mStartSound(mSoundService->registerSound("start.pcm"))
 	{
@@ -46,6 +47,11 @@ namespace dbs
 			return STATUS_KO;
 		}
 
+		if(mInputService->start() != STATUS_OK)
+		{
+			return STATUS_KO;
+		}
+
 		if(mSoundService->start() != STATUS_OK)
 		{
 			return STATUS_KO;
@@ -67,6 +73,7 @@ namespace dbs
 		Pegas_log_debug("DroidBlaster::onDeactivate");
 
 		mSoundService->stop();
+		mInputService->stop();
 		mGraphicsService->stop();
 	}
 
@@ -77,6 +84,7 @@ namespace dbs
 		mTimeService->update();
 
 		mBackground->update();
+		mShip->update();
 
 		if(mGraphicsService->update() != STATUS_OK)
 		{

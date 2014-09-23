@@ -15,10 +15,12 @@ namespace Pegas
 	class TimeService;
 	class GraphicsService;
 	class SoundService;
+	class InputService;
 
 	struct Context {
 		GraphicsService* mGraphicsService;
 		SoundService*	mSoundService;
+		InputService* mInputService;
 		TimeService* mTimeService;
 	};
 }

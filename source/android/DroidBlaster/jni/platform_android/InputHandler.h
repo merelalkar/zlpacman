@@ -10,6 +10,8 @@
 
 #include "Types.h"
 
+#include <android_native_app_glue.h>
+
 namespace Pegas
 {
 	class InputHandler
