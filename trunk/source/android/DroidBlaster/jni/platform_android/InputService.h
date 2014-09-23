@@ -13,7 +13,30 @@
 
 namespace Pegas
 {
-	class InputService
+	class InputService: public InputHandler
+	{
+	public:
+		InputService(android_app* pApplication, const int32_t& pWidth, const int32_t& pHeight);
+
+		float getHorizontal();
+		float getVertical();
+		void setRefPoint(Location* pTouchReference);
+
+		status start();
+		void stop() {}
+
+	public:
+		virtual bool onTouchEvent(AInputEvent* pEvent);
+
+	private:
+		android_app* mApplication;
+		float mHorizontal;
+		float mVertical;
+
+		Location* mRefPoint;
+		const int32_t& mWidth;
+		const int32_t& mHeight;
+	};
 }
 
 #endif /* INPUTSERVICE_H_ */

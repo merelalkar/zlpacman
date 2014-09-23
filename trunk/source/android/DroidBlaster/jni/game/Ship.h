@@ -9,6 +9,8 @@
 #define SHIP_H_
 
 #include "Context.h"
+#include "InputService.h"
+#include "TimeService.h"
 #include "GraphicsService.h"
 #include "GraphicsSprite.h"
 #include "Types.h"
@@ -22,8 +24,11 @@ namespace dbs
 			Ship(Pegas::Context* context);
 
 			void spawn();
+			void update();
 
 		private:
+			Pegas::TimeService* 	mTimeService;
+			Pegas::InputService*	mInputService;
 			Pegas::GraphicsService* mGraphicsService;
 			Pegas::GraphicsSprite* mSprite;
 			float mAnimSpeed;

@@ -14,6 +14,7 @@
 #include "GraphicsService.h"
 #include "Sound.h"
 #include "SoundService.h"
+#include "InputService.h"
 #include "Context.h"
 #include "Background.h"
 #include "Ship.h"
@@ -49,6 +50,7 @@ namespace dbs
 		virtual void onLostFocus();
 
 	private:
+		Pegas::InputService*		mInputService;
 		Pegas::GraphicsService* 	mGraphicsService;
 		Pegas::SoundService*		mSoundService;
 		Pegas::TimeService*  		mTimeService;
