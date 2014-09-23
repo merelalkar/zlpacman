@@ -278,12 +278,35 @@ namespace Pegas
 		lRes = (*mPlayer)->SetPlayState(mPlayer, SL_PLAYSTATE_PLAYING);
 		if (lRes != SL_RESULT_SUCCESS) goto ERROR;
 
+		/*
+		 * Optional: registering sound event callback
+		 *
+		// Registers a callback called when sound is finished.
+		lRes = (*mPlayerQueue)->RegisterCallback(mPlayerQueue, callback_sound, this);
+		if (lRes != SL_RESULT_SUCCESS) goto ERROR;
+
+		lRes = (*mPlayer)->SetCallbackEventsMask(mPlayer, SL_PLAYEVENT_HEADATEND);
+		if (lRes != SL_RESULT_SUCCESS) goto ERROR;
+		*/
+
 		return STATUS_OK;
 
 		ERROR:
 
 		Log::error("Error while starting SoundPlayer");
 		return STATUS_KO;
+	}
+
+	void SoundService::callback_sound(SLBufferQueueItf pObject, void* pContext)
+	{
+		//!!! This is system thread. Use locks and mutexes for communicating with callbacks!
+
+		// Context can be casted back to the original type.
+		SoundService& lService = *(SoundService*)pContext;
+
+		//TODO: delegate event to listeners;
+
+		Log::info("Ended playing sound.");
 	}
 }
 
