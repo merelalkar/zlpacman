@@ -10,6 +10,7 @@
 
 #include "Types.h"
 #include "ActivityHandler.h"
+#include "InputHandler.h"
 
 #include <android_native_app_glue.h>
 
@@ -20,17 +21,21 @@ namespace Pegas
 	public:
 		EventLoop(android_app* pApplication);
 
-		void run(ActivityHandler& handler);
+		void run(ActivityHandler* pActivityHandler, InputHandler* pInputHandler);
 	protected:
 		void activate();
 		void deactivate();
 
 		void processActivityEvent(int32_t pCommand);
+		int32_t processInputEvent(AInputEvent* pEvent);
+		void processSensorEvent();
 
 	private:
-		static void activityCallBack(android_app* pApplication, int32_t pCommand);
+		static void callback_activity(android_app* pApplication, int32_t pCommand);
+		static int32_t callback_input(android_app* pApplication, AInputEvent* pEvent);
 
-		ActivityHandler*	mHandler;
+		ActivityHandler*	mActivityHandler;
+		InputHandler* 		mInputHandler;
 		android_app* 		mApplication;
 		bool		 		mEnabled;
 		bool		 		mQuit;

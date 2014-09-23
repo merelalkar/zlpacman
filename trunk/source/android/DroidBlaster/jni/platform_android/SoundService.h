@@ -35,6 +35,7 @@ namespace Pegas
 
 	private:
 		status startSoundPlayer();
+		static void callback_sound(SLBufferQueueItf pObject, void* pContext);
 
 	private:
 		android_app* mApplication;

@@ -10,16 +10,16 @@
 namespace Pegas
 {
 	EventLoop::EventLoop(android_app* pApplication)
-		:mApplication(pApplication), mHandler(NULL),
+		:mApplication(pApplication), mActivityHandler(NULL), mInputHandler(NULL),
 		 mEnabled(false), mQuit(false)
 	{
 		Pegas_log_debug("EventLoop constructor [pApplication: %X]", pApplication);
 
-		mApplication->onAppCmd = activityCallBack;
+		mApplication->onAppCmd = callback_activity;
 		mApplication->userData = this;
 	}
 
-	void EventLoop::run(ActivityHandler& handler)
+	void EventLoop::run(ActivityHandler* pActivityHandler, InputHandler* pInputHandler)
 	{
 		Pegas_log_debug("EventLoop::run");
 
@@ -29,7 +29,8 @@ namespace Pegas
 
 		app_dummy();
 
-		mHandler = &handler;
+		mActivityHandler = pActivityHandler;
+		mInputHandler = pInputHandler;
 
 		Log::info("Starting event loop");
 		while (true)
@@ -52,7 +53,7 @@ namespace Pegas
 
 			if(mEnabled && !mQuit)
 			{
-				if(mHandler->onStep() != STATUS_OK)
+				if(mActivityHandler->onStep() != STATUS_OK)
 				{
 					mQuit = true;
 					ANativeActivity_finish(mApplication->activity);
@@ -69,7 +70,7 @@ namespace Pegas
 			mQuit = false;
 			mEnabled = true;
 
-			if(mHandler->onActivate() != STATUS_OK)
+			if(mActivityHandler->onActivate() != STATUS_OK)
 			{
 				mQuit = true;
 				ANativeActivity_finish(mApplication->activity);
@@ -83,7 +84,7 @@ namespace Pegas
 
 		if(mEnabled)
 		{
-			mHandler->onDeactivate();
+			mActivityHandler->onDeactivate();
 			mEnabled = false;
 		}
 	}
@@ -95,44 +96,44 @@ namespace Pegas
 		switch(pCommand)
 		{
 		case APP_CMD_CONFIG_CHANGED:
-			mHandler->onConfigurationChanged();
+			mActivityHandler->onConfigurationChanged();
 			break;
 		case APP_CMD_INIT_WINDOW:
-			mHandler->onCreateWindow();
+			mActivityHandler->onCreateWindow();
 			break;
 		case APP_CMD_DESTROY:
-			mHandler->onDestroy();
+			mActivityHandler->onDestroy();
 			break;
 		case APP_CMD_GAINED_FOCUS:
 			activate();
-			mHandler->onGainFocus();
+			mActivityHandler->onGainFocus();
 			break;
 		case APP_CMD_LOST_FOCUS:
-			mHandler->onLostFocus();
+			mActivityHandler->onLostFocus();
 			deactivate();
 			break;
 		case APP_CMD_LOW_MEMORY:
-			mHandler->onLowMemory();
+			mActivityHandler->onLowMemory();
 			break;
 		case APP_CMD_PAUSE:
-			mHandler->onPause();
+			mActivityHandler->onPause();
 			deactivate();
 			break;
 		case APP_CMD_RESUME:
-			mHandler->onResume();
+			mActivityHandler->onResume();
 			break;
 		case APP_CMD_SAVE_STATE:
-			mHandler->onSaveState(&mApplication->savedState,
+			mActivityHandler->onSaveState(&mApplication->savedState,
 					(int32_t*)&mApplication->savedStateSize);
 			break;
 		case APP_CMD_START:
-			mHandler->onStart();
+			mActivityHandler->onStart();
 			break;
 		case APP_CMD_STOP:
-			mHandler->onStop();
+			mActivityHandler->onStop();
 			break;
 		case APP_CMD_TERM_WINDOW:
-			mHandler->onDestroyWindow();
+			mActivityHandler->onDestroyWindow();
 			deactivate();
 			break;
 		default:
@@ -140,12 +141,44 @@ namespace Pegas
 		}
 	}
 
-	void EventLoop::activityCallBack(android_app* pApplication, int32_t pCommand)
+	int32_t EventLoop::processInputEvent(AInputEvent* pEvent)
 	{
-		Pegas_log_debug("EventLoop::activityCallBack [pApplication: %X, pCommand: %d]", pApplication, pCommand);
+		int32_t lEventType = AInputEvent_getType(pEvent);
+		switch (lEventType)
+		{
+		case AINPUT_EVENT_TYPE_MOTION:
+			switch (AInputEvent_getSource(pEvent))
+			{
+			case AINPUT_SOURCE_TOUCHSCREEN:
+				return mInputHandler->onTouchEvent(pEvent);
+				break;
+			}
+			break;
+		}
+
+		return 0;
+	}
+
+	void EventLoop::processSensorEvent()
+	{
+
+	}
+
+	void EventLoop::callback_activity(android_app* pApplication, int32_t pCommand)
+	{
+		Pegas_log_debug("EventLoop::callback_activity [pApplication: %X, pCommand: %d]", pApplication, pCommand);
 
 		EventLoop* pInstance = (EventLoop*)pApplication->userData;
 		pInstance->processActivityEvent(pCommand);
+	}
+
+	int32_t EventLoop::callback_input(android_app* pApplication, AInputEvent* pEvent)
+	{
+		Pegas_log_debug("EventLoop::activityCallBack [pApplication: %X, pEvent: %d]", pApplication, pEvent);
+
+		EventLoop& lEventLoop = *(EventLoop*)pApplication->userData;
+
+		return lEventLoop.processInputEvent(pEvent);
 	}
 }
 
