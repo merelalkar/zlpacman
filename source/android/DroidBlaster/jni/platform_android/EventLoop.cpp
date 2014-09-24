@@ -16,6 +16,7 @@ namespace Pegas
 		Pegas_log_debug("EventLoop constructor [pApplication: %X]", pApplication);
 
 		mApplication->onAppCmd = callback_activity;
+		mApplication->onInputEvent = callback_input;
 		mApplication->userData = this;
 	}
 
@@ -144,17 +145,24 @@ namespace Pegas
 	int32_t EventLoop::processInputEvent(AInputEvent* pEvent)
 	{
 		int32_t lEventType = AInputEvent_getType(pEvent);
+		int32_t lEventSource = AInputEvent_getSource(pEvent);
+
 		switch (lEventType)
 		{
 		case AINPUT_EVENT_TYPE_MOTION:
-			switch (AInputEvent_getSource(pEvent))
+			switch (lEventSource)
 			{
 			case AINPUT_SOURCE_TOUCHSCREEN:
 				return mInputHandler->onTouchEvent(pEvent);
-				break;
+			case AINPUT_SOURCE_TRACKBALL:
+				return mInputHandler->onTrackballEvent(pEvent);
 			}
 			break;
+
+		case AINPUT_EVENT_TYPE_KEY:
+			return mInputHandler->onKeyboardEvent(pEvent);
 		}
+
 
 		return 0;
 	}
