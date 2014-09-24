@@ -19,6 +19,8 @@ namespace Pegas
 	public:
 		virtual ~InputHandler() {}
 		virtual bool onTouchEvent(AInputEvent* pEvent) = 0;
+		virtual bool onKeyboardEvent(AInputEvent* pEvent) = 0;
+		virtual bool onTrackballEvent(AInputEvent* pEvent) = 0;
 	};
 }
 

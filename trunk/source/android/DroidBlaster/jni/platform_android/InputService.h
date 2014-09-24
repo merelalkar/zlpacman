@@ -23,10 +23,13 @@ namespace Pegas
 		void setRefPoint(Location* pTouchReference);
 
 		status start();
+		status update();
 		void stop() {}
 
 	public:
 		virtual bool onTouchEvent(AInputEvent* pEvent);
+		virtual bool onKeyboardEvent(AInputEvent* pEvent);
+		virtual bool onTrackballEvent(AInputEvent* pEvent);
 
 	private:
 		android_app* mApplication;
@@ -36,6 +39,8 @@ namespace Pegas
 		Location* mRefPoint;
 		const int32_t& mWidth;
 		const int32_t& mHeight;
+
+		bool mMenuKey;
 	};
 }
 

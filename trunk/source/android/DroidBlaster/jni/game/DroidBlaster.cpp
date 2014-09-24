@@ -86,6 +86,11 @@ namespace dbs
 		mBackground->update();
 		mShip->update();
 
+		if(mInputService->update() != STATUS_OK)
+		{
+			return STATUS_KO;
+		}
+
 		if(mGraphicsService->update() != STATUS_OK)
 		{
 			return STATUS_KO;
