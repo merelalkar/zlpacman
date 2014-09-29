@@ -8,8 +8,12 @@
 #include "InputService.h"
 #include "DroidBlaster.h"
 
+#include "Log.h"
+
 void android_main(struct android_app* app)
 {
+	Pegas::Log::info("android_main");
+
 	Pegas::TimeService timeService;
 	Pegas::GraphicsService graphicsService(app, &timeService);
 	Pegas::SoundService soundService(app);

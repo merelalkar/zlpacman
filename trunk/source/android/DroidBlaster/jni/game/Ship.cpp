@@ -21,7 +21,7 @@ namespace dbs
 
 				Pegas::GraphicsTexture* texture = mGraphicsService->registerTexture("ship.png");
 
-				mSprite = mGraphicsService->registerSprite(texture);
+				mSprite = mGraphicsService->registerSprite(texture, 64, 64);
 				if(mSprite)
 				{
 					mInputService->setRefPoint(mSprite->getLocation());

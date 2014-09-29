@@ -57,8 +57,8 @@ namespace dbs
 			return STATUS_KO;
 		}
 
-		mSoundService->playBackgroundMusic("bgm.mp3");
-		mSoundService->playSound(mStartSound);
+		//mSoundService->playBackgroundMusic("bgm.mp3");
+		//mSoundService->playSound(mStartSound);
 
 		mBackground->spawn();
 		mShip->spawn();
