@@ -12,7 +12,7 @@
 
 void android_main(struct android_app* app)
 {
-	Pegas::Log::info("android_main");
+	Pegas_log_info("android_main [app: %X]", app);
 
 	Pegas::TimeService timeService;
 	Pegas::GraphicsService graphicsService(app, &timeService);

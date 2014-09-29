@@ -33,11 +33,14 @@ namespace Pegas
 			 mVertexCount(0), mIndexCount(0), mVertexComponents(5),
 			 mHeight(0), mWidth(0), mTileHeight(0), mTileWidth(0), mTileCount(0), mTileXCount(0)
 		{
-
+			Pegas_log_info("GraphicsTileMap constructor [pApplication: %X, pPath: %s, pTexture: %X, pLocation: %X]",
+					pApplication, pPath, pTexture, pLocation);
 		}
 
 		status GraphicsTileMap::load()
 		{
+			Pegas_log_info("GraphicsTileMap::load");
+
 			GLenum lErrorResult;
 			uint8_t* lVertexBuffer = NULL, *lIndexBuffer = NULL;
 			uint32_t lVertexBufferSize, lIndexBufferSize;
@@ -88,6 +91,8 @@ namespace Pegas
 
 		void GraphicsTileMap::unload()
 		{
+			Pegas_log_info("GraphicsTileMap::unload");
+
 			mHeight = 0, mWidth = 0;
 			mTileHeight = 0, mTileWidth = 0;
 			mTileCount = 0, mTileXCount = 0;
@@ -109,6 +114,8 @@ namespace Pegas
 
 		void GraphicsTileMap::draw()
 		{
+			Pegas_log_info_loop("GraphicsTileMap::draw");
+
 			int32_t lVertexSize = mVertexComponents * sizeof(GLfloat);
 			GLvoid* lVertexOffset = (GLvoid*) 0;
 			GLvoid* lTexCoordOffset = (GLvoid*)(sizeof(GLfloat) * 3);
@@ -140,6 +147,8 @@ namespace Pegas
 
 		int32_t* GraphicsTileMap::loadFile()
 		{
+			Pegas_log_info("GraphicsTileMap::loadFile");
+
 			using namespace rapidxml;
 
 			xml_document<> lXmlDocument;
@@ -251,6 +260,8 @@ namespace Pegas
 
 		void GraphicsTileMap::loadVertices(int32_t* pTiles, uint8_t** pVertexBuffer, uint32_t* pVertexBufferSize)
 		{
+			Pegas_log_info("GraphicsTileMap::loadVertices");
+
 			mVertexCount = mHeight * mWidth * 4;
 			*pVertexBufferSize = mVertexCount * mVertexComponents;
 
@@ -321,6 +332,8 @@ namespace Pegas
 
 		void GraphicsTileMap::loadIndexes(uint8_t** pIndexBuffer, uint32_t* pIndexBufferSize)
 		{
+			Pegas_log_info("GraphicsTileMap::loadIndexes");
+
 			mIndexCount = mHeight * mWidth * 6;
 
 			*pIndexBufferSize = mIndexCount;

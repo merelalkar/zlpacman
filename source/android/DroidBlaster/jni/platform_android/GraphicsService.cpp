@@ -22,12 +22,12 @@ namespace Pegas
 		 mSpriteCount(0),
 		 mTileMapCount(0)
 	{
-		Pegas_log_debug("GraphicsService constructor [app: %X, timer: %X]", app, timer);
+		Pegas_log_info("GraphicsService constructor [app: %X, timer: %X]", app, timer);
 	}
 
 	GraphicsService::~GraphicsService()
 	{
-		Pegas_log_debug("GraphicsService destructor");
+		Pegas_log_info("GraphicsService destructor");
 
 		for(int32_t i = 0; i < mTextureCount; ++i)
 		{
@@ -53,7 +53,7 @@ namespace Pegas
 
 	GraphicsTexture* GraphicsService::registerTexture(const char* pPath)
 	{
-		Pegas_log_debug("GraphicsService::registerTexture [pPath: %s]", pPath);
+		Pegas_log_info("GraphicsService::registerTexture [pPath: %s]", pPath);
 
 		for(int32_t i = 0; i < mTextureCount; ++i)
 		{
@@ -71,7 +71,7 @@ namespace Pegas
 
 	GraphicsSprite* GraphicsService::registerSprite(GraphicsTexture* texture, int32_t width, int32_t height)
 	{
-		Pegas_log_debug("GraphicsService::registerSprite [texture: %X, width: %d, height: %d]", texture, width, height);
+		Pegas_log_info("GraphicsService::registerSprite [texture: %X, width: %d, height: %d]", texture, width, height);
 
 		GraphicsSprite* sprite = new GraphicsSprite(texture, width, height);
 		mSprites[mSpriteCount++] = sprite;
@@ -81,7 +81,7 @@ namespace Pegas
 
 	GraphicsTileMap* GraphicsService::registerTileMap(const char* pPath, GraphicsTexture* pTexture, Location* pLocation)
 	{
-		Pegas_log_debug("GraphicsService::registerTileMap [pPath: %s, pTexture: %X, pLocation: %X]", pPath, pTexture, pLocation);
+		Pegas_log_info("GraphicsService::registerTileMap [pPath: %s, pTexture: %X, pLocation: %X]", pPath, pTexture, pLocation);
 
 		GraphicsTileMap* tileMap = new GraphicsTileMap(mApplication, pPath, pTexture, pLocation);
 		mTileMaps[mTileMapCount++] = tileMap;
@@ -91,7 +91,7 @@ namespace Pegas
 
 	void GraphicsService::setup()
 	{
-		Pegas_log_debug("GraphicsService::setup");
+		Pegas_log_info("GraphicsService::setup");
 
 		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
@@ -107,7 +107,7 @@ namespace Pegas
 
 	status GraphicsService::loadResources()
 	{
-		Pegas_log_debug("GraphicsService::loadResources");
+		Pegas_log_info("GraphicsService::loadResources");
 
 		for(int32_t i = 0; i < mTextureCount; ++i)
 		{
@@ -132,7 +132,7 @@ namespace Pegas
 
 	status GraphicsService::unloadResources()
 	{
-		Pegas_log_debug("GraphicsService::unloadResources");
+		Pegas_log_info("GraphicsService::unloadResources");
 
 		for(int32_t i = 0; i < mTileMapCount; ++i)
 		{
@@ -149,28 +149,28 @@ namespace Pegas
 
 	const char* GraphicsService::getPath()
 	{
-		Pegas_log_debug("GraphicsService::getPath");
+		Pegas_log_info("GraphicsService::getPath");
 
 		return NULL;
 	}
 
 	const int32_t& GraphicsService::getHeight()
 	{
-		Pegas_log_debug("GraphicsService::getHeight");
+		Pegas_log_info("GraphicsService::getHeight");
 
 		return mHeight;
 	}
 
 	const int32_t& GraphicsService::getWidth()
 	{
-		Pegas_log_debug("GraphicsService::getWidth");
+		Pegas_log_info("GraphicsService::getWidth");
 
 		return mWidth;
 	}
 
 	status GraphicsService::start()
 	{
-		Pegas_log_debug("GraphicsService::start");
+		Pegas_log_info("GraphicsService::start");
 
 		EGLint format, numConfig, errorResult;
 		EGLConfig config;
@@ -265,7 +265,7 @@ namespace Pegas
 
 	void GraphicsService::stop()
 	{
-		Pegas_log_debug("GraphicsService::stop");
+		Pegas_log_info("GraphicsService::stop");
 
 		unloadResources();
 
@@ -292,7 +292,7 @@ namespace Pegas
 
 	status GraphicsService::update()
 	{
-		Pegas_log_debug("GraphicsService::update");
+		Pegas_log_info_loop("GraphicsService::update");
 
 		float timeStep = mTimer->elapsed();
 
@@ -327,7 +327,7 @@ namespace Pegas
 
 	void GraphicsService::errorReport(const char* message)
 	{
-		Pegas_log_debug("GraphicsService::errorReport [message: %s]", message);
+		Pegas_log_info("GraphicsService::errorReport [message: %s]", message);
 
 		Log::error("Error on calling function: %s", message);
 		EGLint code = eglGetError();

@@ -22,6 +22,17 @@ namespace Pegas
 		va_end(args);
 	}
 
+	void Log::infoLoop(const char* pMessage, ...)
+	{
+		va_list args;
+		va_start(args, pMessage);
+
+		__android_log_vprint(ANDROID_LOG_INFO, "PEGAS_LOOP", pMessage, args);
+		__android_log_print(ANDROID_LOG_INFO, "PEGAS_LOOP",  "\n");
+
+		va_end(args);
+	}
+
 	void Log::error(const char* pMessage, ...)
 	{
 		va_list args;
@@ -33,6 +44,7 @@ namespace Pegas
 		va_end(args);
 	}
 
+
 	void Log::debug(const char* pMessage, ...)
 	{
 		va_list args;
@@ -40,6 +52,17 @@ namespace Pegas
 
 		__android_log_vprint(ANDROID_LOG_DEBUG, "PEGAS", pMessage, args);
 		__android_log_print(ANDROID_LOG_DEBUG, "PEGAS",  "\n");
+
+		va_end(args);
+	}
+
+	void Log::debugLoop(const char* pMessage, ...)
+	{
+		va_list args;
+		va_start(args, pMessage);
+
+		__android_log_vprint(ANDROID_LOG_DEBUG, "PEGAS_LOOP", pMessage, args);
+		__android_log_print(ANDROID_LOG_DEBUG, "PEGAS_LOOP",  "\n");
 
 		va_end(args);
 	}

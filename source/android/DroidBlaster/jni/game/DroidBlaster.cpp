@@ -23,7 +23,7 @@ namespace dbs
 		 mTimeService(context.mTimeService), mBackground(NULL),
 		 mStartSound(mSoundService->registerSound("start.pcm"))
 	{
-		Pegas_log_debug("DroidBlaster constructor");
+		Pegas_log_info("DroidBlaster constructor");
 
 		mBackground = new Background(&context);
 		mShip = new Ship(&context);
@@ -31,7 +31,7 @@ namespace dbs
 
 	DroidBlaster::~DroidBlaster()
 	{
-		Pegas_log_debug("DroidBlaster destructor");
+		Pegas_log_info("DroidBlaster destructor");
 
 		delete mShip;
 		delete mBackground;
@@ -39,26 +39,29 @@ namespace dbs
 
 	status DroidBlaster::onActivate()
 	{
-		Pegas_log_debug("DroidBlaster::onActivate");
+		Pegas_log_info("DroidBlaster::onActivate");
 
 
 		if(mGraphicsService->start() != STATUS_OK)
 		{
+			Pegas::Log::warn("mGraphicsService->start() != STATUS_OK");
 			return STATUS_KO;
 		}
 
 		if(mInputService->start() != STATUS_OK)
 		{
+			Pegas::Log::warn("mInputService->update() != STATUS_OK");
 			return STATUS_KO;
 		}
 
 		if(mSoundService->start() != STATUS_OK)
 		{
+			Pegas::Log::warn("mSoundService->start() != STATUS_OK");
 			return STATUS_KO;
 		}
 
-		//mSoundService->playBackgroundMusic("bgm.mp3");
-		//mSoundService->playSound(mStartSound);
+		mSoundService->playBackgroundMusic("bgm.mp3");
+		mSoundService->playSound(mStartSound);
 
 		mBackground->spawn();
 		mShip->spawn();
@@ -70,7 +73,7 @@ namespace dbs
 
 	void DroidBlaster::onDeactivate()
 	{
-		Pegas_log_debug("DroidBlaster::onDeactivate");
+		Pegas_log_info("DroidBlaster::onDeactivate");
 
 		mSoundService->stop();
 		mInputService->stop();
@@ -79,20 +82,21 @@ namespace dbs
 
 	status DroidBlaster::onStep()
 	{
-		Pegas_log_debug("DroidBlaster::onStep");
+		Pegas_log_info_loop("DroidBlaster::onStep");
 
 		mTimeService->update();
-
 		mBackground->update();
 		mShip->update();
 
 		if(mInputService->update() != STATUS_OK)
 		{
+			Pegas::Log::warn("mInputService->update() != STATUS_OK");
 			return STATUS_KO;
 		}
 
 		if(mGraphicsService->update() != STATUS_OK)
 		{
+			Pegas::Log::warn("mGraphicsService->update() != STATUS_OK");
 			return STATUS_KO;
 		}
 
@@ -101,62 +105,62 @@ namespace dbs
 
 	void DroidBlaster::onStart()
 	{
-		Pegas_log_debug("DroidBlaster::onStart");
+		Pegas_log_info("DroidBlaster::onStart");
 	}
 
 	void DroidBlaster::onResume()
 	{
-		Pegas_log_debug("DroidBlaster::onResume");
+		Pegas_log_info("DroidBlaster::onResume");
 	}
 
 	void DroidBlaster::onPause()
 	{
-		Pegas_log_debug("DroidBlaster::onPause");
+		Pegas_log_info("DroidBlaster::onPause");
 	}
 
 	void DroidBlaster::onStop()
 	{
-		Pegas_log_debug("DroidBlaster::onStop");
+		Pegas_log_info("DroidBlaster::onStop");
 	}
 
 	void DroidBlaster::onDestroy()
 	{
-		Pegas_log_debug("DroidBlaster::onDestroy");
+		Pegas_log_info("DroidBlaster::onDestroy");
 	}
 
 	void DroidBlaster::onSaveState(void** pData, int32_t* pSize)
 	{
-		Pegas_log_debug("DroidBlaster::onSaveState");
+		Pegas_log_info("DroidBlaster::onSaveState");
 	}
 
 	void DroidBlaster::onConfigurationChanged()
 	{
-		Pegas_log_debug("DroidBlaster::onConfigurationChanged");
+		Pegas_log_info("DroidBlaster::onConfigurationChanged");
 	}
 
 	void DroidBlaster::onLowMemory()
 	{
-		Pegas_log_debug("DroidBlaster::onLowMemory");
+		Pegas_log_info("DroidBlaster::onLowMemory");
 	}
 
 	void DroidBlaster::onCreateWindow()
 	{
-		Pegas_log_debug("DroidBlaster::onCreateWindow");
+		Pegas_log_info("DroidBlaster::onCreateWindow");
 	}
 
 	void DroidBlaster::onDestroyWindow()
 	{
-		Pegas_log_debug("DroidBlaster::onDestroyWindow");
+		Pegas_log_info("DroidBlaster::onDestroyWindow");
 	}
 
 	void DroidBlaster::onGainFocus()
 	{
-		Pegas_log_debug("DroidBlaster::onGainFocus");
+		Pegas_log_info("DroidBlaster::onGainFocus");
 	}
 
 	void DroidBlaster::onLostFocus()
 	{
-		Pegas_log_debug("DroidBlaster::onLostFocus");
+		Pegas_log_info("DroidBlaster::onLostFocus");
 	}
 }
 

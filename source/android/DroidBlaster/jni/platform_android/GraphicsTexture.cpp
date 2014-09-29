@@ -15,38 +15,38 @@ namespace Pegas
 		: mResource(app, path), mTextureId(0),
 		  mFormat(0), mWidth(0), mHeight(0)
 	{
-		Pegas_log_debug("GraphicsTexture constructor [app: %X, path: %s]", app, path);
+		Pegas_log_info("GraphicsTexture constructor [app: %X, path: %s]", app, path);
 	}
 
 	GraphicsTexture::~GraphicsTexture()
 	{
-		Pegas_log_debug("GraphicsTexture destructor");
+		Pegas_log_info("GraphicsTexture destructor");
 	}
 
 	int32_t GraphicsTexture::getWidth()
 	{
-		Pegas_log_debug("GraphicsTexture::getWidth");
+		Pegas_log_info("GraphicsTexture::getWidth");
 
 		return mWidth;
 	}
 
 	int32_t GraphicsTexture::getHeight()
 	{
-		Pegas_log_debug("GraphicsTexture::getHeight");
+		Pegas_log_info("GraphicsTexture::getHeight");
 
 		return mHeight;
 	}
 
 	const char* GraphicsTexture::getPath()
 	{
-		Pegas_log_debug("GraphicsTexture::getPath");
+		Pegas_log_info("GraphicsTexture::getPath");
 
 		return mResource.getPath();
 	}
 
 	status GraphicsTexture::load()
 	{
-		Pegas_log_debug("GraphicsTexture::load");
+		Pegas_log_info("GraphicsTexture::load");
 
 		uint8_t* imageBuffer = loadImage();
 		if(imageBuffer == NULL)
@@ -82,7 +82,7 @@ namespace Pegas
 
 	void GraphicsTexture::unload()
 	{
-		Pegas_log_debug("GraphicsTexture::unload");
+		Pegas_log_info("GraphicsTexture::unload");
 
 		if(mTextureId != 0)
 		{
@@ -97,7 +97,7 @@ namespace Pegas
 
 	void GraphicsTexture::apply()
 	{
-		Pegas_log_debug("GraphicsTexture::apply");
+		Pegas_log_info("GraphicsTexture::apply");
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mTextureId);
@@ -105,7 +105,7 @@ namespace Pegas
 
 	uint8_t* GraphicsTexture::loadImage()
 	{
-		Pegas_log_debug("GraphicsTexture::loadImage");
+		Pegas_log_info("GraphicsTexture::loadImage");
 
 		Resource::AutoDispose autoDispose(mResource);
 		if (mResource.open() != STATUS_OK)
@@ -222,7 +222,7 @@ namespace Pegas
 
 	void GraphicsTexture::callback_read(png_structp pStruct, png_bytep pData, png_size_t pSize)
 	{
-		Pegas_log_debug("GraphicsTexture::callback_read [pStruct: %X, pData: %X, pSize: %d]", pStruct, pData, pSize);
+		Pegas_log_info("GraphicsTexture::callback_read [pStruct: %X, pData: %X, pSize: %d]", pStruct, pData, pSize);
 
 		Resource& resourceReader = *((Resource*) (png_get_io_ptr(pStruct)));
 
