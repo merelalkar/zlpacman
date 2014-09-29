@@ -13,7 +13,7 @@ namespace Pegas
 		:mApplication(pApplication), mActivityHandler(NULL), mInputHandler(NULL),
 		 mEnabled(false), mQuit(false)
 	{
-		Pegas_log_debug("EventLoop constructor [pApplication: %X]", pApplication);
+		Pegas_log_info("EventLoop constructor [pApplication: %X]", pApplication);
 
 		mApplication->onAppCmd = callback_activity;
 		mApplication->onInputEvent = callback_input;
@@ -22,7 +22,7 @@ namespace Pegas
 
 	void EventLoop::run(ActivityHandler* pActivityHandler, InputHandler* pInputHandler)
 	{
-		Pegas_log_debug("EventLoop::run");
+		Pegas_log_info_loop("EventLoop::run [pActivityHandler: %X, pInputHandler: %X]", pActivityHandler, pInputHandler);
 
 		int32_t lResult;
 		int32_t lEvents;
@@ -33,7 +33,7 @@ namespace Pegas
 		mActivityHandler = pActivityHandler;
 		mInputHandler = pInputHandler;
 
-		Log::info("Starting event loop");
+		Pegas_log_info("Starting event loop");
 		while (true)
 		{
 			while ((lResult = ALooper_pollAll(mEnabled ? 0 : -1,
@@ -41,13 +41,13 @@ namespace Pegas
 			{
 				if (lSource != NULL)
 				{
-					Log::info("Processing an event");
+					Pegas_log_info_loop("Processing an event");
 					lSource->process(mApplication, lSource);
 				}//if (lSource != NULL)
 
 				if (mApplication->destroyRequested)
 				{
-					Log::info("Exiting event loop");
+					Pegas_log_info("Exiting event loop");
 					return;
 				}//if (mApplication->destroyRequested)
 			}//while ((lResult = ALooper_pollAll(-1, NULL, &lEvents, (void**)&lSource)) >= 0)
@@ -56,6 +56,7 @@ namespace Pegas
 			{
 				if(mActivityHandler->onStep() != STATUS_OK)
 				{
+					Pegas_log_info("Application finish");
 					mQuit = true;
 					ANativeActivity_finish(mApplication->activity);
 				}
@@ -65,14 +66,18 @@ namespace Pegas
 
 	void EventLoop::activate()
 	{
-		Pegas_log_debug("EventLoop::activate");
+		Pegas_log_info("EventLoop::activate");
 
-		if((!mEnabled) && (mApplication->window != NULL)){
+		if((!mEnabled) && (mApplication->window != NULL))
+		{
 			mQuit = false;
 			mEnabled = true;
 
 			if(mActivityHandler->onActivate() != STATUS_OK)
 			{
+				Pegas::Log::warn("mActivityHandler->onActivate() != STATUS_OK");
+				Pegas_log_info("Application finish");
+
 				mQuit = true;
 				ANativeActivity_finish(mApplication->activity);
 			}
@@ -81,7 +86,7 @@ namespace Pegas
 
 	void EventLoop::deactivate()
 	{
-		Pegas_log_debug("EventLoop::deactivate");
+		Pegas_log_info("EventLoop::deactivate");
 
 		if(mEnabled)
 		{
@@ -92,7 +97,7 @@ namespace Pegas
 
 	void EventLoop::processActivityEvent(int32_t pCommand)
 	{
-		Pegas_log_debug("EventLoop::processActivityEvent [pCommand: %d]", pCommand);
+		Pegas_log_info_loop("EventLoop::processActivityEvent [pCommand: %d]", pCommand);
 
 		switch(pCommand)
 		{
@@ -144,8 +149,12 @@ namespace Pegas
 
 	int32_t EventLoop::processInputEvent(AInputEvent* pEvent)
 	{
+		Pegas_log_info_loop("EventLoop::processInputEvent [pEvent: %d]", pEvent);
+
 		int32_t lEventType = AInputEvent_getType(pEvent);
+		Pegas_log_debug_loop("lEventType = %d [%X]", lEventType, lEventType);
 		int32_t lEventSource = AInputEvent_getSource(pEvent);
+		Pegas_log_debug_loop("lEventSource = %d [%X]", lEventSource, lEventSource);
 
 		switch (lEventType)
 		{
@@ -169,12 +178,12 @@ namespace Pegas
 
 	void EventLoop::processSensorEvent()
 	{
-
+		Pegas_log_info_loop("EventLoop::processSensorEvent");
 	}
 
 	void EventLoop::callback_activity(android_app* pApplication, int32_t pCommand)
 	{
-		Pegas_log_debug("EventLoop::callback_activity [pApplication: %X, pCommand: %d]", pApplication, pCommand);
+		Pegas_log_info_loop("EventLoop::callback_activity [pApplication: %X, pCommand: %d]", pApplication, pCommand);
 
 		EventLoop* pInstance = (EventLoop*)pApplication->userData;
 		pInstance->processActivityEvent(pCommand);
@@ -182,7 +191,7 @@ namespace Pegas
 
 	int32_t EventLoop::callback_input(android_app* pApplication, AInputEvent* pEvent)
 	{
-		Pegas_log_debug("EventLoop::activityCallBack [pApplication: %X, pEvent: %d]", pApplication, pEvent);
+		Pegas_log_info_loop("EventLoop::callback_input [pApplication: %X, pEvent: %d]", pApplication, pEvent);
 
 		EventLoop& lEventLoop = *(EventLoop*)pApplication->userData;
 

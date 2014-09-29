@@ -18,12 +18,12 @@ namespace Pegas
 		 mFrameXCount(0), mFrameYCount(0), mFrameCount(0), mAnimationStartFrame(0),
 		 mAnimFrameCount(0), mAnimSpeed(0.0f), mAnimFrame(0.0f), mAnimLoop(false)
 	{
-		Pegas_log_debug("GraphicsSprite constructor [texture: %X, width: %d, height: %d]", texture, width, height);
+		Pegas_log_info("GraphicsSprite constructor [texture: %X, width: %d, height: %d]", texture, width, height);
 	}
 
 	void GraphicsSprite::load()
 	{
-		Pegas_log_debug("GraphicsSprite::load");
+		Pegas_log_info("GraphicsSprite::load");
 
 		if(mWidth <= 0)
 		{
@@ -42,7 +42,7 @@ namespace Pegas
 
 	void GraphicsSprite::draw(float timeStep)
 	{
-		Pegas_log_debug("GraphicsSprite::draw, [timeStep: %f]", timeStep);
+		Pegas_log_info("GraphicsSprite::draw, [timeStep: %f]", timeStep);
 
 		int32_t currentFrame, currentFrameX, currentFrameY;
 		mAnimFrame += timeStep * mAnimSpeed;
@@ -71,7 +71,7 @@ namespace Pegas
 
 	void GraphicsSprite::setAnimation(int32_t startFrame, int32_t frameCount, float speed, bool loop)
 	{
-		Pegas_log_debug("GraphicsSprite::setAnimation [startFrame: %d, frameCount %d, speed: %f, loop: %d]", startFrame, frameCount, speed, loop);
+		Pegas_log_info("GraphicsSprite::setAnimation [startFrame: %d, frameCount %d, speed: %f, loop: %d]", startFrame, frameCount, speed, loop);
 
 		mAnimationStartFrame = startFrame;
 		mAnimFrame = 0.0f;
@@ -84,7 +84,7 @@ namespace Pegas
 
 	bool GraphicsSprite::isAnimationComplete()
 	{
-		Pegas_log_debug("GraphicsSprite::isAnimationComplete");
+		Pegas_log_info("GraphicsSprite::isAnimationComplete");
 
 		return mAnimFrame > (mAnimFrameCount - 1);
 	}
