@@ -10,13 +10,14 @@
 
 #include "Types.h"
 #include "InputHandler.h"
+#include "Sensor.h"
 
 namespace Pegas
 {
 	class InputService: public InputHandler
 	{
 	public:
-		InputService(android_app* pApplication, const int32_t& pWidth, const int32_t& pHeight);
+		InputService(android_app* pApplication, Sensor* pAccelerometer, const int32_t& pWidth, const int32_t& pHeight);
 
 		float getHorizontal();
 		float getVertical();
@@ -24,12 +25,13 @@ namespace Pegas
 
 		status start();
 		status update();
-		void stop() {}
+		void stop();
 
 	public:
 		virtual bool onTouchEvent(AInputEvent* pEvent);
 		virtual bool onKeyboardEvent(AInputEvent* pEvent);
 		virtual bool onTrackballEvent(AInputEvent* pEvent);
+		virtual bool onAccelerometerEvent(ASensorEvent* pEvent);
 
 	private:
 		android_app* mApplication;
@@ -41,6 +43,8 @@ namespace Pegas
 		const int32_t& mHeight;
 
 		bool mMenuKey;
+
+		Sensor* mAccelerometer;
 	};
 }
 

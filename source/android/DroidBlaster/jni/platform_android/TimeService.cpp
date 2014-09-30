@@ -18,7 +18,6 @@ namespace Pegas
 
 	void TimeService::reset()
 	{
-		Log::info("TimeServise::reset()");
 		mElapsed = 0.0f;
 		mLastTime = now();
 	}

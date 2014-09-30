@@ -31,8 +31,13 @@ namespace Pegas
 		void processSensorEvent();
 
 	private:
+		friend class Sensor;
+
 		static void callback_activity(android_app* pApplication, int32_t pCommand);
 		static int32_t callback_input(android_app* pApplication, AInputEvent* pEvent);
+		static void callback_sensor(android_app* pApplication, android_poll_source* pSource);
+
+	private:
 
 		ActivityHandler*	mActivityHandler;
 		InputHandler* 		mInputHandler;
@@ -40,6 +45,9 @@ namespace Pegas
 		bool		 		mEnabled;
 		bool		 		mQuit;
 
+		ASensorManager* mSensorManager;
+		ASensorEventQueue* mSensorEventQueue;
+		android_poll_source mSensorPollSource;
 	};
 }
 

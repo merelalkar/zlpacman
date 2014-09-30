@@ -44,24 +44,30 @@ namespace dbs
 
 		if(mGraphicsService->start() != STATUS_OK)
 		{
-			Pegas::Log::warn("mGraphicsService->start() != STATUS_OK");
+			Pegas_log_warning("DroidBlaster::onActivate:");
+			Pegas_log_warning("mGraphicsService->start() != STATUS_OK");
+
 			return STATUS_KO;
 		}
 
 		if(mInputService->start() != STATUS_OK)
 		{
-			Pegas::Log::warn("mInputService->update() != STATUS_OK");
+			Pegas_log_warning("DroidBlaster::onActivate:");
+			Pegas_log_warning("mInputService->update() != STATUS_OK");
+
 			return STATUS_KO;
 		}
 
 		if(mSoundService->start() != STATUS_OK)
 		{
-			Pegas::Log::warn("mSoundService->start() != STATUS_OK");
+			Pegas_log_warning("DroidBlaster::onActivate:");
+			Pegas_log_warning("mSoundService->start() != STATUS_OK");
+
 			return STATUS_KO;
 		}
 
-		mSoundService->playBackgroundMusic("bgm.mp3");
-		mSoundService->playSound(mStartSound);
+		//mSoundService->playBackgroundMusic("bgm.mp3");
+		//mSoundService->playSound(mStartSound);
 
 		mBackground->spawn();
 		mShip->spawn();
@@ -90,13 +96,17 @@ namespace dbs
 
 		if(mInputService->update() != STATUS_OK)
 		{
-			Pegas::Log::warn("mInputService->update() != STATUS_OK");
+			Pegas_log_warning("DroidBlaster::onStep:");
+			Pegas_log_warning("mInputService->update() != STATUS_OK");
+
 			return STATUS_KO;
 		}
 
 		if(mGraphicsService->update() != STATUS_OK)
 		{
-			Pegas::Log::warn("mGraphicsService->update() != STATUS_OK");
+			Pegas_log_warning("DroidBlaster::onStep:");
+			Pegas_log_warning("mGraphicsService->update() != STATUS_OK");
+
 			return STATUS_KO;
 		}
 

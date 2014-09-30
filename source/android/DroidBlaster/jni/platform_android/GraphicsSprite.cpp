@@ -42,7 +42,7 @@ namespace Pegas
 
 	void GraphicsSprite::draw(float timeStep)
 	{
-		Pegas_log_info("GraphicsSprite::draw, [timeStep: %f]", timeStep);
+		Pegas_log_info_loop("GraphicsSprite::draw, [timeStep: %f]", timeStep);
 
 		int32_t currentFrame, currentFrameX, currentFrameY;
 		mAnimFrame += timeStep * mAnimSpeed;
@@ -84,7 +84,7 @@ namespace Pegas
 
 	bool GraphicsSprite::isAnimationComplete()
 	{
-		Pegas_log_info("GraphicsSprite::isAnimationComplete");
+		Pegas_log_info_loop("GraphicsSprite::isAnimationComplete");
 
 		return mAnimFrame > (mAnimFrameCount - 1);
 	}
