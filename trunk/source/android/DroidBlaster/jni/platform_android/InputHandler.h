@@ -11,6 +11,8 @@
 #include "Types.h"
 
 #include <android_native_app_glue.h>
+#include <android/input.h>
+#include <android/sensor.h>
 
 namespace Pegas
 {
@@ -21,6 +23,7 @@ namespace Pegas
 		virtual bool onTouchEvent(AInputEvent* pEvent) = 0;
 		virtual bool onKeyboardEvent(AInputEvent* pEvent) = 0;
 		virtual bool onTrackballEvent(AInputEvent* pEvent) = 0;
+		virtual bool onAccelerometerEvent(ASensorEvent* pEvent) = 0;
 	};
 }
 

@@ -37,7 +37,7 @@ namespace Pegas
 
 		if (lRes != STATUS_OK)
 		{
-			Log::error("Error while reading PCM sound.");
+			Pegas_log_error("Error while reading PCM sound.");
 			return STATUS_KO;
 		}
 

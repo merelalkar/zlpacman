@@ -54,17 +54,22 @@ namespace Pegas
 	GraphicsTexture* GraphicsService::registerTexture(const char* pPath)
 	{
 		Pegas_log_info("GraphicsService::registerTexture [pPath: %s]", pPath);
+		Pegas_log_debug("mTextures = %X", mTextures);
+		Pegas_log_debug("mTextureCount = %d", mTextureCount);
 
 		for(int32_t i = 0; i < mTextureCount; ++i)
 		{
 			if(strcmp(pPath, mTextures[i]->getPath()) == 0)
 			{
+				Pegas_log_debug("return mTextures[%d]", i);
 				return mTextures[i];
 			}
 		}
 
 		GraphicsTexture* texture = new GraphicsTexture(mApplication, pPath);
 		mTextures[mTextureCount++] = texture;
+		Pegas_log_debug("result = %X", texture);
+		Pegas_log_debug("mTextureCount = %d", mTextureCount);
 
 		return texture;
 	}
@@ -72,9 +77,14 @@ namespace Pegas
 	GraphicsSprite* GraphicsService::registerSprite(GraphicsTexture* texture, int32_t width, int32_t height)
 	{
 		Pegas_log_info("GraphicsService::registerSprite [texture: %X, width: %d, height: %d]", texture, width, height);
+		Pegas_log_debug("mSprites = %X", mSprites);
+		Pegas_log_debug("mSpriteCount = %d", mSpriteCount);
 
 		GraphicsSprite* sprite = new GraphicsSprite(texture, width, height);
 		mSprites[mSpriteCount++] = sprite;
+
+		Pegas_log_debug("result = %X", sprite);
+		Pegas_log_debug("mSpriteCount = %d", mSpriteCount);
 
 		return sprite;
 	}
@@ -82,9 +92,14 @@ namespace Pegas
 	GraphicsTileMap* GraphicsService::registerTileMap(const char* pPath, GraphicsTexture* pTexture, Location* pLocation)
 	{
 		Pegas_log_info("GraphicsService::registerTileMap [pPath: %s, pTexture: %X, pLocation: %X]", pPath, pTexture, pLocation);
+		Pegas_log_debug("mTileMaps = %X", mTileMaps);
+		Pegas_log_debug("mTileMapCount = %d", mTileMapCount);
 
 		GraphicsTileMap* tileMap = new GraphicsTileMap(mApplication, pPath, pTexture, pLocation);
 		mTileMaps[mTileMapCount++] = tileMap;
+
+		Pegas_log_debug("result = %X", tileMap);
+		Pegas_log_debug("mTileMapCount = %d", mTileMapCount);
 
 		return tileMap;
 	}
@@ -113,6 +128,9 @@ namespace Pegas
 		{
 			if(mTextures[i]->load() != STATUS_OK)
 			{
+				Pegas_log_warning("GraphicsService::loadResources:");
+				Pegas_log_warning("mTextures[%d]->load() != STATUS_OK", i);
+
 				return STATUS_KO;
 			}
 		}
@@ -186,6 +204,9 @@ namespace Pegas
 		mDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 		if(mDisplay == EGL_NO_DISPLAY)
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("mDisplay == EGL_NO_DISPLAY");
+
 			errorReport("eglGetDisplay");
 			stop();
 
@@ -194,6 +215,10 @@ namespace Pegas
 
 		if(!eglInitialize(mDisplay, NULL, NULL))
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("!eglInitialize");
+			Pegas_log_warning("mDisplay = %d [%X]", mDisplay, mDisplay);
+
 			errorReport("eglInitialize");
 			stop();
 
@@ -202,6 +227,10 @@ namespace Pegas
 
 		if(!eglChooseConfig(mDisplay, attributes, &config, 1, &numConfig))
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("!eglChooseConfig");
+			Pegas_log_warning("mDisplay = %d [%X]", mDisplay, mDisplay);
+
 			errorReport("eglChooseConfig");
 			stop();
 
@@ -210,6 +239,11 @@ namespace Pegas
 
 		if(!eglGetConfigAttrib(mDisplay, config, EGL_NATIVE_VISUAL_ID, &format))
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("!eglGetConfigAttrib");
+			Pegas_log_warning("mDisplay = %d [%X]", mDisplay, mDisplay);
+			Pegas_log_warning("config = %d [%X]", config, config);
+
 			errorReport("eglGetConfigAttrib");
 			stop();
 
@@ -221,6 +255,12 @@ namespace Pegas
 		mSurface = eglCreateWindowSurface(mDisplay, config, mApplication->window, NULL);
 		if(mSurface == EGL_NO_SURFACE)
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("eglCreateWindowSurface == EGL_NO_SURFACE");
+			Pegas_log_warning("mDisplay = %d [%X]", mDisplay, mDisplay);
+			Pegas_log_warning("config = %d [%X]", config, config);
+			Pegas_log_warning("mApplication->window = %X", mApplication->window);
+
 			errorReport("eglCreateWindowSurface");
 			stop();
 
@@ -230,6 +270,11 @@ namespace Pegas
 		mContext = eglCreateContext(mDisplay, config, EGL_NO_CONTEXT, NULL);
 		if(mContext == EGL_NO_CONTEXT)
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("eglCreateContext == EGL_NO_CONTEXT");
+			Pegas_log_warning("mDisplay = %d [%X]", mDisplay, mDisplay);
+			Pegas_log_warning("config = %d [%X]", config, config);
+
 			errorReport("eglCreateContext");
 			stop();
 
@@ -242,6 +287,14 @@ namespace Pegas
 		if(!makeCurrent || !querySurfaceWidth || !querySurfaceHeight
 				|| (mWidth <= 0) ||  (mHeight <= 0))
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("makeCurrent = %d", makeCurrent);
+			Pegas_log_warning("querySurfaceWidth = %d", querySurfaceWidth);
+			Pegas_log_warning("querySurfaceHeight = %d", querySurfaceHeight);
+			Pegas_log_warning("mWidth = %d", mWidth);
+			Pegas_log_warning("mHeight = %d", mHeight);
+
+
 			errorReport("eglMakeCurrent or eglQuerySurface");
 			stop();
 
@@ -252,6 +305,9 @@ namespace Pegas
 
 		if(loadResources() != STATUS_OK)
 		{
+			Pegas_log_warning("GraphicsService::start:");
+			Pegas_log_warning("loadResources() != STATUS_OK");
+
 			errorReport("loadResources");
 			stop();
 
@@ -314,6 +370,11 @@ namespace Pegas
 
 		if(!eglSwapBuffers(mDisplay, mSurface))
 		{
+			Pegas_log_warning("GraphicsService::update:");
+			Pegas_log_warning("!eglSwapBuffers");
+			Pegas_log_warning("mDisplay = %d [%X]", mDisplay, mDisplay);
+			Pegas_log_warning("mSurface = %d [%X]", mSurface, mSurface);
+
 			errorReport("eglSwapBuffers");
 			stop();
 
@@ -329,52 +390,52 @@ namespace Pegas
 	{
 		Pegas_log_info("GraphicsService::errorReport [message: %s]", message);
 
-		Log::error("Error on calling function: %s", message);
+		Pegas_log_error("Error on calling function: %s", message);
 		EGLint code = eglGetError();
 
 		switch(code)
 		{
 		case EGL_NOT_INITIALIZED:
-			Log::error("Error code: EGL_NOT_INITIALIZED");
+			Pegas_log_error("Error code: EGL_NOT_INITIALIZED");
 			break;
 		case EGL_BAD_ACCESS:
-			Log::error("Error code: EGL_BAD_ACCESS");
+			Pegas_log_error("Error code: EGL_BAD_ACCESS");
 			break;
 		case EGL_BAD_ALLOC:
-			Log::error("Error code: EGL_BAD_ALLOC");
+			Pegas_log_error("Error code: EGL_BAD_ALLOC");
 			break;
 		case EGL_BAD_ATTRIBUTE:
-			Log::error("Error code: EGL_BAD_ATTRIBUTE");
+			Pegas_log_error("Error code: EGL_BAD_ATTRIBUTE");
 			break;
 		case EGL_BAD_CONFIG:
-			Log::error("Error code: EGL_BAD_CONFIG");
+			Pegas_log_error("Error code: EGL_BAD_CONFIG");
 			break;
 		case EGL_BAD_CONTEXT:
-			Log::error("Error code: EGL_BAD_CONTEXT");
+			Pegas_log_error("Error code: EGL_BAD_CONTEXT");
 			break;
 		case EGL_BAD_CURRENT_SURFACE:
-			Log::error("Error code: EGL_BAD_CURRENT_SURFACE");
+			Pegas_log_error("Error code: EGL_BAD_CURRENT_SURFACE");
 			break;
 		case EGL_BAD_DISPLAY:
-			Log::error("Error code: EGL_BAD_DISPLAY");
+			Pegas_log_error("Error code: EGL_BAD_DISPLAY");
 			break;
 		case EGL_BAD_MATCH:
-			Log::error("Error code: EGL_BAD_MATCH");
+			Pegas_log_error("Error code: EGL_BAD_MATCH");
 			break;
 		case EGL_BAD_NATIVE_PIXMAP:
-			Log::error("Error code: EGL_BAD_NATIVE_PIXMAP");
+			Pegas_log_error("Error code: EGL_BAD_NATIVE_PIXMAP");
 			break;
 		case EGL_BAD_NATIVE_WINDOW:
-			Log::error("Error code: EGL_BAD_NATIVE_WINDOW");
+			Pegas_log_error("Error code: EGL_BAD_NATIVE_WINDOW");
 			break;
 		case EGL_BAD_PARAMETER:
-			Log::error("Error code: EGL_BAD_PARAMETER");
+			Pegas_log_error("Error code: EGL_BAD_PARAMETER");
 			break;
 		case EGL_BAD_SURFACE:
-			Log::error("Error code: EGL_BAD_SURFACE");
+			Pegas_log_error("Error code: EGL_BAD_SURFACE");
 			break;
 		case EGL_CONTEXT_LOST:
-			Log::error("Error code: EGL_CONTEXT_LOST");
+			Pegas_log_error("Error code: EGL_CONTEXT_LOST");
 			break;
 		default:
 			break;

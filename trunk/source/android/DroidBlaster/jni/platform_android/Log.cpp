@@ -11,69 +11,50 @@
 
 namespace Pegas
 {
-	void Log::info(const char* pMessage, ...)
+	const char Log::k_tagCommon[] = "PEGAS_COMMON";
+	const char Log::k_tagLoop[] = "PEGAS_LOOP";
+	const char Log::k_tagInput[] = "PEGAS_INPUT";
+
+	void Log::info(const char* pTag, const char* pMessage, ...)
 	{
 		va_list args;
 		va_start(args, pMessage);
 
-		__android_log_vprint(ANDROID_LOG_INFO, "PEGAS", pMessage, args);
-		__android_log_print(ANDROID_LOG_INFO, "PEGAS",  "\n");
+		__android_log_vprint(ANDROID_LOG_INFO, pTag, pMessage, args);
+		__android_log_print(ANDROID_LOG_INFO, pTag,  "\n");
 
 		va_end(args);
 	}
 
-	void Log::infoLoop(const char* pMessage, ...)
+	void Log::debug(const char* pTag, const char* pMessage, ...)
 	{
 		va_list args;
 		va_start(args, pMessage);
 
-		__android_log_vprint(ANDROID_LOG_INFO, "PEGAS_LOOP", pMessage, args);
-		__android_log_print(ANDROID_LOG_INFO, "PEGAS_LOOP",  "\n");
+		__android_log_vprint(ANDROID_LOG_DEBUG, pTag, pMessage, args);
+		__android_log_print(ANDROID_LOG_DEBUG, pTag,  "\n");
 
 		va_end(args);
 	}
 
-	void Log::error(const char* pMessage, ...)
+	void Log::error(const char* pTag, const char* pMessage, ...)
 	{
 		va_list args;
 		va_start(args, pMessage);
 
-		__android_log_vprint(ANDROID_LOG_ERROR, "PEGAS", pMessage, args);
-		__android_log_print(ANDROID_LOG_ERROR, "PEGAS",  "\n");
+		__android_log_vprint(ANDROID_LOG_ERROR, pTag, pMessage, args);
+		__android_log_print(ANDROID_LOG_ERROR, 	pTag,  "\n");
 
 		va_end(args);
 	}
 
-
-	void Log::debug(const char* pMessage, ...)
+	void Log::warn(const char* pTag, const char* pMessage, ...)
 	{
 		va_list args;
 		va_start(args, pMessage);
 
-		__android_log_vprint(ANDROID_LOG_DEBUG, "PEGAS", pMessage, args);
-		__android_log_print(ANDROID_LOG_DEBUG, "PEGAS",  "\n");
-
-		va_end(args);
-	}
-
-	void Log::debugLoop(const char* pMessage, ...)
-	{
-		va_list args;
-		va_start(args, pMessage);
-
-		__android_log_vprint(ANDROID_LOG_DEBUG, "PEGAS_LOOP", pMessage, args);
-		__android_log_print(ANDROID_LOG_DEBUG, "PEGAS_LOOP",  "\n");
-
-		va_end(args);
-	}
-
-	void Log::warn(const char* pMessage, ...)
-	{
-		va_list args;
-		va_start(args, pMessage);
-
-		__android_log_vprint(ANDROID_LOG_WARN, "PEGAS", pMessage, args);
-		__android_log_print(ANDROID_LOG_WARN, "PEGAS",  "\n");
+		__android_log_vprint(ANDROID_LOG_WARN, pTag, pMessage, args);
+		__android_log_print(ANDROID_LOG_WARN, pTag,  "\n");
 
 		va_end(args);
 	}

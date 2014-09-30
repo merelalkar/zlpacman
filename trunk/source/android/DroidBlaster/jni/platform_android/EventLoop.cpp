@@ -11,6 +11,7 @@ namespace Pegas
 {
 	EventLoop::EventLoop(android_app* pApplication)
 		:mApplication(pApplication), mActivityHandler(NULL), mInputHandler(NULL),
+		 mSensorPollSource(), mSensorManager(NULL), mSensorEventQueue(NULL),
 		 mEnabled(false), mQuit(false)
 	{
 		Pegas_log_info("EventLoop constructor [pApplication: %X]", pApplication);
@@ -70,18 +71,42 @@ namespace Pegas
 
 		if((!mEnabled) && (mApplication->window != NULL))
 		{
+			mSensorPollSource.id = LOOPER_ID_USER;
+			mSensorPollSource.app = mApplication;
+			mSensorPollSource.process = callback_sensor;
+			mSensorManager = ASensorManager_getInstance();
+			if (mSensorManager != NULL)
+			{
+				mSensorEventQueue = ASensorManager_createEventQueue(mSensorManager,
+						mApplication->looper, LOOPER_ID_USER, NULL, &mSensorPollSource);
+				if (mSensorEventQueue == NULL)
+				{
+					Pegas_log_warning("EventLoop::activate:");
+					Pegas_log_warning("ASensorManager_createEventQueue == NULL");
+
+					goto ERROR;
+				}
+			}
 			mQuit = false;
 			mEnabled = true;
 
 			if(mActivityHandler->onActivate() != STATUS_OK)
 			{
-				Pegas::Log::warn("mActivityHandler->onActivate() != STATUS_OK");
-				Pegas_log_info("Application finish");
+				Pegas_log_warning("EventLoop::activate:");
+				Pegas_log_warning("mActivityHandler->onActivate() != STATUS_OK");
 
-				mQuit = true;
-				ANativeActivity_finish(mApplication->activity);
+				goto ERROR;
+
 			}
 		}
+		return;
+
+		ERROR:
+
+		Pegas_log_info("Application finish");
+		mQuit = true;
+		deactivate();
+		ANativeActivity_finish(mApplication->activity);
 	}
 
 	void EventLoop::deactivate()
@@ -92,6 +117,13 @@ namespace Pegas
 		{
 			mActivityHandler->onDeactivate();
 			mEnabled = false;
+
+			if (mSensorEventQueue != NULL)
+			{
+				ASensorManager_destroyEventQueue(mSensorManager, mSensorEventQueue);
+				mSensorEventQueue = NULL;
+			}
+			mSensorManager = NULL;
 		}
 	}
 
@@ -179,6 +211,17 @@ namespace Pegas
 	void EventLoop::processSensorEvent()
 	{
 		Pegas_log_info_loop("EventLoop::processSensorEvent");
+
+		ASensorEvent lEvent;
+		while (ASensorEventQueue_getEvents(mSensorEventQueue, &lEvent, 1) > 0)
+		{
+			switch (lEvent.type)
+			{
+			case ASENSOR_TYPE_ACCELEROMETER:
+				mInputHandler->onAccelerometerEvent(&lEvent);
+				break;
+			}
+		}
 	}
 
 	void EventLoop::callback_activity(android_app* pApplication, int32_t pCommand)
@@ -196,6 +239,12 @@ namespace Pegas
 		EventLoop& lEventLoop = *(EventLoop*)pApplication->userData;
 
 		return lEventLoop.processInputEvent(pEvent);
+	}
+
+	void EventLoop::callback_sensor(android_app* pApplication, android_poll_source* pSource)
+	{
+		EventLoop& lEventLoop = *(EventLoop*)pApplication->userData;
+		lEventLoop.processSensorEvent();
 	}
 }
 

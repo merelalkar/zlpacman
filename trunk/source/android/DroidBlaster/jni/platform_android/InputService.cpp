@@ -12,9 +12,10 @@
 
 namespace Pegas
 {
-	InputService::InputService(android_app* pApplication, const int32_t& pWidth, const int32_t& pHeight)
+	InputService::InputService(android_app* pApplication, Sensor* pAccelerometer, const int32_t& pWidth, const int32_t& pHeight)
 		:mApplication(pApplication), mWidth(pWidth), mHeight(pHeight),
-		 mRefPoint(NULL), mHorizontal(0.0f), mVertical(0.0f), mMenuKey(false)
+		 mRefPoint(NULL), mHorizontal(0.0f), mVertical(0.0f), mMenuKey(false),
+		 mAccelerometer(pAccelerometer)
 	{
 
 	}
@@ -51,10 +52,18 @@ namespace Pegas
 	{
 		if(mMenuKey)
 		{
-			return STATUS_EXIT;
+			if (mAccelerometer->toggle() != STATUS_OK)
+			{
+				return STATUS_KO;
+			}
 		}
 
 		return STATUS_OK;
+	}
+
+	void InputService::stop()
+	{
+		mAccelerometer->disable();
 	}
 
 	bool InputService::onTouchEvent(AInputEvent* pEvent)
@@ -219,6 +228,41 @@ namespace Pegas
 			mHorizontal = 0.0f;
 			mVertical = 0.0f;
 		}
+
+		return true;
+	}
+
+	bool InputService::onAccelerometerEvent(ASensorEvent* pEvent)
+	{
+		const float GRAVITY = ASENSOR_STANDARD_GRAVITY / 2.0f;
+		const float MIN_X = -1.0f;
+		const float MAX_X = 1.0f;
+		const float MIN_Y = 0.0f;
+		const float MAX_Y = 2.0f;
+		const float CENTER_X = (MAX_X + MIN_X) / 2.0f;
+		const float CENTER_Y = (MAX_Y + MIN_Y) / 2.0f;
+		float lRawHorizontal = pEvent->vector.x / GRAVITY;
+
+		if (lRawHorizontal > MAX_X)
+		{
+			lRawHorizontal = MAX_X;
+		} else if (lRawHorizontal < MIN_X)
+		{
+			lRawHorizontal = MIN_X;
+		}
+
+		mHorizontal = CENTER_X - lRawHorizontal;
+		float lRawVertical = pEvent->vector.z / GRAVITY;
+
+		if (lRawVertical > MAX_Y)
+		{
+			lRawVertical = MAX_Y;
+		} else if (lRawVertical < MIN_Y)
+		{
+			lRawVertical = MIN_Y;
+		}
+
+		mVertical = lRawVertical - CENTER_Y;
 
 		return true;
 	}

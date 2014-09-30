@@ -31,8 +31,6 @@ namespace Pegas
 
 	status SoundService::start()
 	{
-		Log::info("Starting SoundService.");
-
 		SLresult lRes;
 		const SLuint32 lEngineMixIIDCount = 1;
 		const SLInterfaceID lEngineMixIIDs[]= { SL_IID_ENGINE };
@@ -63,7 +61,7 @@ namespace Pegas
 
 		ERROR:
 
-		Log::error("Error while starting SoundService.");
+		Pegas_log_error("Error while starting SoundService.");
 		stop();
 
 		return STATUS_KO;
@@ -109,7 +107,6 @@ namespace Pegas
 		ResourceDescriptor lDescriptor = lResource.descript();
 		if (lDescriptor.mDescriptor < 0)
 		{
-			Log::info("Could not open BGM file");
 			return STATUS_KO;
 		}
 
@@ -224,7 +221,7 @@ namespace Pegas
 
 		ERROR:
 
-		Log::error("Error trying to play sound");
+		Pegas_log_error("Error trying to play sound");
 		return STATUS_KO;
 	}
 
@@ -293,7 +290,7 @@ namespace Pegas
 
 		ERROR:
 
-		Log::error("Error while starting SoundPlayer");
+		Pegas_log_error("Error while starting SoundPlayer");
 		return STATUS_KO;
 	}
 
@@ -306,7 +303,7 @@ namespace Pegas
 
 		//TODO: delegate event to listeners;
 
-		Log::info("Ended playing sound.");
+
 	}
 }
 

@@ -71,7 +71,7 @@ namespace Pegas
 
 		if(glGetError() != GL_NO_ERROR)
 		{
-			Log::error("Error loading texture into OpenGL");
+			Pegas_log_error("Error loading texture into OpenGL");
 			unload();
 
 			return STATUS_KO;
@@ -97,7 +97,7 @@ namespace Pegas
 
 	void GraphicsTexture::apply()
 	{
-		Pegas_log_info("GraphicsTexture::apply");
+		Pegas_log_info_loop("GraphicsTexture::apply");
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mTextureId);
@@ -110,36 +110,36 @@ namespace Pegas
 		Resource::AutoDispose autoDispose(mResource);
 		if (mResource.open() != STATUS_OK)
 		{
-			Log::error("mResource.open failed");
+			Pegas_log_error("mResource.open failed");
 			return NULL;
 		}
 
 		png_byte header[8];
 		if (mResource.read(header, sizeof(header)) != STATUS_OK)
 		{
-			Log::error("mResource.read failed");
+			Pegas_log_error("mResource.read failed");
 			return NULL;
 		}
 
 		if (png_sig_cmp(header, 0, 8) != 0)
 		{
-			Log::error("png_sig_cmp failed, header param: %s", header);
+			Pegas_log_error("png_sig_cmp failed, header param: %s", header);
 			return NULL;
 		}
 
 		png_structp pngMain = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		if (!pngMain) {
-			Log::error("png_create_read_struct failed");
+			Pegas_log_error("png_create_read_struct failed");
 			return NULL;
 		}
 		png_infop pngInfo = png_create_info_struct(pngMain);
 		if (!pngInfo) {
-			Log::error("png_create_info_struct failed");
+			Pegas_log_error("png_create_info_struct failed");
 			return NULL;
 		}
 		png_set_read_fn(pngMain, &mResource, callback_read);
 		if (setjmp(png_jmpbuf(pngMain))) {
-			Log::error("setjmp failed");
+			Pegas_log_error("setjmp failed");
 			return NULL;
 		}
 		png_set_sig_bytes(pngMain, 8);
@@ -157,7 +157,7 @@ namespace Pegas
 			png_set_tRNS_to_alpha(pngMain);
 			transparency = true;
 
-			Log::error("png_get_valid failed");
+			Pegas_log_error("png_get_valid failed");
 			return NULL;
 		}
 		// Expands PNG with less than 8bits per channel to 8bits.
@@ -192,17 +192,17 @@ namespace Pegas
 		png_read_update_info(pngMain, pngInfo);
 		png_int_32 rowSize = png_get_rowbytes(pngMain, pngInfo);
 		if (rowSize <= 0) {
-			Log::error("invalid png row size: %d", rowSize);
+			Pegas_log_error("invalid png row size: %d", rowSize);
 			return NULL;
 		}
 		png_byte* imageBuffer = new png_byte[rowSize * height];
 		if (!imageBuffer) {
-			Log::error("can not allocate image buffer");
+			Pegas_log_error("can not allocate image buffer");
 			return NULL;
 		}
 		png_bytep* rowPtrs = new png_bytep[height];
 		if (!rowPtrs) {
-			Log::error("can not allocate row pointers");
+			Pegas_log_error("can not allocate row pointers");
 			//TODO: use smart pointer for this
 			delete[] imageBuffer;
 

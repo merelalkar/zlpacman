@@ -18,8 +18,8 @@ namespace rapidxml
 	static jmp_buf sJmpBuffer;
 	void parse_error_handler(const char* pWhat, void* pWhere)
 	{
-		Pegas::Log::error("Error while parsing TMX file.");
-		Pegas::Log::error(pWhat);
+		Pegas_log_error("Error while parsing TMX file.");
+		Pegas_log_error(pWhat);
 		longjmp(sJmpBuffer, 0);
 	}
 }
@@ -81,7 +81,7 @@ namespace Pegas
 
 			ERROR:
 
-			Log::error("Error loading tilemap");
+			Pegas_log_error("Error loading tilemap");
 			unload();
 			delete[] lTiles; delete[] lVertexBuffer;
 			delete[] lIndexBuffer;
