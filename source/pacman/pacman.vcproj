@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)/platform&quot;;&quot;$(SolutionDir)/engine&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)/platform_windows&quot;;&quot;$(SolutionDir)/engine&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -121,7 +121,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)/platform&quot;;&quot;$(SolutionDir)/engine&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)/platform_windows&quot;;&quot;$(SolutionDir)/engine&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -188,11 +188,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\media\bitmap1.bmp"
+				RelativePath=".\bitmap1.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\bitmap1.bmp"
+				RelativePath=".\media\bitmap1.bmp"
 				>
 			</File>
 			<File
