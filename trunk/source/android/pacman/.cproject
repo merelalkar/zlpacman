@@ -5,15 +5,14 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.android.toolchain.gcc.313660929" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -28,12 +27,21 @@
 								</outputEntries>
 							</builder>
 							<tool id="com.android.gcc.compiler.696372152" name="Android GCC Compiler" superClass="com.android.gcc.compiler">
+								<option id="com.android.gcc.option.includePath.1297828389" superClass="com.android.gcc.option.includePath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/sources/libpng&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/platforms/android-9/arch-arm/usr/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/sources/android/native_app_glue&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8/prebuilt/windows-x86_64/lib/gcc/arm-linux-androideabi/4.8/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/../../../3dparty/rapidxml&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/platform_android&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/engine&quot;"/>
+								</option>
 								<inputType id="com.android.gcc.inputType.1498411336" superClass="com.android.gcc.inputType"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="jni"/>
+						<entry excluding="game/pacman.h|game/pacman.cpp|engine/engine.vcxproj.user|engine/engine.vcxproj.filters|engine/engine.vcxproj|engine/engine.vcproj.SLAVA.Слава.user|engine/engine.vcproj.MEDLIFE.nikitinsv.user|engine/engine.vcproj.DNS-DNS.DNS.user|engine/engine.vcproj.8.00.old|engine/engine.vcproj|game/media|game/small.ico|game/ReadMe.txt|game/pacman.vcxproj.user|game/pacman.vcxproj.filters|game/pacman.vcxproj|game/pacman.vcproj.DNS-DNS.DNS.user|game/pacman.vcproj|game/pacman.rc|game/pacman.ico|game/pacman.aps|game/bitmap2.bmp|game/bitmap1.bmp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="jni"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
