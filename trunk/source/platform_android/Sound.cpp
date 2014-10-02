@@ -5,8 +5,8 @@
  *      Author: borisov.v
  */
 
-#include "Sound.h"
-#include "Log.h"
+#include "sound.h"
+#include "log.h"
 
 namespace Pegas
 {

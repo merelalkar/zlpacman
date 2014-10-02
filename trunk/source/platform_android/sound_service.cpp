@@ -5,9 +5,9 @@
  *      Author: borisov.v
  */
 
-#include "SoundService.h"
-#include "Log.h"
-#include "Resource.h"
+#include "sound_service.h"
+#include "resource.h"
+#include "log.h"
 
 namespace Pegas
 {

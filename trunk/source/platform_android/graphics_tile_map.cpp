@@ -5,12 +5,11 @@
  *      Author: borisov.v
  */
 
-#include "GraphicsTileMap.h"
-#include "Log.h"
+#include "graphics_tile_map.h"
+#include "log.h"
 
 #include <GLES/gl.h>
 #include <GLES/glext.h>
-
 #include <rapidxml.hpp>
 
 namespace rapidxml

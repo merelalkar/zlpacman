@@ -4,8 +4,8 @@
  *  Created on: 25.07.2014
  *      Author: DNS
  */
-#include "EventLoop.h"
-#include "Log.h"
+#include "event_loop.h"
+#include "log.h"
 
 namespace Pegas
 {

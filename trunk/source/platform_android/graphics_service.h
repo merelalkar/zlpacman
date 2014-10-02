@@ -8,11 +8,11 @@
 #ifndef PEGAS_GRAPHICSSERVICE_H_
 #define PEGAS_GRAPHICSSERVICE_H_
 
-#include "GraphicsSprite.h"
-#include "GraphicsTexture.h"
-#include "GraphicsTileMap.h"
-#include "TimeService.h"
-#include "Types.h"
+#include "graphics_sprite.h"
+#include "graphics_texture.h"
+#include "graphics_tile_map.h"
+#include "time_service.h"
+#include "packt_types.h"
 
 #include <android_native_app_glue.h>
 #include <EGL/egl.h>

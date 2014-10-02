@@ -4,8 +4,8 @@
  *  Created on: 11.08.2014
  *      Author: DNS
  */
-#include "Log.h"
-#include "GraphicsTexture.h"
+#include "graphics_texture.h"
+#include "log.h"
 
 namespace Pegas
 {

@@ -5,8 +5,8 @@
  *      Author: DNS
  */
 
-#include "Resource.h"
-#include "Log.h"
+#include "resource.h"
+#include "log.h"
 
 namespace Pegas
 {

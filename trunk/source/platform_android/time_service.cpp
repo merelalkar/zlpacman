@@ -4,8 +4,8 @@
  *  Created on: 26.07.2014
  *      Author: DNS
  */
-#include "TimeService.h"
-#include "Log.h"
+#include "time_service.h"
+#include "log.h"
 
 namespace Pegas
 {

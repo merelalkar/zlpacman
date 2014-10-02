@@ -8,9 +8,9 @@
 #ifndef GRAPHICSTEXTURE_H_
 #define GRAPHICSTEXTURE_H_
 
-#include "Context.h"
-#include "Resource.h"
-#include "Types.h"
+#include "packt_types.h"
+#include "context.h"
+#include "resource.h"
 
 #include <android_native_app_glue.h>
 #include <GLES/gl.h>

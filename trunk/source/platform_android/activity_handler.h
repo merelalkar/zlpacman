@@ -8,7 +8,7 @@
 #ifndef PEGAS_ACTIVITY_HANDLER_H_
 #define PEGAS_ACTIVITY_HANDLER_H_
 
-#include "Types.h"
+#include "packt_types.h"
 
 namespace Pegas
 {

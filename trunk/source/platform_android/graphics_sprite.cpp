@@ -5,8 +5,8 @@
  *      Author: DNS
  */
 
-#include "GraphicsSprite.h"
-#include "Log.h"
+#include "graphics_sprite.h"
+#include "log.h"
 
 #include <GLES/gl.h>
 #include <GLES/glext.h>
