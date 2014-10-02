@@ -24,9 +24,10 @@
 
 // TODO. Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
 #include "engine.h"
+/*
 #ifdef _WINDOWS
 #include "platform_windows.h"
 #endif
 #ifdef ANDROID
 #include "platform_android.h"
-#endif
+#endif*/

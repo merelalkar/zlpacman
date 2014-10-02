@@ -8,9 +8,11 @@
 #ifndef GRAPHICSSPRITE_H_
 #define GRAPHICSSPRITE_H_
 
+
+#include "packt_types.h"
 #include "graphics_texture.h"
 #include "time_service.h"
-#include "packt_types.h"
+
 
 namespace Pegas
 {

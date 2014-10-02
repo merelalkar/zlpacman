@@ -8,12 +8,14 @@
 #ifndef PLATFORM_ANDROID_H_
 #define PLATFORM_ANDROID_H_
 
+#include "event_loop.h"
+
 #include "packt_types.h"
 #include "log.h"
 
 #include "activity_handler.h"
 #include "context.h"
-#include "event_loop.h"
+
 
 #include "resource.h"
 

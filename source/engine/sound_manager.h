@@ -1,6 +1,6 @@
 #ifndef PEGAS_SOUND_MANAGER_H
 #define PEGAS_SOUND_MANAGER_H
-#pragma once
+
 #pragma warning(disable : 4355)
 
 namespace Pegas
@@ -20,4 +20,4 @@ namespace Pegas
 	};
 }
 
-#endif PEGAS_SOUND_MANAGER_H
+#endif //PEGAS_SOUND_MANAGER_H

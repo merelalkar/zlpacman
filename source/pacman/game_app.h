@@ -3,7 +3,6 @@
 
 namespace Pegas
 {
-
 	class GameApplication: public Singleton<GameApplication>, public IPlatformContext, public IEventListener
 	{
 	public:
@@ -84,6 +83,5 @@ namespace Pegas
 		ProcessManager			m_processManager;
 		MILLISECONDS			m_lastTime;
 	};
-
 }
 

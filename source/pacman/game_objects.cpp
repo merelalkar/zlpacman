@@ -2,8 +2,6 @@
 #include "game_objects.h"
 #include "game_events.h"
 #include "waiting.h"
-//Sprite animation class
-#include "platform_windows.h"
 
 using namespace Pegas;
 /*************************************************************************************************************
