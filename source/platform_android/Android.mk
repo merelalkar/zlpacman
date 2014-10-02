@@ -14,7 +14,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../../../3dparty/rapidxml
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../engine
 
 LOCAL_SRC_FILES := $(call LS_CPP,$(LOCAL_PATH))
-LOCAL_STATIC_LIBRARIES := android_native_app_glue png
+LOCAL_STATIC_LIBRARIES := engine android_native_app_glue png
 
 include $(BUILD_STATIC_LIBRARY)
 

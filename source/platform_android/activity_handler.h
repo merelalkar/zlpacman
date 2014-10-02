@@ -18,6 +18,7 @@ namespace Pegas
 	public:
 		virtual ~ActivityHandler() {};
 
+
 		virtual status onActivate() = 0;
 		virtual void onDeactivate() = 0;
 		virtual status onStep() = 0;
@@ -36,6 +37,8 @@ namespace Pegas
 		virtual void onDestroyWindow() {};
 		virtual void onGainFocus() {};
 		virtual void onLostFocus() {};
+
+
 	};
 }
 
