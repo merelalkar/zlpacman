@@ -8,8 +8,8 @@
 #ifndef SOUNDSERVICE_H_
 #define SOUNDSERVICE_H_
 
-#include "Types.h"
-#include "Sound.h"
+#include "packt_types.h"
+#include "sound.h"
 
 #include <android_native_app_glue.h>
 #include <SLES/OpenSLES.h>

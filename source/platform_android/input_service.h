@@ -8,9 +8,9 @@
 #ifndef INPUTSERVICE_H_
 #define INPUTSERVICE_H_
 
-#include "Types.h"
-#include "InputHandler.h"
-#include "Sensor.h"
+#include "packt_types.h"
+#include "input_handler.h"
+#include "sensor.h"
 
 namespace Pegas
 {

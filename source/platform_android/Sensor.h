@@ -8,7 +8,7 @@
 #ifndef SENSOR_H_
 #define SENSOR_H_
 
-#include "Types.h"
+#include "packt_types.h"
 
 #include <android/sensor.h>
 

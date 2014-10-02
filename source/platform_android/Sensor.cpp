@@ -4,9 +4,9 @@
  *  Created on: 30.09.2014
  *      Author: borisov.v
  */
-#include "Sensor.h"
-#include "EventLoop.h"
-#include "Log.h"
+#include "sensor.h"
+#include "event_loop.h"
+#include "log.h"
 
 namespace Pegas
 {

@@ -8,7 +8,8 @@
 #ifndef RESOURCE_H_
 #define RESOURCE_H_
 
-#include "Types.h"
+#include "packt_types.h"
+
 #include <android_native_app_glue.h>
 
 namespace Pegas

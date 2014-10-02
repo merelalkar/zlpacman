@@ -5,8 +5,8 @@
  *      Author: borisov.v
  */
 
-#include "InputService.h"
-#include "Log.h"
+#include "input_service.h"
+#include "log.h"
 
 #include <math.h>
 

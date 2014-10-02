@@ -8,7 +8,7 @@
 #ifndef INPUTHANDLER_H_
 #define INPUTHANDLER_H_
 
-#include "Types.h"
+#include "packt_types.h"
 
 #include <android_native_app_glue.h>
 #include <android/input.h>

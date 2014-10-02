@@ -4,8 +4,8 @@
  *  Created on: 28.07.2014
  *      Author: DNS
  */
-#include "GraphicsService.h"
-#include "Log.h"
+#include "graphics_service.h"
+#include "log.h"
 
 #include <GLES/gl.h>
 #include <GLES/glext.h>

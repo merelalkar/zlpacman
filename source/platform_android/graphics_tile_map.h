@@ -8,8 +8,8 @@
 #ifndef GRAPHICSTILEMAP_H_
 #define GRAPHICSTILEMAP_H_
 
-#include "Types.h"
-#include "GraphicsTexture.h"
+#include "packt_types.h"
+#include "graphics_texture.h"
 
 #include <android_native_app_glue.h>
 
