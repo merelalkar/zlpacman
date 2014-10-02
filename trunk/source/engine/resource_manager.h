@@ -1,6 +1,5 @@
 #ifndef PEGAS_RESOURCE_MANAGER_H
 #define PEGAS_RESOURCE_MANAGER_H
-#pragma once
 
 namespace Pegas
 {
@@ -31,8 +30,9 @@ namespace Pegas
 	public:
 		typedef std::map<RESOURCEID, ResourceType*> RESOURCE_LOOKUP_MAP;
 
-		ResourceManager(): Singleton(*this) {};
-		virtual ~ResourceManager() { destroyAll(); };
+		ResourceManager():
+			Singleton<ResourceManager<ResourceType, ResourceCode> >(*this) {}
+		virtual ~ResourceManager() { destroyAll(); }
 
 		ResourceType* registerResource(RESOURCEID id, const ResourceCode& platformCode);
 		ResourceType* getResource(RESOURCEID id);
@@ -87,7 +87,7 @@ namespace Pegas
 	template<class ResourceType, class ResourceCode>
 	void ResourceManager<ResourceType, ResourceCode>::loadAll()
 	{
-		for(RESOURCE_LOOKUP_MAP::iterator it = m_resourceMap.begin(); 
+		for(typename RESOURCE_LOOKUP_MAP::iterator it = m_resourceMap.begin();
 			it != m_resourceMap.end(); ++it)
 		{
 			ResourceType* pResource = it->second;
@@ -106,7 +106,7 @@ namespace Pegas
     template<class ResourceType, class ResourceCode>
 	void ResourceManager<ResourceType, ResourceCode>::destroyAll()
 	{
-		for(RESOURCE_LOOKUP_MAP::iterator it = m_resourceMap.begin(); 
+		for(typename RESOURCE_LOOKUP_MAP::iterator it = m_resourceMap.begin();
 			it != m_resourceMap.end(); ++it)
 		{
 			ResourceType* pResource = it->second;

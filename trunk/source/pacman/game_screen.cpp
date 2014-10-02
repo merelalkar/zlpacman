@@ -8,8 +8,6 @@
 #include "standart_widgets.h"
 #include "fader_layer.h"
 
-#include "platform_windows.h"
-
 using namespace Pegas;
 
 /*************************************************************************************************

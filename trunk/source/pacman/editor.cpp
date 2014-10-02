@@ -224,7 +224,7 @@ void EditorLayer::handleEvent(EventPtr evt)
 #else
 			sprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);
 #endif
-			ISerializer* fileStream = m_context->openFile(fileName, FileOpenMode::k_readOnly);
+			ISerializer* fileStream = m_context->openFile(fileName, k_readOnly);
 			if(fileStream)
 			{
 				OSUtils::getInstance().debugOutput("loading...");
