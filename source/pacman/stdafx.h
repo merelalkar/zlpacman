@@ -7,7 +7,7 @@
 
 #include "targetver.h"
 
-#ifdef _WINDWOWS
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN             // Исключите редко используемые компоненты из заголовков Windows
 // Файлы заголовков Windows:
 #include <windows.h>
@@ -18,16 +18,16 @@
 #include <malloc.h>
 #include <memory.h>
 
-#ifdef _WINDOWS
+#ifdef _WIN32
 #include <tchar.h>
 #endif
 
 // TODO. Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
 #include "engine.h"
-/*
-#ifdef _WINDOWS
+
+#ifdef _WIN32
 #include "platform_windows.h"
 #endif
 #ifdef ANDROID
 #include "platform_android.h"
-#endif*/
+#endif
