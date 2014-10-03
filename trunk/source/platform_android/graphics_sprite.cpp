@@ -89,3 +89,4 @@ namespace Pegas
 		return mAnimFrame > (mAnimFrameCount - 1);
 	}
 }
+

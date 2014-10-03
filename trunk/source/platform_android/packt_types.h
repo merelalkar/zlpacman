@@ -5,9 +5,7 @@
  *      Author: DNS
  */
 
-#ifndef PEGAS_TYPES_H
-#define PEGAS_TYPES_H
-
+#pragma once
 #include <stdint.h>
 
 namespace Pegas
@@ -40,4 +38,4 @@ namespace Pegas
 	};
 }
 
-#endif /* TYPES_HPP_ */
+

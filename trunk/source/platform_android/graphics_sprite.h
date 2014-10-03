@@ -42,7 +42,8 @@ namespace Pegas
 		float mAnimFrame;
 		bool mAnimLoop;
 	};
-}
 
+
+}
 
 #endif /* GRAPHICSSPRITE_H_ */
