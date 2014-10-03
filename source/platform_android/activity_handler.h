@@ -9,7 +9,6 @@
 #define PEGAS_ACTIVITY_HANDLER_H_
 
 #include "packt_types.h"
-#include "types.h"
 
 namespace Pegas
 {
@@ -37,8 +36,6 @@ namespace Pegas
 		virtual void onDestroyWindow() {};
 		virtual void onGainFocus() {};
 		virtual void onLostFocus() {};
-
-
 	};
 }
 

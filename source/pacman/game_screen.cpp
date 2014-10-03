@@ -88,7 +88,7 @@ void GameVerticalLayer::create(IPlatformContext* context)
 	m_levelTextParams._font = k_fontHUD_Panel;
 	m_levelTextParams._color = 0xffffff33;
 	m_levelTextParams._top = m_scoresTextSprite._top + m_scoresTextSprite._height - 5;
-	m_levelTextParams._left = canvasWidth - k_sideMargin - scoresBarWidth;	
+	m_levelTextParams._left = canvasWidth - k_sideMargin - scoresBarWidth;
 }
 
 void GameVerticalLayer::destroy(IPlatformContext* context)

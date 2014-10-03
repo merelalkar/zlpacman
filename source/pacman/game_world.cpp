@@ -6,7 +6,12 @@
 #include "game_events.h"
 #include "pacman_game_screens.h"
 
+#ifdef _WIN32
 #include "platform_windows.h"
+#endif
+#ifdef ANDROID
+#include "platform_android.h"
+#endif
 
 using namespace Pegas;
 
