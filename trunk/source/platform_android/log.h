@@ -24,8 +24,8 @@ namespace packt
 	};
 }
 
-#define Pegas_log_warning(...)	packt::Log::warn(Pegas::Log::k_tagCommon, __VA_ARGS__)
-#define Pegas_log_error(...) packt::Log::error(Pegas::Log::k_tagCommon, __VA_ARGS__)
+#define Pegas_log_warning(...)	packt::Log::warn(packt::Log::k_tagCommon, __VA_ARGS__)
+#define Pegas_log_error(...) packt::Log::error(packt::Log::k_tagCommon, __VA_ARGS__)
 
 #ifndef NDEBUG
 	#define Pegas_log_debug(...) packt::Log::debug(packt::Log::k_tagCommon, __VA_ARGS__)

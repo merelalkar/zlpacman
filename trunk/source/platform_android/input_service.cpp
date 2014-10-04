@@ -10,7 +10,7 @@
 
 #include <math.h>
 
-namespace Pegas
+namespace packt
 {
 	InputService::InputService(android_app* pApplication, Sensor* pAccelerometer, const int32_t& pWidth, const int32_t& pHeight)
 		:mApplication(pApplication), mWidth(pWidth), mHeight(pHeight),

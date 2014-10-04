@@ -381,30 +381,30 @@ void FontResource::getTextExtent(const String& text, CURCOORD& width, CURCOORD& 
 	height = extent.cy;*/
 }
 
-int FontResource::inreaseInstanceCounter()
+/*int FontResource::inreaseInstanceCounter()
 {
-	/*if(s_instanceCounter == 0)
+	if(s_instanceCounter == 0)
 	{
 		s_deviseContext = CreateCompatibleDC(0);
 		_tsetlocale(LC_ALL, _text("Russian"));
 	}
 
-	return (++s_instanceCounter);*/
+	return (++s_instanceCounter);
 
 	return 0;
 }
 
 int FontResource::decreaseInstanceCounter()
 {
-	/*s_instanceCounter--;
+	s_instanceCounter--;
 	
 	if(s_instanceCounter == 0)
 	{
 		DeleteDC(s_deviseContext);
 	}
 
-	return s_instanceCounter;*/
+	return s_instanceCounter;
 
 	return 0;
-}
+}*/
 

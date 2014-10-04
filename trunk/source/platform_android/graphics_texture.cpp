@@ -7,10 +7,8 @@
 #include "graphics_texture.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
-
-
 	GraphicsTexture::GraphicsTexture(android_app* app, const char* path)
 		: mResource(app, path), mTextureId(0),
 		  mFormat(0), mWidth(0), mHeight(0)
