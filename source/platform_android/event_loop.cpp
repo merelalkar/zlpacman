@@ -7,7 +7,7 @@
 #include "event_loop.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
 	EventLoop::EventLoop(android_app* pApplication)
 		:mApplication(pApplication), mActivityHandler(NULL), mInputHandler(NULL),

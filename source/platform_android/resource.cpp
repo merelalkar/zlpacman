@@ -8,7 +8,7 @@
 #include "resource.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
 	Resource::Resource(android_app* app, const char* path)
 		:mPath(path), mAssetManager(app->activity->assetManager), mAsset(NULL)

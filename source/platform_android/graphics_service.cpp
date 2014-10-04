@@ -10,7 +10,7 @@
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 
-namespace Pegas
+namespace packt
 {
 	GraphicsService::GraphicsService(android_app* app, TimeService* timer)
 		:mApplication(app), mTimer(timer),

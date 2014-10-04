@@ -5,8 +5,7 @@
  *      Author: borisov.v
  */
 
-#ifndef PLATFORM_ANDROID_H_
-#define PLATFORM_ANDROID_H_
+#pragma once
 
 
 
@@ -35,4 +34,4 @@
 #include "sound_service.h"
 #include "sound.h"
 
-#endif /* PLATFORM_ANDROID_H_ */
+

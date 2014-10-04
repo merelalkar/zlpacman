@@ -5,14 +5,13 @@
  *      Author: DNS
  */
 
-#ifndef PEGAS_TIMESERVICE_H_
-#define PEGAS_TIMESERVICE_H_
+#pragma once
 
 #include "packt_types.h"
 
 #include <time.h>
 
-namespace Pegas
+namespace packt
 {
 	class TimeService
 	{
@@ -31,4 +30,4 @@ namespace Pegas
 	};
 }
 
-#endif /* TIMESERVICE_H_ */
+

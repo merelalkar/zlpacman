@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #include <android/log.h>
 
-namespace Pegas
+namespace packt
 {
 	const char Log::k_tagCommon[] = "PEGAS_COMMON";
 	const char Log::k_tagLoop[] = "PEGAS_LOOP";

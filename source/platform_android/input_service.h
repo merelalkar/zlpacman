@@ -5,14 +5,13 @@
  *      Author: borisov.v
  */
 
-#ifndef INPUTSERVICE_H_
-#define INPUTSERVICE_H_
+#pragma once
 
 #include "packt_types.h"
 #include "input_handler.h"
 #include "sensor.h"
 
-namespace Pegas
+namespace packt
 {
 	class InputService: public InputHandler
 	{
@@ -48,4 +47,4 @@ namespace Pegas
 	};
 }
 
-#endif /* INPUTSERVICE_H_ */
+

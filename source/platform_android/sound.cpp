@@ -8,7 +8,7 @@
 #include "sound.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
 	Sound::Sound(android_app* pApplication, const char* pPath)
 		:mResource(pApplication, pPath), mBuffer(NULL), mLength(0)

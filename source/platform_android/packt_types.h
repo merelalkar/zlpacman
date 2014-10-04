@@ -8,7 +8,7 @@
 #pragma once
 #include <stdint.h>
 
-namespace Pegas
+namespace packt
 {
 	typedef int32_t status;
 

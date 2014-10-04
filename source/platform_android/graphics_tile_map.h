@@ -5,15 +5,14 @@
  *      Author: borisov.v
  */
 
-#ifndef GRAPHICSTILEMAP_H_
-#define GRAPHICSTILEMAP_H_
+#pragma once
 
 #include "packt_types.h"
 #include "graphics_texture.h"
 
 #include <android_native_app_glue.h>
 
-namespace Pegas
+namespace packt
 {
 	class GraphicsTileMap
 	{
@@ -48,4 +47,4 @@ namespace Pegas
 }
 
 
-#endif /* GRAPHICSTILEMAP_H_ */
+

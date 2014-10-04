@@ -5,8 +5,7 @@
  *      Author: DNS
  */
 
-#ifndef GRAPHICSTEXTURE_H_
-#define GRAPHICSTEXTURE_H_
+#pragma once
 
 #include "packt_types.h"
 #include "context.h"
@@ -16,7 +15,7 @@
 #include <GLES/gl.h>
 #include <png.h>
 
-namespace Pegas
+namespace packt
 {
 	class GraphicsTexture
 	{
@@ -46,4 +45,4 @@ namespace Pegas
 	};
 }
 
-#endif /* GRAPHICSTEXTURE_H_ */
+
