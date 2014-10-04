@@ -22,6 +22,7 @@ LOCAL_STATIC_LIBRARIES := engine platform_android
 include $(BUILD_SHARED_LIBRARY)
 
 $(call import-add-path,$(LOCAL_PATH)/..)
+$(call import-add-path,$(LOCAL_PATH)/../../../../3dparty)
 $(call import-module,android/native_app_glue)
 $(call import-module,libpng)
 $(call import-module,engine)
