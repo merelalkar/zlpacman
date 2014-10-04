@@ -33,6 +33,7 @@ namespace Pegas
 }
 
 #include "types.h"
+#include "text_tools.h"
 #include "singleton.h"
 #include "math_utils.h"
 #include "vectors.h"

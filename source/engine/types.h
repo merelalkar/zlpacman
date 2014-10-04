@@ -8,16 +8,15 @@
 
 namespace Pegas
 {
+
 #ifdef _UNICODE
 	
-	typedef std::wstring String;
 	typedef wchar_t tchar;
 
 #define _text(str) L##str
 
 #else
 	
-	typedef std::string String;
 	typedef char tchar;
 
 #define _text(str) str

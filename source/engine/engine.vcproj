@@ -282,6 +282,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\text_tools.h"
+				>
+			</File>
+			<File
 				RelativePath=".\types.cpp"
 				>
 			</File>
