@@ -42,14 +42,9 @@ void GameVerticalLayer::create(IPlatformContext* context)
 	m_maze._width = canvasWidth - (k_sideMargin * 2);
 	m_maze._height = (CURCOORD)((mazeTexture->getInnerImageHeight() * m_maze._width) / mazeTexture->getInnerImageWidth());
 
-	tchar buffer[50];
-#ifdef _UNICODE
-		m_scoresText = _itow(MAX_INT32, buffer, 50);
-#else
-		m_scoresText = _itoa(MAX_INT32, buffer, 50);
-#endif	
+	m_scoresText.format(_text("%d"), MAX_INT16);
 	CURCOORD bottomBarHeight, scoresBarWidth;
-	GrafManager::getInstance().getTextExtent(buffer, k_fontHUD_Panel, scoresBarWidth, bottomBarHeight); 
+	GrafManager::getInstance().getTextExtent(m_scoresText, k_fontHUD_Panel, scoresBarWidth, bottomBarHeight); 
 
 	//scores text sprite
 	TextureResource* scoresTextTexture = Pegas::TextureResourceManager::getInstance().getResource(k_textureScoresText);
@@ -202,12 +197,7 @@ void GameVerticalLayer::handleEvent(EventPtr evt)
 		Event_HUD_ScoresChanged* pEvent = evt->cast<Event_HUD_ScoresChanged>();
 		m_numScore = pEvent->_scores;
 
-		tchar buffer[10];
-#ifdef _UNICODE
-		m_scoresText = _itow(m_numScore, buffer, 10);
-#else
-		m_scoresText = _itoa(m_numScore, buffer, 10);
-#endif	
+		m_scoresText.format(_text("%d"), m_numScore);
 		return;
 	}
 
@@ -233,13 +223,8 @@ void GameVerticalLayer::handleEvent(EventPtr evt)
 	{
 		Event_HUD_LevelChanged* pEvent = evt->cast<Event_HUD_LevelChanged>();
 		m_level = pEvent->_level;
+		m_levelText.format(_text("%d"), m_level); 
 		
-		tchar buffer[10];
-#ifdef _UNICODE
-		m_levelText = _itow(m_level, buffer, 10);
-#else
-		m_levelText = _itoa(m_level, buffer, 10);
-#endif	
 		return;
 	}	
 }
@@ -273,14 +258,7 @@ void DebugLayer::update(IPlatformContext* context, MILLISECONDS deltaTime, MILLI
 	{
 		int32 FPS = (int32)(m_frames / (m_ellapsedTime * 0.001));
 		m_frames = m_ellapsedTime = 0;
-
-		tchar text[50];
-#ifndef _UNICODE
-		sprintf(text, _text("FPS = %d"), FPS);
-#else
-		wsprintf(text, _text("FPS = %d"), FPS);
-#endif
-		m_fpsText = text;
+		m_fpsText.format(_text("FPS = %d"), FPS);
 	}
 }
 
@@ -354,14 +332,7 @@ Frag::Frag(int32 scores, const Vector3& position, float lifeTime)
 	m_initialLifeTime = lifeTime;
 	m_lifeTime = lifeTime;
 
-	tchar text[10];
-#ifndef _UNICODE
-		sprintf(text, _text("%d"), scores);
-#else
-		wsprintf(text, _text("%d"), scores);
-#endif
-	
-	m_fragText = text;
+	m_fragText.format(_text("%d"), scores);
 
 	CURCOORD width, height;
 	GrafManager& graf = GrafManager::getInstance();
