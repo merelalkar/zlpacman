@@ -5,14 +5,13 @@
  *      Author: borisov.v
  */
 
-#ifndef SOUND_H_
-#define SOUND_H_
+#pragma once
 
 #include "packt_types.h"
 #include "context.h"
 #include "resource.h"
 
-namespace Pegas
+namespace packt
 {
 	class SoundService;
 
@@ -36,4 +35,4 @@ namespace Pegas
 }
 
 
-#endif /* SOUND_H_ */
+

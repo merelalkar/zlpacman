@@ -5,8 +5,7 @@
  *      Author: DNS
  */
 
-#ifndef PEGAS_GRAPHICSSERVICE_H_
-#define PEGAS_GRAPHICSSERVICE_H_
+#pragma once
 
 #include "graphics_sprite.h"
 #include "graphics_texture.h"
@@ -17,7 +16,7 @@
 #include <android_native_app_glue.h>
 #include <EGL/egl.h>
 
-namespace Pegas
+namespace packt
 {
 	class GraphicsService
 	{
@@ -67,4 +66,4 @@ namespace Pegas
 	};
 }
 
-#endif /* GRAPHICSSERVICE_H_ */
+

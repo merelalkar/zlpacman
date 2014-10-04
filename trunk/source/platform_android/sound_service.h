@@ -5,8 +5,7 @@
  *      Author: borisov.v
  */
 
-#ifndef SOUNDSERVICE_H_
-#define SOUNDSERVICE_H_
+#pragma once
 
 #include "packt_types.h"
 #include "sound.h"
@@ -16,7 +15,7 @@
 #include <SLES/OpenSLES_Android.h>
 #include <SLES/OpenSLES_AndroidConfiguration.h>
 
-namespace Pegas
+namespace packt
 {
 	class SoundService
 	{
@@ -57,4 +56,4 @@ namespace Pegas
 	};
 }
 
-#endif /* SOUNDSERVICE_H_ */
+

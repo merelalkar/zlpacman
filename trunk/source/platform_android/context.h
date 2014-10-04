@@ -5,12 +5,11 @@
  *      Author: DNS
  */
 
-#ifndef PEGAS_CONTEXT_H_
-#define PEGAS_CONTEXT_H_
+#pragma once
 
 #include "packt_types.h"
 
-namespace Pegas
+namespace packt
 {
 	class TimeService;
 	class GraphicsService;
@@ -26,4 +25,4 @@ namespace Pegas
 }
 
 
-#endif /* CONTEXT_H_ */
+

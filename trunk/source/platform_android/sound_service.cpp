@@ -9,7 +9,7 @@
 #include "resource.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
 	SoundService::SoundService(android_app* app)
 		: mApplication(app), mEngineObj(NULL),

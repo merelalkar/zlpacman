@@ -5,16 +5,14 @@
  *      Author: DNS
  */
 
-#ifndef GRAPHICSSPRITE_H_
-#define GRAPHICSSPRITE_H_
-
+#pragma once
 
 #include "packt_types.h"
 #include "graphics_texture.h"
 #include "time_service.h"
 
 
-namespace Pegas
+namespace packt
 {
 	class GraphicsSprite
 	{
@@ -46,4 +44,4 @@ namespace Pegas
 
 }
 
-#endif /* GRAPHICSSPRITE_H_ */
+

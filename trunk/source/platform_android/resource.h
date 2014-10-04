@@ -5,14 +5,13 @@
  *      Author: DNS
  */
 
-#ifndef RESOURCE_H_
-#define RESOURCE_H_
+#pragma once
 
 #include "packt_types.h"
 
 #include <android_native_app_glue.h>
 
-namespace Pegas
+namespace packt
 {
 	struct ResourceDescriptor
 	{
@@ -53,4 +52,4 @@ namespace Pegas
 }
 
 
-#endif /* RESOURCE_H_ */
+

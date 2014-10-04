@@ -11,7 +11,7 @@
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 
-namespace Pegas
+namespace packt
 {
 	GraphicsSprite::GraphicsSprite(GraphicsTexture* texture, int32_t width, int32_t height)
 		: mTexture(texture), mWidth(width), mHeight(height),

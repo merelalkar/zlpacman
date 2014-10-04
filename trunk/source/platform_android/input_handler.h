@@ -5,16 +5,14 @@
  *      Author: borisov.v
  */
 
-#ifndef INPUTHANDLER_H_
-#define INPUTHANDLER_H_
-
+#pragma once
 #include "packt_types.h"
 
 #include <android_native_app_glue.h>
 #include <android/input.h>
 #include <android/sensor.h>
 
-namespace Pegas
+namespace packt
 {
 	class InputHandler
 	{
@@ -28,4 +26,4 @@ namespace Pegas
 }
 
 
-#endif /* INPUTHANDLER_H_ */
+

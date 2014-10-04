@@ -2,9 +2,14 @@
 
 #include "types.h"
 
-#include <stdio.h> 
-#include <stdarg.h> 
+#include <stdio.h>
+#include <cctype>
+#include <stdarg.h>
+#include <wchar.h>
+
+#ifdef _WIN32
 #include <tchar.h> 
+#endif
 
 #ifndef STD_STRING_H
 #define STD_STRING_H
@@ -61,7 +66,7 @@ namespace Pegas
 		bool operator<(const TString<_Char>& rhs);
 
 		// format the string from optional parameters
-		void __cdecl format(const _Char* text, ...);
+		void format(const _Char* text, ...);
 		
 		//additional functions
 		TString<_Char>& toLower();
@@ -174,7 +179,7 @@ namespace Pegas
 	template<typename _Char>
 	inline TString<_Char>::operator const _Char*()const
 	{
-		return (c_str());
+		return (this->c_str());
 	}
 
 	/*************************************************************************************
@@ -190,9 +195,9 @@ namespace Pegas
 	inline TString<_Char>& TString<_Char>::trimStart(_Char c)
 	{
 		size_t found_pos = find_first_not_of(c);
-		if(found_pos != npos)
+		if(found_pos != this->npos)
 		{
-			TEXT_BASE_CLASS trimmedStr(begin() + found_pos, end());
+			TEXT_BASE_CLASS trimmedStr(this->begin() + found_pos, this->end());
 			assign(trimmedStr);
 		}
 
@@ -202,17 +207,17 @@ namespace Pegas
 	template<typename _Char>
 	inline TString<_Char>& TString<_Char>::trimEnd(_Char c)
 	{
-		size_t new_length = length();
-		for(size_t i = length() - 1; i >= 0; --i)
+		size_t new_length = this->length();
+		for(size_t i = this->length() - 1; i >= 0; --i)
 		{
-			if((at(i) != c) && (at(i) != _Char(0)))
+			if((this->at(i) != c) && (this->at(i) != _Char(0)))
 				break;
 			--new_length;
 		}
 
-		if(new_length != length())
+		if(new_length != this->length())
 		{
-			resize(new_length);
+			this->resize(new_length);
 		}
 
 		return *this;
@@ -230,21 +235,50 @@ namespace Pegas
 		char* buffer;
 
 		va_start( args, text );
+
+#ifdef _WIN32
 		// _vscprintf doesn't count  terminating '\0'
 		len = _vscprintf( text, args ) + 1;
 		buffer = new char[len];
-		
 		vsprintf_s( buffer, len, text, args );
-		assign(buffer);
+#endif
+
+#ifdef ANDROID
+		len = vsnprintf(0, 0, text, args) + 1;
+		buffer = new char[len];
+		vsnprintf(buffer, len, text, args);
+#endif
 		
+		assign(buffer);
 		delete[] buffer;
+		
+		va_end(args);
 	}
 
 	// test without case sensitivity
 	template<>
 	inline bool TString<char>::compareWithoutCase(const TString<char>& rhs)
 	{
+#ifdef _WIN32
 		return(_stricmp(c_str(), rhs.c_str()) == 0);
+#endif
+
+#ifdef ANDROID
+		char c1, c2;
+		size_t l = std::min(length(), rhs.length());
+
+		for (size_t i = 0; i < l; i++)
+		{
+			c1 = tolower(at(i));
+		    c2 = tolower(rhs.at(i));
+		    if (c1 != c2)
+		    {
+		    	return false;
+		    }
+		}
+
+	   return true;
+#endif
 	}
 
 	// operator that allows TString<_Char> to be used as an STL map key value
@@ -256,33 +290,51 @@ namespace Pegas
 
 	// format the string from optional parameters
 	template<>
-	inline void __cdecl TString<char>::format(const char* text, ...)
+	inline void TString<char>::format(const char* text, ...)
 	{
 		va_list args;
 		int len;
 		char* buffer;
 
 		va_start( args, text );
+
+#ifdef _WIN32
 		// _vscprintf doesn't count  terminating '\0'
 		len = _vscprintf( text, args ) + 1;
 		buffer = new char[len];
-		
 		vsprintf_s( buffer, len, text, args );
-		assign(buffer);
+#endif
 		
+#ifdef ANDROID
+		len = vsnprintf(0, 0, text, args) + 1;
+		buffer = new char[len];
+		vsnprintf(buffer, len, text, args);
+#endif
+
+		assign(buffer);
 		delete[] buffer;
+
+		va_end(args);
 	}
 
 	//additional functions
 	template<>
 	inline TString<char>& TString<char>::toLower()
 	{
+#ifdef _WIN32
 		if(at(length() - 1) != '\0')
 		{
 			append(1, '\0');
 		}
-
 		_strlwr_s(&(*begin()), length());
+#endif
+
+#ifdef ANDROID
+		for(size_t i = 0; i < length(); i++)
+		{
+			at(i) = tolower(at(i));
+		}
+#endif
 
 		return *this;
 	}
@@ -290,12 +342,21 @@ namespace Pegas
 	template<>
 	inline TString<char>& TString<char>::toUpper()
 	{
+#ifdef _WIN32
 		if(at(length() - 1) != '\0')
 		{
 			append(1, '\0');
 		}
 
 		_strupr_s(&(*begin()), length());							
+#endif
+
+#ifdef ANDROID
+		for(size_t i = 0; i < length(); i++)
+		{
+			at(i) = toupper(at(i));
+		}
+#endif
 
 		return *this;
 	}
@@ -312,23 +373,50 @@ namespace Pegas
 
 		va_start( args, text );
 
+#ifdef _WIN32
+
 		// _vscprintf doesn't count  terminating '\0'
 		len = _vscwprintf( text, args ) + 1;
-		
 		buffer = new wchar_t[len];
-					
 		vswprintf_s( buffer, len, text, args );
-		
+#endif
+
+#ifdef ANDROID
+		len = vswprintf(0, 0, text, args ) + 1;
+		buffer = new wchar_t[len];
+		vswprintf(0, 0, text, args );
+#endif
+
 		assign(buffer);
-		
 		delete[] buffer;
+		
+		va_end(args);
 	}
 
 	// test without case sensitivity
 	template<>
 	inline bool TString<wchar_t>::compareWithoutCase(const TString<wchar_t>& rhs)
 	{
+#ifdef _WIN32
 		return(_wcsicmp(c_str(), rhs.c_str()) == 0);
+#endif
+
+#ifdef ANDROID
+		wchar_t c1, c2;
+		size_t l = std::min(length(), rhs.length());
+
+		for (size_t i = 0; i < l; i++)
+		{
+			c1 = towlower(at(i));
+		    c2 = towlower(rhs.at(i));
+		    if (c1 != c2)
+		    {
+		    	return false;
+		    }
+		}
+
+	   return true;
+#endif
 	}
 
 	// operator that allows TString<_Char> to be used as an STL map key value
@@ -340,7 +428,7 @@ namespace Pegas
 
 	// format the string from optional parameters
 	template<>
-	inline void __cdecl TString<wchar_t>::format(const wchar_t* text, ...)
+	inline void TString<wchar_t>::format(const wchar_t* text, ...)
 	{
 		va_list args;
 		int len;
@@ -348,28 +436,44 @@ namespace Pegas
 
 		va_start( args, text );
 
+#ifdef _WIN32
 		// _vscprintf doesn't count  terminating '\0'
 		len = _vscwprintf( text, args ) + 1;
-		
 		buffer = new wchar_t[len];
-					
 		vswprintf_s( buffer, len, text, args );
+#endif
 		
+#ifdef ANDROID
+		len = vswprintf(0, 0, text, args ) + 1;
+		buffer = new wchar_t[len];
+		vswprintf(0, 0, text, args );
+#endif
+
 		assign(buffer);
-		
 		delete[] buffer;
+
+		va_end(args);
 	}
 
 	//additional functions
 	template<>
 	inline TString<wchar_t>& TString<wchar_t>::toLower()
 	{
+#ifdef _WIN32
 		if(at(length() - 1) != L'\0')
 		{
 			append(1, L'\0');
 		}
 
 		_wcslwr_s(&(*begin()), length());
+#endif
+
+#ifdef ANDROID
+		for(size_t i = 0; i < length(); i++)
+		{
+			at(i) = towlower(at(i));
+		}
+#endif
 
 		return *this;
 	}
@@ -377,12 +481,21 @@ namespace Pegas
 	template<>
 	inline TString<wchar_t>& TString<wchar_t>::toUpper()
 	{
+#ifdef _WIN32
 		if(at(length() - 1) != L'\0')
 		{
 			append(1, L'\0');
 		}
 
 		_wcsupr_s(&(*begin()), length());							
+#endif
+
+#ifdef ANDROID
+		for(size_t i = 0; i < length(); i++)
+		{
+			at(i) = towupper(at(i));
+		}
+#endif
 
 		return *this;
 	}

@@ -5,12 +5,10 @@
  *      Author: DNS
  */
 
-#ifndef PEGAS_ACTIVITY_HANDLER_H_
-#define PEGAS_ACTIVITY_HANDLER_H_
-
+#pragma once
 #include "packt_types.h"
 
-namespace Pegas
+namespace packt
 {
 	class ActivityHandler
 	{
@@ -39,4 +37,4 @@ namespace Pegas
 	};
 }
 
-#endif /* ACTIVITYHANDLER_H_ */
+

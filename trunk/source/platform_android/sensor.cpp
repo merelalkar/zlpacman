@@ -8,7 +8,7 @@
 #include "event_loop.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
 	Sensor::Sensor(EventLoop& pEventLoop, int32_t pSensorType)
 		:mEventLoop(pEventLoop), mSensor(NULL), mSensorType(pSensorType)

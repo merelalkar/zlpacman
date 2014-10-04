@@ -7,7 +7,7 @@
 #include "time_service.h"
 #include "log.h"
 
-namespace Pegas
+namespace packt
 {
 
 	TimeService::TimeService()

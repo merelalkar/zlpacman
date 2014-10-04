@@ -5,8 +5,7 @@
  *      Author: DNS
  */
 
-#ifndef PEGAS_EVENTLOOP_H_
-#define PEGAS_EVENTLOOP_H_
+#pragma once
 
 #include "packt_types.h"
 #include "activity_handler.h"
@@ -15,7 +14,7 @@
 #include <android_native_app_glue.h>
 #include <android/sensor.h>
 
-namespace Pegas
+namespace packt
 {
 	class EventLoop
 	{
@@ -52,4 +51,4 @@ namespace Pegas
 	};
 }
 
-#endif /* EVENTLOOP_H_ */
+

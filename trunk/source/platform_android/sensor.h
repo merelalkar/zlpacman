@@ -5,14 +5,13 @@
  *      Author: borisov.v
  */
 
-#ifndef SENSOR_H_
-#define SENSOR_H_
+#pragma once
 
 #include "packt_types.h"
 
 #include <android/sensor.h>
 
-namespace Pegas
+namespace packt
 {
 	class EventLoop;
 
@@ -32,4 +31,4 @@ namespace Pegas
 	};
 }
 
-#endif /* SENSOR_H_ */
+

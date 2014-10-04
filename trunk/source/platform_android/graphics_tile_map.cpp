@@ -23,7 +23,7 @@ namespace rapidxml
 	}
 }
 
-namespace Pegas
+namespace packt
 {
 		GraphicsTileMap::GraphicsTileMap(android_app* pApplication, const char* pPath,
 										GraphicsTexture* pTexture, 	Location* pLocation)
