@@ -73,14 +73,9 @@ void GameWorld::loadMap()
 	int32 canvasWidth = (int32)GrafManager::getInstance().getCanvasWidth();
 	int32 canvasHeight = (int32)GrafManager::getInstance().getCanvasHeight();
 
-	tchar fileName[256];
-#ifdef		_UNICODE
-	wsprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);  
-#else
-	sprintf(fileName, _text("maze_%d_%d.map"), canvasWidth, canvasHeight);
-#endif
 	
-	ISerializer* fileStream = m_context->openFile(fileName, FileOpenMode::k_readOnly);
+	String fileName(_text("maze_%d_%d.map"), canvasWidth, canvasHeight);
+	ISerializer* fileStream = m_context->openFile(fileName, k_readOnly);
 	if(fileStream)
 	{
 		OSUtils::getInstance().debugOutput("loading...");
