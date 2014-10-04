@@ -7,10 +7,6 @@
 #include <stdarg.h>
 #include <wchar.h>
 
-#ifdef _WIN32
-#include <tchar.h> 
-#endif
-
 #ifndef STD_STRING_H
 #define STD_STRING_H
 #pragma warning(disable : 4786)
@@ -236,18 +232,9 @@ namespace Pegas
 
 		va_start( args, text );
 
-#ifdef _WIN32
-		// _vscprintf doesn't count  terminating '\0'
-		len = _vscprintf( text, args ) + 1;
-		buffer = new char[len];
-		vsprintf_s( buffer, len, text, args );
-#endif
-
-#ifdef ANDROID
 		len = vsnprintf(0, 0, text, args) + 1;
 		buffer = new char[len];
 		vsnprintf(buffer, len, text, args);
-#endif
 		
 		assign(buffer);
 		delete[] buffer;
@@ -259,13 +246,8 @@ namespace Pegas
 	template<>
 	inline bool TString<char>::compareWithoutCase(const TString<char>& rhs)
 	{
-#ifdef _WIN32
-		return(_stricmp(c_str(), rhs.c_str()) == 0);
-#endif
-
-#ifdef ANDROID
 		char c1, c2;
-		size_t l = std::min(length(), rhs.length());
+		size_t l = std::min<size_t>(length(), rhs.length());
 
 		for (size_t i = 0; i < l; i++)
 		{
@@ -278,7 +260,6 @@ namespace Pegas
 		}
 
 	   return true;
-#endif
 	}
 
 	// operator that allows TString<_Char> to be used as an STL map key value
@@ -297,19 +278,10 @@ namespace Pegas
 		char* buffer;
 
 		va_start( args, text );
-
-#ifdef _WIN32
-		// _vscprintf doesn't count  terminating '\0'
-		len = _vscprintf( text, args ) + 1;
-		buffer = new char[len];
-		vsprintf_s( buffer, len, text, args );
-#endif
-		
-#ifdef ANDROID
+	
 		len = vsnprintf(0, 0, text, args) + 1;
 		buffer = new char[len];
 		vsnprintf(buffer, len, text, args);
-#endif
 
 		assign(buffer);
 		delete[] buffer;
@@ -321,20 +293,10 @@ namespace Pegas
 	template<>
 	inline TString<char>& TString<char>::toLower()
 	{
-#ifdef _WIN32
-		if(at(length() - 1) != '\0')
-		{
-			append(1, '\0');
-		}
-		_strlwr_s(&(*begin()), length());
-#endif
-
-#ifdef ANDROID
 		for(size_t i = 0; i < length(); i++)
 		{
 			at(i) = tolower(at(i));
 		}
-#endif
 
 		return *this;
 	}
@@ -342,21 +304,10 @@ namespace Pegas
 	template<>
 	inline TString<char>& TString<char>::toUpper()
 	{
-#ifdef _WIN32
-		if(at(length() - 1) != '\0')
-		{
-			append(1, '\0');
-		}
-
-		_strupr_s(&(*begin()), length());							
-#endif
-
-#ifdef ANDROID
 		for(size_t i = 0; i < length(); i++)
 		{
 			at(i) = toupper(at(i));
 		}
-#endif
 
 		return *this;
 	}
@@ -373,19 +324,9 @@ namespace Pegas
 
 		va_start( args, text );
 
-#ifdef _WIN32
-
-		// _vscprintf doesn't count  terminating '\0'
-		len = _vscwprintf( text, args ) + 1;
-		buffer = new wchar_t[len];
-		vswprintf_s( buffer, len, text, args );
-#endif
-
-#ifdef ANDROID
 		len = vswprintf(0, 0, text, args ) + 1;
 		buffer = new wchar_t[len];
-		vswprintf(0, 0, text, args );
-#endif
+		vswprintf(buffer, len, text, args );
 
 		assign(buffer);
 		delete[] buffer;
@@ -397,13 +338,8 @@ namespace Pegas
 	template<>
 	inline bool TString<wchar_t>::compareWithoutCase(const TString<wchar_t>& rhs)
 	{
-#ifdef _WIN32
-		return(_wcsicmp(c_str(), rhs.c_str()) == 0);
-#endif
-
-#ifdef ANDROID
 		wchar_t c1, c2;
-		size_t l = std::min(length(), rhs.length());
+		size_t l = std::min<size_t>(length(), rhs.length());
 
 		for (size_t i = 0; i < l; i++)
 		{
@@ -416,7 +352,6 @@ namespace Pegas
 		}
 
 	   return true;
-#endif
 	}
 
 	// operator that allows TString<_Char> to be used as an STL map key value
@@ -436,18 +371,9 @@ namespace Pegas
 
 		va_start( args, text );
 
-#ifdef _WIN32
-		// _vscprintf doesn't count  terminating '\0'
-		len = _vscwprintf( text, args ) + 1;
-		buffer = new wchar_t[len];
-		vswprintf_s( buffer, len, text, args );
-#endif
-		
-#ifdef ANDROID
 		len = vswprintf(0, 0, text, args ) + 1;
 		buffer = new wchar_t[len];
-		vswprintf(0, 0, text, args );
-#endif
+		vswprintf(buffer, len, text, args );
 
 		assign(buffer);
 		delete[] buffer;
@@ -459,21 +385,10 @@ namespace Pegas
 	template<>
 	inline TString<wchar_t>& TString<wchar_t>::toLower()
 	{
-#ifdef _WIN32
-		if(at(length() - 1) != L'\0')
-		{
-			append(1, L'\0');
-		}
-
-		_wcslwr_s(&(*begin()), length());
-#endif
-
-#ifdef ANDROID
 		for(size_t i = 0; i < length(); i++)
 		{
 			at(i) = towlower(at(i));
 		}
-#endif
 
 		return *this;
 	}
@@ -481,21 +396,10 @@ namespace Pegas
 	template<>
 	inline TString<wchar_t>& TString<wchar_t>::toUpper()
 	{
-#ifdef _WIN32
-		if(at(length() - 1) != L'\0')
-		{
-			append(1, L'\0');
-		}
-
-		_wcsupr_s(&(*begin()), length());							
-#endif
-
-#ifdef ANDROID
 		for(size_t i = 0; i < length(); i++)
 		{
 			at(i) = towupper(at(i));
 		}
-#endif
 
 		return *this;
 	}
