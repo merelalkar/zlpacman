@@ -12,7 +12,7 @@
 
 namespace Pegas
 {
-	bool OGLGrafManager::initialize(ANativeWindow* window)
+	bool GLESv1_GraphManager::initialize(ANativeWindow* window)
 	{
 		Pegas_log_info("GraphicsService::start");
 
@@ -118,7 +118,7 @@ namespace Pegas
 			Pegas_log_warning("querySurfaceWidth = %d", querySurfaceWidth);
 			Pegas_log_warning("querySurfaceHeight = %d", querySurfaceHeight);
 			Pegas_log_warning("mWidth = %d", width);
-			Pegas_log_warning("mHeight = %d", weight);
+			Pegas_log_warning("mHeight = %d", height);
 
 
 			errorReport("eglMakeCurrent or eglQuerySurface");
@@ -258,40 +258,50 @@ namespace Pegas
 		glColor4ub(((color & 0x00ff0000) >> 16), ((color & 0x0000ff00) >> 8),
 				(color & 0x000000ff), ((color & 0xff000000) >> 24));
 
-		glBegin(GL_LINES);
-		glVertex2f(fromX, fromY);
-		glVertex2f(toX, toY);
-		glEnd();
+		GLfloat vertices[] = { fromX, fromY, toX, toY };
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(2, GL_FLOAT, 0, vertices);
+		glDrawArrays(GL_LINES, 0, 2);
+		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 
 	void GLESv1_GraphManager::drawRectangle(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height, RGBCOLOR border, RGBCOLOR fill)
 	{
+		GLfloat vertices[] = { left, top, //0
+							  (left + width), top, //1
+							  (left + width), (top + height), //2
+							   left, (top + height) }; //3
+
+		GLubyte quadIndices[] = { 0, 1, 2, 0, 2, 3 };
+		GLubyte lineIndices[] = { 0, 1, 1, 2, 2, 3, 3, 0 };
+
 		glColor4ub(((fill & 0x00ff0000) >> 16), ((fill & 0x0000ff00) >> 8),
-				(fill & 0x000000ff), ((fill & 0xff000000) >> 24));
+						(fill & 0x000000ff), ((fill & 0xff000000) >> 24));
 
-		glBegin(GL_QUADS);
-		glVertex2f(left, top);
-		glVertex2f(left + width, top);
-		glVertex2f(left + width, top + height);
-		glVertex2f(left, top + height);
-		glEnd();
 
-		if(border == fill) return;
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, quadIndices);
+
+		if(border == fill)
+		{
+			glDisableClientState(GL_VERTEX_ARRAY);
+			return;
+		}
 
 		glColor4ub(((border & 0x00ff0000) >> 16), ((border & 0x0000ff00) >> 8),
-				(border & 0x000000ff), ((border & 0xff000000) >> 24));
+					(border & 0x000000ff), ((border & 0xff000000) >> 24));
 
-		glBegin(GL_LINE_LOOP);
-		glVertex2f(left, top);
-		glVertex2f(left + width, top);
-		glVertex2f(left + width, top + height);
-		glVertex2f(left, top + height);
-		glEnd();
+		glDrawElements(GL_LINES, 8, GL_UNSIGNED_BYTE, lineIndices);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 
 	void GLESv1_GraphManager::drawEllipse(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height, RGBCOLOR border, RGBCOLOR fill)
 	{
-		glEnable(GL_TEXTURE_2D);
+		/*glEnable(GL_TEXTURE_2D);
 		glColor4ub(((fill & 0x00ff0000) >> 16), ((fill & 0x0000ff00) >> 8),
 				(fill & 0x000000ff), ((fill & 0xff000000) >> 24));
 
@@ -321,7 +331,15 @@ namespace Pegas
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(left, top + height);
 		glEnd();
 
-		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);*/
+
+		/*
+		 * mTexture->apply();
+		int32_t crop[] = {currentFrameX * mWidth, currentFrameY * mHeight, mWidth,  mHeight };
+
+		glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_CROP_RECT_OES, crop);
+		glDrawTexfOES(mLocation.mPosX - (mWidth / 2), 	mLocation.mPosY - (mHeight / 2), 0.0f, mWidth, mHeight);
+		 * */
 	}
 
 	void GLESv1_GraphManager::drawSprite(const SpriteParameters& params)
