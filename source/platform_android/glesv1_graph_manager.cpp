@@ -5,7 +5,9 @@
  *      Author: borisov.v
  */
 #include "glesv1_graph_manager.h"
+
 #include "log.h"
+#include "platform_resources.h"
 
 #include <GLES/gl.h>
 #include <GLES/glext.h>
@@ -168,6 +170,10 @@ namespace Pegas
 
 		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		glMatrixMode(GL_PROJECTION);
@@ -281,7 +287,7 @@ namespace Pegas
 
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0, vertices);
+		glVertexPointer(2, GL_FLOAT, 0, vertices);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, quadIndices);
 
@@ -344,27 +350,107 @@ namespace Pegas
 
 	void GLESv1_GraphManager::drawSprite(const SpriteParameters& params)
 	{
+		glColor4ub(255, 255, 255, 255);
 
+		TextureResource* pTexture = TextureResourceManager::getInstance().getResource(params._texture);
+
+		GLfloat minU = 0;
+		GLfloat minV = 0;
+		GLfloat maxU = pTexture->getMaxUCoord();
+		GLfloat maxV = pTexture->getMaxVCoord();
+
+		if((params._flags & k_customTextureCoords) == k_customTextureCoords)
+		{
+			minU = params._minU;
+			minV = params._minV;
+			maxU = params._maxU;
+			maxV = params._maxV;
+		}else
+		{
+			if((params._flags & k_repeatTextureAlongX) == k_repeatTextureAlongX)
+				maxU = (params._width * 1.0) / pTexture->getImageWidth();
+
+			if((params._flags & k_repeatTextureAlongY) == k_repeatTextureAlongY)
+				maxV = (params._height * 1.0) / pTexture->getImageHeight();
+		}
+
+		if(params._flags & k_flipHorizontal)
+		{
+			std::swap(minU, maxU);
+		}
+
+		if(params._flags &	k_flipVertical)
+		{
+			std::swap(minV, maxV);
+		}
+
+		GLfloat vertices[] = { -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f };
+		GLfloat textureCoords[] = {minU, maxV, maxU, maxV, maxU, minV, minU, minV };
+		GLubyte quadIndices[] = { 0, 1, 2, 0, 2, 3 };
+
+		GLfloat tx = params._left + (params._width * 0.5f);
+		GLfloat ty = params._top + (params._height * 0.5f);
+		GLfloat tz = 0.0f;
+		GLfloat sx = params._width;
+		GLfloat sy = params._height;
+		GLfloat sz = 0.0f;
+
+		glPushMatrix();
+		glTranslatef(tx, ty, tz);
+		glRotatef(params._angle, 0.0f, 0.0f, 1.0f);
+		glScalef(sx, sy, sz);
+
+		pTexture->apply();
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, quadIndices);
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+		glPopMatrix();
 	}
 
 	void GLESv1_GraphManager::drawText(const String& text, const TextParameters& params)
 	{
+		FontResourceManager& manager = FontResourceManager::getInstance();
+		FontResource* fontResource = manager.getResource(params._font);
 
+		int bufferLength = 0;
+		GLubyte* buffer = fontResource->prepareString(text, bufferLength);
+
+		glColor4ub(((params._color & 0x00ff0000) >> 16), ((params._color & 0x0000ff00) >> 8),
+				(params._color & 0x000000ff), ((params._color & 0xff000000) >> 24));
+
+		glRasterPos2f(params._left, params._top);
+		glPushAttrib(GL_LIST_BIT);
+		glListBase(fontResource->getFontID());
+		glCallLists(bufferLength, GL_UNSIGNED_BYTE, buffer);
+		glPopAttrib();
 	}
 
 	void GLESv1_GraphManager::drawText(RESOURCEID textID, const TextParameters& params)
 	{
-
+		StringResource* stringResource = StringResourceManager::getInstance().getResource(textID);
+		drawText(stringResource->getString(), params);
 	}
 
 	void GLESv1_GraphManager::getTextExtent(const String& text, RESOURCEID fontID, CURCOORD& width, CURCOORD& height)
 	{
-
+		FontResourceManager& manager = FontResourceManager::getInstance();
+		FontResource* fontResource = manager.getResource(fontID);
+		fontResource->getTextExtent(text, width, height);
 	}
 
 	void GLESv1_GraphManager::getTextExtent(RESOURCEID textID, RESOURCEID fontID, CURCOORD& width, CURCOORD& height)
 	{
-
+		StringResource* stringResource = StringResourceManager::getInstance().getResource(textID);
+		getTextExtent(stringResource->getString(), fontID, width, height);
 	}
 }
 

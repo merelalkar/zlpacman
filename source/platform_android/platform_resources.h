@@ -82,6 +82,7 @@ namespace Pegas
 		virtual void create(const PathResourceCode& code);
 		virtual void load();
 		virtual void destroy();
+		void apply();
 
 		//DWORD* getImageBits() const { return m_pPixels; };
 		//DWORD* getInvertedImageBits() const { return m_pInvertedPixels; };

@@ -162,6 +162,12 @@ void TextureResource::destroy()
 	m_fMaxUCoord = 0.0f;
 	m_fMaxVCoord = 0.0f;*/
 }
+
+void TextureResource::apply()
+{
+
+}
+
 /*
 int TextureResource::inreaseInstanceCounter()
 {
