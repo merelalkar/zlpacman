@@ -427,11 +427,11 @@ namespace Pegas
 		glColor4ub(((params._color & 0x00ff0000) >> 16), ((params._color & 0x0000ff00) >> 8),
 				(params._color & 0x000000ff), ((params._color & 0xff000000) >> 24));
 
-		glRasterPos2f(params._left, params._top);
+		/*glRasterPos2f(params._left, params._top);
 		glPushAttrib(GL_LIST_BIT);
 		glListBase(fontResource->getFontID());
 		glCallLists(bufferLength, GL_UNSIGNED_BYTE, buffer);
-		glPopAttrib();
+		glPopAttrib();*/
 	}
 
 	void GLESv1_GraphManager::drawText(RESOURCEID textID, const TextParameters& params)
