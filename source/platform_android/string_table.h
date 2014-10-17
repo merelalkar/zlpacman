@@ -20,7 +20,7 @@ namespace Pegas
 	public:
 		StringResource(const StringTable& owner);
 
-		virtual void create(const ResourceCode& code) {}
+		virtual void create(const STRINGID& code) {}
 		virtual void load() {}
 		virtual void destroy() {}
 

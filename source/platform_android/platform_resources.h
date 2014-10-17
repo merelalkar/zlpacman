@@ -3,6 +3,11 @@
 #pragma once
 
 #include "engine.h"
+
+#include "packt_types.h"
+#include "graphics_texture.h"
+
+#include <android_native_app_glue.h>
 #include <GLES/gl.h>
 
 namespace Pegas
@@ -11,63 +16,18 @@ namespace Pegas
 	{
 	public:
 		PathResourceCode() {}
-		PathResourceCode(const String& path): _path(path) {}
+		PathResourceCode(android_app* app, const String& path)
+		: _app(app), _path(path) {}
 
+		android_app* _app;
 		String _path;
 	};
 
-#define MAKE_RESOURCE_CODE(path) Pegas::PathResourceCode(path)
+	#define MAKE_RESOURCE_CODE(app, path) Pegas::PathResourceCode(app, path)
 
-	class StringResource: public BaseResource<PathResourceCode>
-	{
-	public:
-		enum
-		{
-			k_bufferLength = 512
-		};
-
-		StringResource() {};
-		virtual ~StringResource() {};
-
-		virtual void create(const PathResourceCode& code);
-		virtual void load();
-		virtual void destroy();
-
-		String& getString() { return m_loadedString; };
-
-	private:
-		StringResource(const StringResource& src);
-		StringResource& operator=(const StringResource& src);
-
-		String m_loadedString;
-	};
-
-	typedef ResourceManager<StringResource, PathResourceCode> StringResourceManager;
-
-	class SoundResource: public BaseResource<PathResourceCode>
-	{
-	public:
-		SoundResource() {};
-		virtual ~SoundResource() {};
-
-		virtual void create(const PathResourceCode& code)
-		{
-			m_resourceCode = code;
-			m_izInitialized = true;
-		};
-
-		virtual void load() {};
-		virtual void destroy() {};
-
-		PathResourceCode& getCode() { return m_resourceCode; };
-
-	private:
-		SoundResource(const SoundResource& src);
-		SoundResource& operator=(const SoundResource& src);
-	};
-
-	typedef ResourceManager<SoundResource, PathResourceCode> SoundResourceManager;
-
+	/****************************************************************************************************
+	 *	Textures
+	 * **************************************************************************************************/
 	class TextureResource: public BaseResource<PathResourceCode>
 	{
 	public:
@@ -84,47 +44,41 @@ namespace Pegas
 		virtual void destroy();
 		void apply();
 
-		//DWORD* getImageBits() const { return m_pPixels; };
-		//DWORD* getInvertedImageBits() const { return m_pInvertedPixels; };
-		int getImageWidth() const { return m_nImageWidth; };
-		int getImageHeight() const { return m_nImageHeght; };
-		int getInnerImageWidth() const { return m_nInnerImageWidth; };
-		int getInnerImageHeight() const { return m_nInnerImageHeight; };
+		int32 getImageWidth() const { return m_nImageWidth; };
+		int32 getImageHeight() const { return m_nImageHeght; };
+		int32 getInnerImageWidth() const { return m_nInnerImageWidth; };
+		int32 getInnerImageHeight() const { return m_nInnerImageHeight; };
 
-		GLuint getTexture() const { return m_textureID; };
-		GLuint getInvertedTexture() const { return m_invertedTextureID; };
-		GLfloat getMaxUCoord() const { return m_fMaxUCoord; };
-		GLfloat getMaxVCoord() const { return m_fMaxVCoord; };
+		/*GLuint getTexture() const { return m_textureID; };
+		GLuint getInvertedTexture() const { return m_invertedTextureID; };*/
+		GLfloat getMaxUCoord() const { return 1.0f; };
+		GLfloat getMaxVCoord() const { return 1.0f; };
 
-	protected:
+	private:
 		TextureResource(const TextureResource& src);
 		TextureResource& operator=(const TextureResource& src);
 
-		/*static int s_instanceCounter;
-		static HDC s_deviseContext;
-		static std::set<int>* s_pTextureValidSizes;
+	private:
+		typedef SmartPointer<packt::GraphicsTexture> TexturePtr;
+		TexturePtr m_pTexture;
+		bool	   m_isLoaded;
 
-		int inreaseInstanceCounter();
-		int decreaseInstanceCounter();
-		HDC& getDeviceContext() { return s_deviseContext; };
+		int32 m_nImageWidth;
+		int32 m_nImageHeght;
+		int32 m_nInnerImageWidth;
+		int32 m_nInnerImageHeight;
 		
-		PBITMAPINFO createBitmapInfoStruct(HBITMAP hBmp, int& nPitch);
-		GLuint createTexture(DWORD* pBuffer, int width, int height);
-
-		DWORD* m_pPixels;
-		DWORD* m_pInvertedPixels;*/
-		int m_nImageWidth;
-		int m_nImageHeght;
-		int m_nInnerImageWidth;
-		int m_nInnerImageHeight;
-		
-		GLuint m_textureID;
+		/*GLuint m_textureID;
 		GLuint m_invertedTextureID;
 		GLfloat m_fMaxUCoord;
-		GLfloat m_fMaxVCoord;
+		GLfloat m_fMaxVCoord;*/
 	};
 
 	typedef ResourceManager<TextureResource, PathResourceCode> TextureResourceManager;
+
+	/***********************************************************************************************
+	 * 	Fonts
+	 * ********************************************************************************************/
 
 	struct FontResourceCode
 	{
@@ -153,26 +107,18 @@ namespace Pegas
 		FontResource();
 		virtual ~FontResource();
 
-		virtual void create(const FontResourceCode& code);
-		virtual void load();
-		virtual void destroy();
+		virtual void create(const FontResourceCode& code) {}
+		virtual void load() {}
+		virtual void destroy() {}
 
 		GLuint getFontID() { return m_dlBaseOffset; };
-		GLubyte* prepareString(const String& text, int& bufferLength);
+		GLubyte* prepareString(const String& text, int& bufferLength) { return 0; }
 		void getTextExtent(const String& text, CURCOORD& width, CURCOORD& height);
 
 	private:
-		/*FontResource(const FontResource& src);
+		FontResource(const FontResource& src);
 		FontResource& operator=(const FontResource& src);
 
-		static int s_instanceCounter;
-		static HDC s_deviseContext;
-		
-		int inreaseInstanceCounter();
-		int decreaseInstanceCounter();
-		HDC& getDeviceContext() { return s_deviseContext; };
-		
-		HFONT m_hFont;*/
 		GLuint m_dlBaseOffset;
 		GLubyte m_buffer[k_maxBufferLength];
 	};
