@@ -436,8 +436,8 @@ namespace Pegas
 
 	void GLESv1_GraphManager::drawText(RESOURCEID textID, const TextParameters& params)
 	{
-		StringResource* stringResource = StringResourceManager::getInstance().getResource(textID);
-		drawText(stringResource->getString(), params);
+		//StringResource* stringResource = StringResourceManager::getInstance().getResource(textID);
+		//drawText(stringResource->getString(), params);
 	}
 
 	void GLESv1_GraphManager::getTextExtent(const String& text, RESOURCEID fontID, CURCOORD& width, CURCOORD& height)
@@ -449,8 +449,8 @@ namespace Pegas
 
 	void GLESv1_GraphManager::getTextExtent(RESOURCEID textID, RESOURCEID fontID, CURCOORD& width, CURCOORD& height)
 	{
-		StringResource* stringResource = StringResourceManager::getInstance().getResource(textID);
-		getTextExtent(stringResource->getString(), fontID, width, height);
+		//StringResource* stringResource = StringResourceManager::getInstance().getResource(textID);
+		//getTextExtent(stringResource->getString(), fontID, width, height);
 	}
 }
 
