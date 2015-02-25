@@ -11,14 +11,9 @@ namespace Pegas
 			TextureResource class implementation
 	**********************************************************************/
 	TextureResource::TextureResource()
+	 : m_isLoaded(false)
 	{
 		Pegas_log_info("TextureResource constructor");
-
-		m_isLoaded = false;
-		m_nImageWidth = 0;
-		m_nImageHeght = 0;
-		m_nInnerImageWidth = 0;
-		m_nInnerImageHeight = 0;
 	}
 
 	TextureResource::~TextureResource()
@@ -57,11 +52,6 @@ namespace Pegas
 		}
 
 		m_isLoaded = true;
-
-		m_nImageWidth = m_pTexture->getWidth();
-		m_nImageHeght = m_pTexture->getHeight();
-		m_nInnerImageWidth = m_pTexture->getWidth();
-		m_nInnerImageHeight = m_pTexture->getHeight();
 	}
 
 	void TextureResource::destroy()
@@ -71,12 +61,19 @@ namespace Pegas
 		if(m_pTexture.IsValid())
 		{
 			m_pTexture->unload();
+			m_isLoaded = false;
 		}
 	}
 
 	void TextureResource::apply()
 	{
 		Pegas_log_info("TextureResource::apply");
+
+		if(!m_isLoaded)
+		{
+			Pegas_log_warning("texture has not load");
+			return;
+		}
 
 		if(m_pTexture.IsValid())
 		{
