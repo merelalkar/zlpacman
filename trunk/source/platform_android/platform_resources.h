@@ -44,15 +44,13 @@ namespace Pegas
 		virtual void destroy();
 		void apply();
 
-		int32 getImageWidth() const { return m_nImageWidth; };
-		int32 getImageHeight() const { return m_nImageHeght; };
-		int32 getInnerImageWidth() const { return m_nInnerImageWidth; };
-		int32 getInnerImageHeight() const { return m_nInnerImageHeight; };
+		int32 getImageWidth() const { return m_isLoaded ? m_pTexture->getWidth() : 0; }
+		int32 getImageHeight() const { return m_isLoaded ? m_pTexture->getHeight() : 0; }
+		int32 getInnerImageWidth() const { return getImageWidth(); }
+		int32 getInnerImageHeight() const { return getImageHeight(); }
 
-		/*GLuint getTexture() const { return m_textureID; };
-		GLuint getInvertedTexture() const { return m_invertedTextureID; };*/
-		GLfloat getMaxUCoord() const { return 1.0f; };
-		GLfloat getMaxVCoord() const { return 1.0f; };
+		GLfloat getMaxUCoord() const { return 1.0f; }
+		GLfloat getMaxVCoord() const { return 1.0f; }
 
 	private:
 		TextureResource(const TextureResource& src);
@@ -62,16 +60,6 @@ namespace Pegas
 		typedef SmartPointer<packt::GraphicsTexture> TexturePtr;
 		TexturePtr m_pTexture;
 		bool	   m_isLoaded;
-
-		int32 m_nImageWidth;
-		int32 m_nImageHeght;
-		int32 m_nInnerImageWidth;
-		int32 m_nInnerImageHeight;
-		
-		/*GLuint m_textureID;
-		GLuint m_invertedTextureID;
-		GLfloat m_fMaxUCoord;
-		GLfloat m_fMaxVCoord;*/
 	};
 
 	typedef ResourceManager<TextureResource, PathResourceCode> TextureResourceManager;
