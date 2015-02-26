@@ -5,6 +5,7 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.android.toolchain.gcc.313660929" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
 				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -12,7 +13,7 @@
 					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -36,6 +37,7 @@
 									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/platform_android&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/engine&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/game&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/../../../3dparty/libttf&quot;"/>
 								</option>
 								<inputType id="com.android.gcc.inputType.1498411336" superClass="com.android.gcc.inputType"/>
 							</tool>
@@ -52,6 +54,7 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.android.toolchain.gcc.313660929.2033346534" moduleId="org.eclipse.cdt.core.settings" name="android_debug">
 				<externalSettings/>
 				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -59,7 +62,7 @@
 					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -79,9 +82,10 @@
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/platforms/android-9/arch-arm/usr/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/sources/android/native_app_glue&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8/prebuilt/windows-x86_64/lib/gcc/arm-linux-androideabi/4.8/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${project_loc}/../../../3dparty/rapidxml&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/platform_android&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${project_loc}/jni/engine&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/../../../3dparty/rapidxml&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${project_loc}/../../../3dparty/libttf&quot;"/>
 								</option>
 								<inputType id="com.android.gcc.inputType.1541027431" superClass="com.android.gcc.inputType"/>
 							</tool>
@@ -99,14 +103,17 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="pacman.null.791166194" name="pacman"/>
 	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/pacman"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="com.android.toolchain.gcc.313660929;com.android.toolchain.gcc.313660929.1187735269;com.android.gcc.compiler.696372152;com.android.gcc.inputType.1498411336">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.android.AndroidPerProjectProfile"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.android.toolchain.gcc.313660929.2033346534;com.android.toolchain.gcc.313660929.2033346534.;com.android.gcc.compiler.351714439;com.android.gcc.inputType.1541027431">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.android.AndroidPerProjectProfile"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/pacman"/>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
