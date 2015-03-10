@@ -3,6 +3,8 @@
 
 #include "game_manager.h"
 
+#include "font_test.h"
+
 namespace Pegas
 {
 	/******************************************************************************************************************
@@ -43,8 +45,11 @@ namespace Pegas
 	{
 		BaseGameApplication::init(hWnd);
 
-		addGameState(GameStatePtr(new MainMenu()));
-		addGameState(GameStatePtr(new GameScreen()));
-		changeState(k_stateGame);
+		//addGameState(GameStatePtr(new MainMenu()));
+		//addGameState(GameStatePtr(new GameScreen()));
+		//changeState(k_stateGame);
+
+		addGameState(GameStatePtr(new FontTest()));
+		changeState(1);
 	}
 }

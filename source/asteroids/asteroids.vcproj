@@ -273,6 +273,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="ogl_font"
+			>
+			<File
+				RelativePath=".\font_test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\font_test.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

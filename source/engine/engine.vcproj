@@ -298,6 +298,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="gfx"
+			>
+			<File
+				RelativePath=".\texture.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\common_events.cpp"
 			>

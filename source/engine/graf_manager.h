@@ -3,6 +3,8 @@
 #pragma once
 #pragma warning(disable : 4355)
 
+#include "texture.h"
+
 namespace Pegas
 {
 	enum SpiteDrawingFlags
@@ -65,11 +67,13 @@ namespace Pegas
         virtual void destroy() = 0;
 		virtual void render() { };
 
-		virtual void beginScene() = 0;
+		virtual void beginScene(Texture* texture = 0) = 0;
 		virtual void endScene() = 0;
 
 		virtual CURCOORD getCanvasWidth() = 0;
 		virtual CURCOORD getCanvasHeight() = 0;
+
+		virtual TexturePtr createTexture(int32 width, int32 height, int32 format = -1, int32 flags = 0) = 0; 
 
 		virtual void drawLine(CURCOORD fromX, CURCOORD fromY, CURCOORD toX, CURCOORD toY, RGBCOLOR color) = 0;
 		virtual void drawRectangle(CURCOORD left, CURCOORD top, CURCOORD width, 
