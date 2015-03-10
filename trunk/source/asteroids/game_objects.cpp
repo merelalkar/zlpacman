@@ -39,8 +39,8 @@ namespace Pegas
 	const float k_initialExplosionRadius = 10.0f;
 	const float k_particleVelocity = 4.0f;
 	const float k_particleHalfSize = 1.5f;
-	const float k_particleSize = 3.0f;
-	const float k_explosionLifeTime = 3.0f;
+	const float k_particleSize = 10.0f;
+	const float k_explosionLifeTime = 10.0f;
 
 	
 	

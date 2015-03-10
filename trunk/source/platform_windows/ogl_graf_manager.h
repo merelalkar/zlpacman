@@ -35,18 +35,20 @@ namespace Pegas
 	class OGLGrafManager: public GrafManager
 	{
 	public:
-		OGLGrafManager():m_window(0), m_deviceContext(0), m_glRenderContext(0) { };		
+		OGLGrafManager();		
 
 		void initialize(HWND window);
 		void setViewport(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height);
 		virtual void destroy();
 		virtual void render();
 
-		virtual void beginScene();
+		virtual void beginScene(Texture* texture = 0);
 		virtual void endScene();
 
 		virtual CURCOORD getCanvasWidth();
 		virtual CURCOORD getCanvasHeight();
+
+		virtual TexturePtr createTexture(int32 width, int32 height, int32 format = -1, int32 flags = 0);
 
 		virtual void drawLine(CURCOORD fromX, CURCOORD fromY, CURCOORD toX, CURCOORD toY, RGBCOLOR color);
 		virtual void drawRectangle(CURCOORD left, CURCOORD top, CURCOORD width, 
@@ -62,11 +64,19 @@ namespace Pegas
 
 
 	private:
+		void _setViewport(GLint left, GLint top, GLsizei width, GLsizei height);
+
 		HWND  m_window;
 		HDC   m_deviceContext;
 		HGLRC m_glRenderContext;
+		
+		GLint   m_screenLeft;
+		GLint   m_screenTop;
+		GLsizei m_screenWidth;
+		GLsizei m_screenHeight;
 
 		EllipseTexture m_ellipseTexture;
+		Texture* m_renderTarget;
 
 		OGLGrafManager(const OGLGrafManager& src);
 		OGLGrafManager& operator=(const OGLGrafManager& src);

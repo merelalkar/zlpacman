@@ -1,6 +1,19 @@
 #include "platform_windows.h"
 using namespace Pegas;
 
+OGLGrafManager::OGLGrafManager()
+	:m_window(0), 
+	 m_deviceContext(0), 
+	 m_glRenderContext(0),
+	 m_renderTarget(NULL),
+	 m_screenLeft(0),
+	 m_screenTop(0),
+	 m_screenWidth(0),
+	 m_screenHeight(0)
+{
+
+}	
+
 void OGLGrafManager::initialize(HWND window)
 {
 	PIXELFORMATDESCRIPTOR pfd;
@@ -48,11 +61,21 @@ void OGLGrafManager::initialize(HWND window)
 
 void OGLGrafManager::setViewport(CURCOORD left, CURCOORD top, CURCOORD width, CURCOORD height)
 {
+	m_screenLeft = (GLint)left;
+	m_screenTop = (GLint)top;
+	m_screenWidth = (GLsizei)width;
+	m_screenHeight = (GLsizei)height;
+	
+	_setViewport(m_screenLeft, m_screenTop, m_screenWidth, m_screenHeight);
+}
+
+void OGLGrafManager::_setViewport(GLint left, GLint top, GLsizei width, GLsizei height)
+{
 	if(!wglMakeCurrent(m_deviceContext, m_glRenderContext))
 	{
 		throw GMException(_text("wglMakeCurrent Failed"));
 	}
-	
+
 	glViewport(left, top, width, height);
 	
 	glMatrixMode(GL_PROJECTION);
@@ -88,9 +111,20 @@ void OGLGrafManager::render()
 	endScene();	
 }
 
-void OGLGrafManager::beginScene()
+void OGLGrafManager::beginScene(Texture* texture)
 {
 	wglMakeCurrent(m_deviceContext, m_glRenderContext);
+
+	//TODO: http://masandilov.ru/opengl/render-to-texture
+	m_renderTarget = texture;
+	if(m_renderTarget)
+	{
+		_setViewport(0, 0, m_renderTarget->width(), m_renderTarget->height());
+	}else
+	{
+		//TODO:
+		_setViewport(m_screenLeft, m_screenTop, m_screenWidth, m_screenHeight);
+	}
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);	
@@ -98,8 +132,21 @@ void OGLGrafManager::beginScene()
 
 void OGLGrafManager::endScene()
 {
-	glFlush();
-	SwapBuffers(m_deviceContext);
+	//TODO: http://masandilov.ru/opengl/render-to-texture
+	if(m_renderTarget)
+	{
+		m_renderTarget->apply();
+
+		 glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 
+			 m_renderTarget->width(), m_renderTarget->height(), 0);
+		 glClear(GL_COLOR_BUFFER_BIT);
+
+		m_renderTarget = NULL;
+	}else
+	{
+		glFlush();
+		SwapBuffers(m_deviceContext);
+	}
 }
 
 CURCOORD OGLGrafManager::getCanvasWidth()
@@ -303,6 +350,14 @@ void OGLGrafManager::getTextExtent(RESOURCEID textID, RESOURCEID fontID, CURCOOR
 	getTextExtent(stringResource->getString(), fontID, width, height);	
 }
 
+TexturePtr OGLGrafManager::createTexture(int32 width, int32 height, int32 format, int32 flags)
+{
+	TexturePtr result(new OGLTexture());
+	result->create(width, height, format, flags);
+
+	return result;
+}
+
 /*************************************************************************************
 		EllipseTexture class implementation
 **************************************************************************************/
@@ -366,3 +421,4 @@ void EllipseTexture::load()
 	m_invertedTextureID = createTexture(m_pInvertedPixels, m_nImageWidth, m_nImageHeght);
 
 }
+

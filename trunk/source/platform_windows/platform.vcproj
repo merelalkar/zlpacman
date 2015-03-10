@@ -149,6 +149,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ogl_texture.h"
+				>
+			</File>
+			<File
 				RelativePath=".\platform_resources.h"
 				>
 			</File>
@@ -182,6 +186,10 @@
 			</File>
 			<File
 				RelativePath=".\ogl_graf_manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ogl_texture.cpp"
 				>
 			</File>
 			<File

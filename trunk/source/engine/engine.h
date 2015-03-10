@@ -40,6 +40,7 @@ namespace Pegas
 #include "matrix.h"
 #include "resource_manager.h"
 #include "utils.h"
+#include "texture.h"
 #include "graf_manager.h"
 #include "gui_manager.h"
 #include "sound_manager.h"
