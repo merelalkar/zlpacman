@@ -213,6 +213,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="multycore"
+			>
+			<File
+				RelativePath=".\critical_section.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\critical_section.h"
+				>
+			</File>
+			<File
+				RelativePath=".\realtime_process.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\realtime_process.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
