@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="c,cpp">
+<includepath>${ANDROID_NDK}/sources/libpng</includepath>
+<includepath>${ANDROID_NDK}/platforms/android-9/arch-arm/usr/include</includepath>
+<includepath>${ANDROID_NDK}/sources/android/native_app_glue</includepath>
+<includepath>${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8/prebuilt/windows-x86_64/lib/gcc/arm-linux-androideabi/4.8/include</includepath>
+<includepath>${project_loc}/../../../3dparty/rapidxml</includepath>
+<includepath>${project_loc}/../../../3dparty/libttf</includepath>
+<includepath>${project_loc}/jni/platform_android</includepath>
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="c,cpp">
+
+</language>
+</section>
+</cdtprojectproperties>

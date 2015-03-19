@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="app">
+      <UniqueIdentifier>{6680bc1a-39b4-4de6-ae93-5de662098a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game_view">
+      <UniqueIdentifier>{1eed8530-12e2-49ff-b297-6fdf84088a86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="old">
+      <UniqueIdentifier>{c55c57a1-8bb7-46de-9127-76495eee20bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{879eab0a-2a22-43a2-8e22-71f08baad424}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cell_grid.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_checker.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="default_game_state.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="event_system.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="processes.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="waiting.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="fader_layer.h">
+      <Filter>game_view</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_layer.h">
+      <Filter>game_view</Filter>
+    </ClInclude>
+    <ClInclude Include="standart_widgets.h">
+      <Filter>game_view</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects_old.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="graf_manager.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_manager.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_manager.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_manager.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>old</Filter>
+    </ClInclude>
+    <ClInclude Include="math_utils.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_pointer.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="vectors.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="common_events.h" />
+    <ClInclude Include="engine.h" />
+    <ClInclude Include="interfaces.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="collision_checker.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="default_game_state.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="event_system.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="processes.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="waiting.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="fader_layer.cpp">
+      <Filter>game_view</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_layer.cpp">
+      <Filter>game_view</Filter>
+    </ClCompile>
+    <ClCompile Include="standart_widgets.cpp">
+      <Filter>game_view</Filter>
+    </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>old</Filter>
+    </ClCompile>
+    <ClCompile Include="game_objects.cpp">
+      <Filter>old</Filter>
+    </ClCompile>
+    <ClCompile Include="graf_manager.cpp">
+      <Filter>old</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_manager.cpp">
+      <Filter>old</Filter>
+    </ClCompile>
+    <ClCompile Include="math_utils.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="types.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="common_events.cpp" />
+    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="interfaces.cpp" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{f1adb8cf-df77-42e5-abe5-4743d22171b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game logic">
+      <UniqueIdentifier>{770a7c05-9324-48a1-9af0-b48d9d72b839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{a83a6e4a-ba97-460c-af88-a1e6368f2120}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="media\animation_sprite_sheet.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="bitmap1.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\bitmap1.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="bitmap2.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\blinki_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\blinky_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\bmp00001.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\bonus_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\bonus_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\clyde_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\clyde_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\get_ready.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\inky_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\inky_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\lives_text.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="pacman.ico">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\pacman_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\pacman_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\pill_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\pill_tile2.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\pinky_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\pinky_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\scores_text.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="small.ico">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\super_pill_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\tunnel_editor_tile.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="media\tunnel_static_sprite.bmp">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pacman.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game_app.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="pacman.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="game_ai.cpp">
+      <Filter>game logic</Filter>
+    </ClCompile>
+    <ClCompile Include="game_events.cpp">
+      <Filter>game logic</Filter>
+    </ClCompile>
+    <ClCompile Include="game_objects.cpp">
+      <Filter>game logic</Filter>
+    </ClCompile>
+    <ClCompile Include="game_world.cpp">
+      <Filter>game logic</Filter>
+    </ClCompile>
+    <ClCompile Include="tile_grid.cpp">
+      <Filter>game logic</Filter>
+    </ClCompile>
+    <ClCompile Include="editor.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="game_screen.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="pacman_game_screens.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game_app.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="game_resources.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="pacman.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="game_ai.h">
+      <Filter>game logic</Filter>
+    </ClInclude>
+    <ClInclude Include="game_events.h">
+      <Filter>game logic</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects.h">
+      <Filter>game logic</Filter>
+    </ClInclude>
+    <ClInclude Include="game_world.h">
+      <Filter>game logic</Filter>
+    </ClInclude>
+    <ClInclude Include="tile_grid.h">
+      <Filter>game logic</Filter>
+    </ClInclude>
+    <ClInclude Include="editor.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="game_screen.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="pacman_game_screens.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
