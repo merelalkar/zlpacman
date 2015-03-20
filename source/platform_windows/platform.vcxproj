@@ -56,20 +56,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="base_game_application.h" />
+    <ClInclude Include="critical_section.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="ogl_graf_manager.h" />
     <ClInclude Include="platform_resources.h" />
     <ClInclude Include="platform_windows.h" />
+    <ClInclude Include="realtime_process.h" />
     <ClInclude Include="sprite_animation.h" />
     <ClInclude Include="windows_os_utils.h" />
     <ClInclude Include="winmm_sound_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base_game_application.cpp" />
+    <ClCompile Include="critical_section.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="ogl_graf_manager.cpp" />
     <ClCompile Include="platform_resources.cpp" />
     <ClCompile Include="platform_windows.cpp" />
+    <ClCompile Include="realtime_process.cpp" />
     <ClCompile Include="sprite_animation.cpp" />
     <ClCompile Include="windows_os_utils.cpp" />
     <ClCompile Include="winmm_sound_manager.cpp" />

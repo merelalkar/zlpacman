@@ -11,18 +11,21 @@ namespace Pegas
 		virtual void suspend();
 		virtual void resume();
 		virtual void terminate();
+		virtual void update(MILLISECONDS deltaTime) {}
 
-		static DWORD WINAPI ThreadProc(LPVOID lpParam);
-	
 	protected:
-		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+		static DWORD WINAPI ThreadProc(LPVOID lpParam);
 
-	private:
-		//вызывается из ThreadProc
-		void _threadProc();
+		virtual void start(ProcessHandle myHandle, ProcessManagerPtr owner);
+		virtual void onThreadRun();
+		virtual void onThreadExit() {}
+
+		bool isStopEventSignaled(uint32 timeOut = 10) const;
+		bool isRunning(uint32 timeOut = 50) const;
+
 
 		HANDLE m_hThread;
-		DWORD  m_threadId;
-		int32  m_threadPriority;
+		HANDLE m_hStopEvent;
+		uint32  m_ThreadPriority;
 	};
 }
