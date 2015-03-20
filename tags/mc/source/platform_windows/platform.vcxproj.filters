@@ -7,6 +7,9 @@
     <Filter Include="source">
       <UniqueIdentifier>{eb4f0e97-0fc7-4601-8970-d92437c2eb9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="multycore">
+      <UniqueIdentifier>{bfe31282-4ce5-4b5b-b4f3-b6d2a24ea412}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base_game_application.h">
@@ -33,6 +36,12 @@
     <ClInclude Include="winmm_sound_manager.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="realtime_process.h">
+      <Filter>multycore</Filter>
+    </ClInclude>
+    <ClInclude Include="critical_section.h">
+      <Filter>multycore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base_game_application.cpp">
@@ -58,6 +67,12 @@
     </ClCompile>
     <ClCompile Include="winmm_sound_manager.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="realtime_process.cpp">
+      <Filter>multycore</Filter>
+    </ClCompile>
+    <ClCompile Include="critical_section.cpp">
+      <Filter>multycore</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
